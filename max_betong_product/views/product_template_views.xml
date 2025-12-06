@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_form_view_inherit_max_beton_product" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.max.beton.product</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+				<div name="options" position="inside">
+					<span class="d-inline-block">
+	                    <field name="is_betong_product"/>
+	                    <label for="is_betong_product"/>
+	                </span>
+				</div>
+                <xpath expr="//field[@name='detailed_type'][1]" position="before">
+                    <field name="betong_lifespan" invisible="not is_betong_product" widget="float_time"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

@@ -1,0 +1,265 @@
+# -*- coding: utf-8 -*-
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    so_type = fields.Selection(
+        [
+            ('betong', 'Concrete'),
+            ('bom', 'Pump'),
+            ('normal', 'Normal'),
+        ],
+        string='SO Type',
+        default='normal',
+        required=True,
+        help='Sale Order Type\n'
+             'Concrete SO: for concrete products, managed separately according to Concrete business.\n'
+             'Pump SO: for concrete pumping services, managed separately according to Pump business.\n'
+             'Normal SO: standard sales order, follows default Odoo flow.'
+    )
+
+    trial_mix = fields.Boolean(
+        string='Trial Mix',
+        default=False,
+        help='Mark if this Concrete order is a trial mix order. '
+             'Used to distinguish trial orders from commercial orders. '
+             'Allows quick filtering of trial mix orders in the order list.'
+    )
+
+    has_pump = fields.Boolean(
+        string='Has Pump',
+        default=False,
+        help='Mark if this Concrete order includes Pump service. '
+             'Used to distinguish Concrete orders with and without Pump. '
+             'Allows quick filtering of orders with Pump in the order list.'
+    )
+
+    related_pump_so_id = fields.Many2one(
+        'sale.order',
+        string='Related Pump SO',
+        readonly=True,
+        help='Pump order automatically created when Has Pump is checked and moved to Planned'
+    )
+
+    state = fields.Selection(selection_add=[
+                    ('planned', 'Planned'),
+                    ('dispatching', 'Dispatching'),
+                    ('done', 'Completed'),
+                ])
+
+    dispatching_date = fields.Datetime(
+        string='Dispatching Date',
+        readonly=True,
+        help='Time when moved to Dispatching status'
+    )
+
+    volume = fields.Float(
+        string='Volume',
+        compute='_compute_volume',
+        readonly=True,
+        help='Volume of Concrete product in the order (m³)'
+    )
+
+    volume_allocated = fields.Float(
+        string='Allocated Volume',
+        compute='_compute_volume_allocated',
+        readonly=True,
+        help='Total volume from linked Loads (m³)'
+    )
+
+    volume_unallocated = fields.Float(
+        string='Unallocated Volume',
+        compute='_compute_volume_unallocated',
+        readonly=True,
+        help='Volume not yet allocated to Load (m³)'
+    )
+
+    load_ids = fields.One2many(
+        'betong.load',
+        'sale_order_id',
+        string='Loads',
+        help='List of Loads linked to this SO'
+    )
+    
+    concrete_station_id = fields.Many2one(
+        'mrp.workcenter',
+        string='Station',
+        help="Concrete production station (Work Center). "
+             "Each Concrete SO must be assigned to a Station for production coordination."
+    )
+    
+    @api.depends('state', 'order_line.invoice_status')
+    def _compute_invoice_status(self):
+        """
+        Compute the invoice status of a SO. Possible statuses:
+        - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
+          invoice. This is also the default value if the conditions of no other status is met.
+        - to invoice: if any SO line is 'to invoice', the whole SO is 'to invoice'
+        - invoiced: if all SO lines are invoiced, the SO is invoiced.
+        - upselling: if all SO lines are invoiced or upselling, the status is upselling.
+        """
+        confirmed_orders = self.filtered(lambda so: so.state == 'sale' and so.so_type != 'betong')
+        if not confirmed_orders:
+            confirmed_orders = self.filtered(lambda so: so.state == 'done' and so.so_type == 'betong')
+        (self - confirmed_orders).invoice_status = 'no'
+        if not confirmed_orders:
+            return
+        lines_domain = [('is_downpayment', '=', False), ('display_type', '=', False)]
+        line_invoice_status_all = [
+            (order.id, invoice_status)
+            for order, invoice_status in self.env['sale.order.line']._read_group(
+                lines_domain + [('order_id', 'in', confirmed_orders.ids)],
+                ['order_id', 'invoice_status']
+            )
+        ]
+        for order in confirmed_orders:
+            line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
+            if order.state != 'sale':
+                order.invoice_status = 'no'
+            elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
+                if any(invoice_status == 'no' for invoice_status in line_invoice_status):
+                    # If only discount/delivery/promotion lines can be invoiced, the SO should not
+                    # be invoiceable.
+                    invoiceable_domain = lines_domain + [('invoice_status', '=', 'to invoice')]
+                    invoiceable_lines = order.order_line.filtered_domain(invoiceable_domain)
+                    special_lines = invoiceable_lines.filtered(
+                        lambda sol: not sol._can_be_invoiced_alone()
+                    )
+                    if invoiceable_lines == special_lines:
+                        order.invoice_status = 'no'
+                    else:
+                        order.invoice_status = 'to invoice'
+                else:
+                    order.invoice_status = 'to invoice'
+            elif line_invoice_status and all(invoice_status == 'invoiced' for invoice_status in line_invoice_status):
+                order.invoice_status = 'invoiced'
+            elif line_invoice_status and all(invoice_status in ('invoiced', 'upselling') for invoice_status in line_invoice_status):
+                order.invoice_status = 'upselling'
+            else:
+                order.invoice_status = 'no'
+
+    @api.depends('order_line', 'order_line.product_uom_qty', 'order_line.product_id')
+    def _compute_volume(self):
+        for order in self:
+            if order.so_type == 'betong':
+                betong_line = order.order_line.filtered(
+                    lambda l: l.product_id and l.product_id.is_betong_product
+                )
+                if betong_line:
+                    order.volume = betong_line[0].product_uom_qty
+                else:
+                    order.volume = 0.0
+            else:
+                order.volume = 0.0
+
+    @api.depends('load_ids', 'load_ids.volume')
+    def _compute_volume_allocated(self):
+        """Calculate total volume from linked Loads"""
+        for order in self:
+            order.volume_allocated = 0.0
+            # if order.so_type == 'betong':
+            #     order.volume_allocated = sum(order.load_ids.mapped('volume'))
+            # else:
+            #     order.volume_allocated = 0.0
+
+    @api.depends('volume', 'volume_allocated')
+    def _compute_volume_unallocated(self):
+        """Calculate unallocated volume = Volume - Allocated Volume"""
+        for order in self:
+            if order.so_type == 'betong':
+                order.volume_unallocated = order.volume - order.volume_allocated
+            else:
+                order.volume_unallocated = 0.0
+
+    @api.onchange('so_type')
+    def _onchange_so_type(self):
+        if self.so_type != 'betong':
+            self.trial_mix = False
+            self.has_pump = False
+            self.related_pump_so_id = False
+            
+    def action_confirm(self):
+        betong_orders = self.filtered(lambda o: o.so_type == 'betong')
+        normal_orders = self - betong_orders
+        if normal_orders:
+            super(SaleOrder, normal_orders).action_confirm()
+        for order in betong_orders:
+            if order.state == 'draft':
+                order.write({
+                    'state': 'sale',
+                })
+                order.message_post(body=_('Order has been confirmed (no MO/DO generated)'))
+        return True
+
+    def action_betong_set_planned(self):
+        for order in self:
+            order.state = 'planned'
+        return True
+
+    def action_betong_set_completed(self):
+        for order in self:
+            order.state = 'done'
+        return True
+    
+    def action_betong_set_dispatching(self):
+        for order in self:
+            order.state = 'dispatching'
+        return True
+
+    def action_cancel(self):
+        for order in self:
+            if order.so_type != 'betong':
+                continue
+            if order.state == 'dispatching':
+                tickets = self._get_related_tickets()
+                if tickets:
+                    completed_tickets = tickets.filtered(lambda t: t.state == 'completed')
+                    if completed_tickets:
+                        raise ValidationError(_('Cannot cancel SO when there are tickets in Completed status.'))
+                    valid_states = ['dum', 'remix_swapped']
+                    if not all(t.state in valid_states for t in tickets):
+                        raise ValidationError(_('Can only cancel SO when all tickets are in Dum/Remix&Swapped status.'))
+        return super().action_cancel()
+
+    def _get_related_tickets(self):
+        """Get list of tickets related to this SO"""
+        # Assuming ticket model exists with sale_order_id field
+        # If model doesn't exist, return empty recordset
+        try:
+            return self.env['betong.ticket'].search([('sale_order_id', '=', self.id)])
+        except:
+            return self.env['betong.ticket']  # Return empty recordset if model doesn't exist
+
+    def _check_ticket_loading_and_update_state(self):
+        """Check tickets and auto-transition to Dispatching if there's a Loading ticket"""
+        for order in self:
+            if order.so_type != 'betong' or order.state != 'planned':
+                continue
+            
+            tickets = self._get_related_tickets()
+            loading_tickets = tickets.filtered(lambda t: t.state == 'loading')
+            
+            if loading_tickets:
+                order.state = 'dispatching'
+                order.dispatching_date = fields.Datetime.now()
+
+    def _create_related_pump_so(self):
+        """Create Pump SO linked to Concrete SO"""
+        self.ensure_one()
+        
+        # Create new Pump SO with information inherited from Concrete SO
+        pump_so_vals = {
+            'partner_id': self.partner_id.id,
+            'partner_invoice_id': self.partner_invoice_id.id,
+            'partner_shipping_id': self.partner_shipping_id.id,
+            'pricelist_id': self.pricelist_id.id,
+            'payment_term_id': self.payment_term_id.id,
+            'so_type': 'bom',
+            'note': f'Pump SO linked to Concrete SO: {self.name}',
+        }
+        
+        pump_so = self.env['sale.order'].create(pump_so_vals)
+        return pump_so
+
