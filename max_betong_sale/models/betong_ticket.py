@@ -32,10 +32,11 @@ class BetongTicket(models.Model):
 
     @api.model_create_multi
     def create(self, vals):
-        ticket = super(BetongTicket, self).create(vals)
-        if ticket.state == 'loading' and ticket.sale_order_id:
-            ticket.sale_order_id._check_ticket_loading_and_update_state()
-        return ticket
+        tickets = super(BetongTicket, self).create(vals)
+        for ticker in tickets:
+            if ticket.state == 'loading' and ticket.sale_order_id:
+                ticket.sale_order_id._check_ticket_loading_and_update_state()
+        return tickets
 
     def write(self, vals):
         result = super(BetongTicket, self).write(vals)
