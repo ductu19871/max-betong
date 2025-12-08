@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
 
     so_type = fields.Selection(
         [
-            ('betong', 'Concrete'),
+            ('concrete', 'Concrete'),
             ('bom', 'Pump'),
             ('normal', 'Normal'),
         ],
@@ -58,29 +58,36 @@ class SaleOrder(models.Model):
     volume = fields.Float(
         string='Volume',
         compute='_compute_volume',
-        readonly=True,
-        help='Volume of Concrete product in the order (m³)'
+        help='Volume of Concrete product in the order (m³)',
+        store =True
     )
 
     volume_allocated = fields.Float(
         string='Allocated Volume',
         compute='_compute_volume_allocated',
-        readonly=True,
-        help='Total volume from linked Loads (m³)'
+        help='Total volume from linked Loads (m³)',
+        store =True
     )
 
     volume_unallocated = fields.Float(
         string='Unallocated Volume',
         compute='_compute_volume_unallocated',
-        readonly=True,
-        help='Volume not yet allocated to Load (m³)'
+        help='Volume not yet allocated to Load (m³)',
+        store =True
     )
 
     load_ids = fields.One2many(
-        'betong.load',
+        'concrete.load',
         'sale_order_id',
         string='Loads',
         help='List of Loads linked to this SO'
+    )
+    
+    ticket_ids = fields.One2many(
+        'concrete.ticket',
+        'sale_order_id',
+        string='Ticket',
+        help='List of Ticket linked to this SO'
     )
     
     concrete_station_id = fields.Many2one(
@@ -100,9 +107,9 @@ class SaleOrder(models.Model):
         - invoiced: if all SO lines are invoiced, the SO is invoiced.
         - upselling: if all SO lines are invoiced or upselling, the status is upselling.
         """
-        confirmed_orders = self.filtered(lambda so: so.state == 'sale' and so.so_type != 'betong')
+        confirmed_orders = self.filtered(lambda so: so.state == 'sale' and so.so_type != 'concrete')
         if not confirmed_orders:
-            confirmed_orders = self.filtered(lambda so: so.state == 'done' and so.so_type == 'betong')
+            confirmed_orders = self.filtered(lambda so: so.state == 'done' and so.so_type == 'concrete')
         (self - confirmed_orders).invoice_status = 'no'
         if not confirmed_orders:
             return
@@ -143,7 +150,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line', 'order_line.product_uom_qty', 'order_line.product_id')
     def _compute_volume(self):
         for order in self:
-            if order.so_type == 'betong':
+            if order.so_type == 'concrete':
                 betong_line = order.order_line.filtered(
                     lambda l: l.product_id and l.product_id.is_betong_product
                 )
@@ -168,20 +175,20 @@ class SaleOrder(models.Model):
     def _compute_volume_unallocated(self):
         """Calculate unallocated volume = Volume - Allocated Volume"""
         for order in self:
-            if order.so_type == 'betong':
+            if order.so_type == 'concrete':
                 order.volume_unallocated = order.volume - order.volume_allocated
             else:
                 order.volume_unallocated = 0.0
 
     @api.onchange('so_type')
     def _onchange_so_type(self):
-        if self.so_type != 'betong':
+        if self.so_type != 'concrete':
             self.trial_mix = False
             self.has_pump = False
             self.related_pump_so_id = False
             
     def action_confirm(self):
-        betong_orders = self.filtered(lambda o: o.so_type == 'betong')
+        betong_orders = self.filtered(lambda o: o.so_type == 'concrete')
         normal_orders = self - betong_orders
         if normal_orders:
             super(SaleOrder, normal_orders).action_confirm()
@@ -194,53 +201,35 @@ class SaleOrder(models.Model):
         return True
 
     def action_betong_set_planned(self):
-        for order in self:
-            order.state = 'planned'
-        return True
+        self.write({'state':'planned'})
 
     def action_betong_set_completed(self):
-        for order in self:
-            order.state = 'done'
-        return True
+        self.write({'state':'done'})
     
     def action_betong_set_dispatching(self):
-        for order in self:
-            order.state = 'dispatching'
-        return True
+        self.write({'state':'dispatching'})
 
     def action_cancel(self):
         for order in self:
-            if order.so_type != 'betong':
+            if order.so_type != 'concrete':
                 continue
             if order.state == 'dispatching':
-                tickets = self._get_related_tickets()
-                if tickets:
-                    completed_tickets = tickets.filtered(lambda t: t.state == 'completed')
+                if self.ticket_ids:
+                    completed_tickets = self.ticket_ids.filtered(lambda t: t.state == 'completed')
                     if completed_tickets:
                         raise ValidationError(_('Cannot cancel SO when there are tickets in Completed status.'))
                     valid_states = ['dum', 'remix_swapped']
-                    if not all(t.state in valid_states for t in tickets):
+                    if not all(t.state in valid_states for t in self.ticket_ids):
                         raise ValidationError(_('Can only cancel SO when all tickets are in Dum/Remix&Swapped status.'))
         return super().action_cancel()
 
-    def _get_related_tickets(self):
-        """Get list of tickets related to this SO"""
-        # Assuming ticket model exists with sale_order_id field
-        # If model doesn't exist, return empty recordset
-        try:
-            return self.env['betong.ticket'].search([('sale_order_id', '=', self.id)])
-        except:
-            return self.env['betong.ticket']  # Return empty recordset if model doesn't exist
 
     def _check_ticket_loading_and_update_state(self):
         """Check tickets and auto-transition to Dispatching if there's a Loading ticket"""
         for order in self:
-            if order.so_type != 'betong' or order.state != 'planned':
+            if order.so_type != 'concrete' or order.state != 'planned':
                 continue
-            
-            tickets = self._get_related_tickets()
-            loading_tickets = tickets.filtered(lambda t: t.state == 'loading')
-            
+            loading_tickets = order.ticket_ids.filtered(lambda t: t.state == 'loading')
             if loading_tickets:
                 order.state = 'dispatching'
                 order.dispatching_date = fields.Datetime.now()
