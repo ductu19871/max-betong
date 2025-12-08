@@ -31,9 +31,9 @@ class BetongTicket(models.Model):
     )
 
     @api.model_create_multi
-    def create(self, vals):
-        tickets = super(BetongTicket, self).create(vals)
-        for ticker in tickets:
+    def create(self, vals_list):
+        tickets = super(BetongTicket, self).create(vals_list)
+        for ticket in tickets:
             if ticket.state == 'loading' and ticket.sale_order_id:
                 ticket.sale_order_id._check_ticket_loading_and_update_state()
         return tickets

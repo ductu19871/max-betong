@@ -2,8 +2,8 @@
 <odoo>
     <data>
         <!-- Extend sale.order form view -->
-        <record id="sale_order_form_view_betong" model="ir.ui.view">
-            <field name="name">sale.order.form.betong</field>
+        <record id="sale_order_form_view_concrete" model="ir.ui.view">
+            <field name="name">sale.order.form.concrete</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
@@ -35,18 +35,18 @@
                     <field name="volume_unallocated" widget="float" invisible="so_type != 'concrete'"/>
               </xpath>
 			<xpath expr="//header" position="inside">
-			    <button name="action_betong_set_planned" 
+			    <button name="action_concrete_set_planned" 
 			            string="Planned" 
 			            type="object"
 			            class="oe_stat_button"
 			            invisible="so_type != 'concrete' or state not in ['sale']"/>
-			    <button name="action_betong_set_completed" 
+			    <button name="action_concrete_set_completed" 
 			            string="Completed" 
 			            type="object"
 			            class="oe_stat_button"
 			            invisible="so_type != 'concrete' or state not in ['planned','dispatching']"/>
 			    />
-			    <button name="action_betong_set_dispatching" 
+			    <button name="action_concrete_set_dispatching" 
 			            string="Dispatching" 
 			            type="object"
 			            class="oe_stat_button"
@@ -56,8 +56,8 @@
             </field>
         </record>
         
-        <record id="sale_order_tree_view_betong" model="ir.ui.view">
-            <field name="name">sale.order.tree.betong</field>
+        <record id="sale_order_tree_view_concrete" model="ir.ui.view">
+            <field name="name">sale.order.tree.concrete</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
@@ -67,8 +67,8 @@
             </field>
         </record>
         
-        <record id="sale_order_search_view_betong" model="ir.ui.view">
-            <field name="name">sale.order.search.betong</field>
+        <record id="sale_order_search_view_concrete" model="ir.ui.view">
+            <field name="name">sale.order.search.concrete</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">

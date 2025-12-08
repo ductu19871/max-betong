@@ -8,9 +8,9 @@ class SaleOrderLine(models.Model):
     def _onchange_product_id(self):
         result = []
         if (self.order_id and 
-            self.order_id.so_type == 'betong' and 
+            self.order_id.so_type == 'concrete' and 
             self.product_id and 
-            not self.product_id.is_betong_product):
+            not self.product_id.is_concrete_product):
             return {
                 'warning': {
                     'title': 'Warning',

@@ -113,8 +113,6 @@ class SaleOrder(models.Model):
         concrete_sale_orders = self - normal_sale_orders
         confirmed_orders = concrete_sale_orders.filtered(lambda so: so.state == 'done')
         (concrete_sale_orders - confirmed_orders).invoice_status = 'no'
-        ...
-        (self - confirmed_orders).invoice_status = 'no'
         if not confirmed_orders:
             return
         lines_domain = [('is_downpayment', '=', False), ('display_type', '=', False)]
@@ -156,7 +154,7 @@ class SaleOrder(models.Model):
         for order in self:
             if order.so_type == 'concrete':
                 betong_line = order.order_line.filtered(
-                    lambda l: l.product_id and l.product_id.is_betong_product
+                    lambda l: l.product_id and l.product_id.is_concrete_product
                 )
                 if betong_line:
                     order.volume = betong_line[0].product_uom_qty
@@ -170,7 +168,7 @@ class SaleOrder(models.Model):
         """Calculate total volume from linked Loads"""
         for order in self:
             order.volume_allocated = 0.0
-            # if order.so_type == 'betong':
+            # if order.so_type == 'concrete':
             #     order.volume_allocated = sum(order.load_ids.mapped('volume'))
             # else:
             #     order.volume_allocated = 0.0
@@ -204,13 +202,13 @@ class SaleOrder(models.Model):
                 order.message_post(body=_('Order has been confirmed (no MO/DO generated)'))
         return True
 
-    def action_betong_set_planned(self):
+    def action_concrete_set_planned(self):
         self.write({'state':'planned'})
 
-    def action_betong_set_completed(self):
+    def action_concrete_set_completed(self):
         self.write({'state':'done'})
     
-    def action_betong_set_dispatching(self):
+    def action_concrete_set_dispatching(self):
         self.write({'state':'dispatching'})
 
     def action_cancel(self):
