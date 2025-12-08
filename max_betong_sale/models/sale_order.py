@@ -218,12 +218,12 @@ class SaleOrder(models.Model):
             if order.so_type != 'concrete':
                 continue
             if order.state == 'dispatching':
-                if self.ticket_ids:
-                    completed_tickets = self.ticket_ids.filtered(lambda t: t.state == 'completed')
+                if order.ticket_ids:
+                    completed_tickets = order.ticket_ids.filtered(lambda t: t.state == 'completed')
                     if completed_tickets:
                         raise ValidationError(_('Cannot cancel SO when there are tickets in Completed status.'))
                     valid_states = ['dum', 'remix_swapped']
-                    if not all(t.state in valid_states for t in self.ticket_ids):
+                    if not all(t.state in valid_states for t in order.ticket_ids):
                         raise ValidationError(_('Can only cancel SO when all tickets are in Dum/Remix&Swapped status.'))
         return super().action_cancel()
 
