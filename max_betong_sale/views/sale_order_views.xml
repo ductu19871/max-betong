@@ -29,7 +29,7 @@
 	           		<button name="action_cancel" type="object" string="Cancel" 
 	           		invisible="state not in ['sale', 'planned', 'dispatching'] or not id or locked or so_type != 'concrete'" data-hotkey="x"/>
 	           </xpath>
-	           <xpath expr="//field[@name='note']" position="before">
+	           <xpath expr="//field[@name='note'][not(ancestor::field)]" position="before">
 	                <field name="volume" widget="float" invisible="so_type != 'concrete'"/>
                     <field name="volume_allocated" widget="float" invisible="so_type != 'concrete'"/>
                     <field name="volume_unallocated" widget="float" invisible="so_type != 'concrete'"/>
