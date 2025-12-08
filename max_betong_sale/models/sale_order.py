@@ -107,9 +107,13 @@ class SaleOrder(models.Model):
         - invoiced: if all SO lines are invoiced, the SO is invoiced.
         - upselling: if all SO lines are invoiced or upselling, the status is upselling.
         """
-        confirmed_orders = self.filtered(lambda so: so.state == 'sale' and so.so_type != 'concrete')
-        if not confirmed_orders:
-            confirmed_orders = self.filtered(lambda so: so.state == 'done' and so.so_type == 'concrete')
+        # apply origin logic to `normal` SO
+        normal_sale_orders = self.filtered(lambda so: so.so_type != 'concrete')
+        super(SaleOrder, normal_sale_orders)._compute_invoice_status()
+        concrete_sale_orders = self - normal_sale_orders
+        confirmed_orders = concrete_sale_orders.filtered(lambda so: so.state == 'done')
+        (concrete_sale_orders - confirmed_orders).invoice_status = 'no'
+        ...
         (self - confirmed_orders).invoice_status = 'no'
         if not confirmed_orders:
             return
