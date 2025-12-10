@@ -8,11 +8,11 @@
 		    <field name="arch" type="xml">
 		        <xpath expr="//label[@for='tag_ids']" position="before">
 		        	<group>
-                    	<field name="type" class="oe_inline"/>
+                    	<field name="vehicle_type" class="oe_inline"/>
                     </group>
 		        </xpath>
 		        <xpath expr="//field[@name='location']" position="after">
-                	<field name="station_id" invisible="type == 'normal'" required="type != 'normal'"/>
+                	<field name="station_id" invisible="vehicle_type not in ('concrete','pump')" required="vehicle_type in ('concrete','pump')"/>
 		        </xpath>
 		    </field>
 		</record>
