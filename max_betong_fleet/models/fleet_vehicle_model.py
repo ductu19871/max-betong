@@ -4,7 +4,6 @@ from odoo import models, fields
 class FleetVehicleModel(models.Model):
     _inherit = 'fleet.vehicle.model'
 
-    vehicle_type = fields.Selection([('car', 'Car'),
-                                     ('bike', 'Bike'),
+    vehicle_type = fields.Selection(selection_add=[
                                      ('concrete', 'Concrete'),
-                                     ('pump', 'Pump')], default='car', required=True)
+                                     ('pump', 'Pump')],ondelete={'concrete': 'set default', 'pump': 'set default'})
