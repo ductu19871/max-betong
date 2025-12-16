@@ -285,7 +285,7 @@ class SaleOrder(models.Model):
             'load_station_id': self.concrete_station_id.id,
             'delivery_address_id': self.partner_shipping_id.id,
             'mix_note': mix_note,
-            'comany_id':self.company_id.id,
+            'company_id':self.company_id.id,
         }
     
     def action_view_load(self):
