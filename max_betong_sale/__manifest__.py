@@ -11,6 +11,8 @@
                 'sale_mrp','max_betong_fleet','base_geolocalize'],
     'data': [
         #data
+        #wizard
+        "wizard/wizard_confirm_fields.xml",
         #view
         'views/sale_order_views.xml',
         'views/betong_load_views.xml',

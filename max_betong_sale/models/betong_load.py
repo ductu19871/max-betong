@@ -48,8 +48,8 @@ class ConcreteLoad(models.Model):
         help="Vehicle used to deliver the concrete."
     )
     vehicle_station_id = fields.Many2one(
-        related='vehicle_id.station_id',
-        string='Vehicle Station',store =True, readonly =False,
+        'mrp.workcenter',
+        string='Vehicle Station',
         help="Station associated with the selected vehicle. "
              "Automatically filled based on vehicle configuration."
     )
