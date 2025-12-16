@@ -1,0 +1,79 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* max_betong_fleet
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20251121\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-16 10:50+0000\n"
+"PO-Revision-Date: 2025-12-16 10:50+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: max_betong_fleet
+#: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle_model__vehicle_type__bike
+msgid "Bike"
+msgstr "Xe máy"
+
+#. module: max_betong_fleet
+#: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle_model__vehicle_type__car
+msgid "Car"
+msgstr "Xe hơi"
+
+#. module: max_betong_fleet
+#: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle_model__vehicle_type__concrete
+msgid "Concrete"
+msgstr "Bê tông"
+
+#. module: max_betong_fleet
+#: model:ir.model,name:max_betong_fleet.model_fleet_vehicle_model
+msgid "Model of a vehicle"
+msgstr "Mô hình xe"
+
+#. module: max_betong_fleet
+#: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle_model__vehicle_type__pump
+msgid "Pump"
+msgstr "Bơm"
+
+#. module: max_betong_fleet
+#: model:ir.model.fields,field_description:max_betong_fleet.field_fleet_vehicle__station_id
+msgid "Station"
+msgstr "Trạm"
+
+#. module: max_betong_fleet
+#: model:ir.model.fields,help:max_betong_fleet.field_fleet_vehicle__station_id
+msgid ""
+"The station to which the vehicle belongs.\n"
+"Used to determine the batching plant when the vehicle participates in concrete delivery."
+msgstr ""
+"Trạm mà xe trực thuộc.\n"
+"Dùng để xác định trạm trộn khi xe tham gia giao bê tông."
+
+#. module: max_betong_fleet
+#: model:ir.model,name:max_betong_fleet.model_fleet_vehicle
+msgid "Vehicle"
+msgstr "Mã xe"
+
+#. module: max_betong_fleet
+#: model:ir.model.fields,field_description:max_betong_fleet.field_fleet_vehicle__vehicle_type
+#: model:ir.model.fields,field_description:max_betong_fleet.field_fleet_vehicle_model__vehicle_type
+msgid "Vehicle Type"
+msgstr "Loại xe"
+
+#. module: max_betong_fleet
+#: model:ir.model.fields,help:max_betong_fleet.field_fleet_vehicle__vehicle_type
+msgid ""
+"Vehicle classification.\n"
+"Concrete Truck: used for transporting concrete, managed separately based on concrete logistics.\n"
+"Pump Truck: used for concrete pumping services, managed separately based on pump operations.\n"
+"Standard Vehicle: normal vehicle following the default workflow."
+msgstr ""
+"Phân loại xe\n"
+"Xe Bê Tông: dùng vận chuyển bê tông, quản lý riêng theo nghiệp vụ vận chuyển bê tông.\n"
+"Xe Bơm: dùng cho dịch vụ bơm bê tông, quản lý riêng theo nghiệp vụ bơm.\n"
+"Xe Thông Thường: xe tiêu chuẩn, theo luồng mặc định."

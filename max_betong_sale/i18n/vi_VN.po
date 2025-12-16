@@ -1,0 +1,697 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* max_betong_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20251121\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-16 10:52+0000\n"
+"PO-Revision-Date: 2025-12-16 17:57+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+msgid "/&gt;"
+msgstr ""
+
+#. module: max_betong_sale
+#: model:res.groups,name:max_betong_sale.group_betong_load_admin
+msgid "Administrator"
+msgstr "Quản trị"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__volume_allocated
+msgid "Allocated Volume"
+msgstr "Khối lượng đã chia Load"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+msgid "Are you sure you've selected the correct information above?"
+msgstr "Bạn có chắc chắn mình đã chọn đúng thông tin không?"
+
+#. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Danh mục vật tư"
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "Can only cancel SO when all tickets are in Dum/Remix&Swapped status."
+msgstr ""
+"Chỉ có thể hủy SO khi tất cả ticket đều ở trạng thái Dum/Remix Swapped."
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+msgid "Cancelled"
+msgstr "Đã hủy"
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "Cannot cancel SO when there are tickets in Completed status."
+msgstr "Không thể hủy đơn đặt hàng khi có ticket ở trạng thái Đã hoàn thành."
+
+#. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_res_company
+msgid "Companies"
+msgstr "Công ty"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_load__state__completed
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__completed
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__sale_order__state__done
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Completed"
+msgstr "Đã hoàn tất"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
+msgid "Compute Localization"
+msgstr "Vị trí địa lý"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
+msgid "Compute based on address"
+msgstr "Tính toán dựa trên địa chỉ"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__sale_order__so_type__concrete
+msgid "Concrete"
+msgstr "Bê tông"
+
+#. module: max_betong_sale
+#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_coordination_root
+msgid "Concrete Coordination"
+msgstr "Điều phối bê tông"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_concrete_load
+#: model:ir.model,name:max_betong_sale.model_concrete_load
+#: model:ir.module.category,name:max_betong_sale.module_category_betong_load
+#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_load
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.res_config_settings_view_form_inherit_max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_tree
+msgid "Concrete Load"
+msgstr "Load"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.res_config_settings_view_form_inherit_max_betong_sale
+msgid "Concrete Load Setting"
+msgstr "Điều phối bê tông"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_res_company__concrete_load_volume
+#: model:ir.model.fields,field_description:max_betong_sale.field_res_config_settings__concrete_load_volume
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.res_config_settings_view_form_inherit_max_betong_sale
+msgid "Concrete Load Volume"
+msgstr "Khối lượng cố định chia Load"
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/res_config_settings.py:0
+#, python-format
+msgid "Concrete Load Volume must be greater than 0."
+msgstr "Khối lượng Load phải lơn hơn 0."
+
+#. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_concrete_ticket
+msgid "Concrete Ticket"
+msgstr "Ticket bê tông"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__concrete_station_id
+msgid ""
+"Concrete production station (Work Center). Each Concrete SO must be "
+"assigned to a Station for production coordination."
+msgstr ""
+"Trạm sản xuất Bê tông (Work Center).\n"
+"Mỗi SO Bê Tông phải gán cho một Trạm để điều phối sản xuất."
+
+#. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr "Cài đặt cấu hình"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_wizard_confirm_fields
+msgid "Confirm Selection"
+msgstr "Xác nhận chọn"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_wizard_confirm_fields
+msgid "Confirm Vehicle - Station"
+msgstr "Cập nhật Mã xe & Trạm của xe"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__delivery_address_id
+msgid "Construction Site Address"
+msgstr "Địa chỉ công trường"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Create Date"
+msgstr "Ngày tạo"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__create_uid
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__create_uid
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__create_uid
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__create_date
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__create_date
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__create_date
+msgid "Created on"
+msgstr "Ngày tạo"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+msgid "Date Dispatching"
+msgstr "Ngày điều phối"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Delivery Address"
+msgstr "Địa chỉ công trường"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__sale_order__state__dispatching
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+msgid "Dispatching"
+msgstr "Đang điều phối"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__dispatching_date
+msgid "Dispatching Date"
+msgstr "Ngày điều phối"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__display_name
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__display_name
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "Do not create two products in this type of concrete."
+msgstr "Không thể tạo 2 sản phẩm cho đơn hàng loại Bê tông"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_load__state__draft
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__draft
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Draft"
+msgstr "Nháp"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__dum
+msgid "Dum"
+msgstr ""
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
+msgid "Geo Location"
+msgstr "Vị trí địa lý"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Group By"
+msgstr "Nhóm theo"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__has_pump
+msgid "Has Pump"
+msgstr "Có bơm"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__id
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__id
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__id
+msgid "ID"
+msgstr ""
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__write_uid
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__write_uid
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__write_uid
+msgid "Last Updated by"
+msgstr "Lần cập nhật cuối bởi"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__write_date
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__write_date
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__write_date
+msgid "Last Updated on"
+msgstr "Lần cập nhật cuối vào"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
+msgid "Lat :"
+msgstr "Vĩ độ:"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__load_ids
+msgid "List of Loads linked to this SO"
+msgstr "Danh sách Load liên kết với SO này"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__ticket_ids
+msgid "List of Ticket linked to this SO"
+msgstr "Danh sách ticket liên kết đến SO này"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
+msgid "Load"
+msgstr ""
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__name
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
+msgid "Load Code"
+msgstr "Mã load"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__load_station_id
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Load Station"
+msgstr "Trạm của Load"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
+msgid "Load Vehicle"
+msgstr "Cập nhật mã & trạm xe"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__count_load
+msgid "Load count"
+msgstr "Số lượng Load"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_concrete_load__volume
+msgid "Load volume must be greater than 0."
+msgstr "Khối lượng Load phải lớn hơn 0"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__loading
+msgid "Loading"
+msgstr "Đang tải"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__load_ids
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+msgid "Loads"
+msgstr "Load"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
+msgid "Long:"
+msgstr "Kinh độ:"
+
+#. module: max_betong_sale
+#: model:res.groups,name:max_betong_sale.group_betong_load_manager
+msgid "Manager"
+msgstr "Quản lý"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
+msgid "Mark as Completed"
+msgstr "Đánh dấu hoàn tất"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__has_pump
+msgid ""
+"Mark if this Concrete order includes Pump service. Used to distinguish "
+"Concrete orders with and without Pump. Allows quick filtering of orders "
+"with Pump in the order list."
+msgstr ""
+"Đánh dấu nếu đơn hàng Bê tông này có kèm dịch vụ Bơm.\n"
+"Dùng để phân biệt đơn hàng Bê tông có Bơm và không có Bơm.\n"
+"Cho phép lọc nhanh các đơn có Bơm trong danh sách đơn hàng."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__trial_mix
+msgid ""
+"Mark if this Concrete order is a trial mix order. Used to distinguish trial "
+"orders from commercial orders. Allows quick filtering of trial mix orders "
+"in the order list."
+msgstr ""
+"Đánh dấu nếu đơn hàng Bê tông này là đơn trộn thử (trial mix).\n"
+"Dùng để phân biệt đơn thử nghiệm với đơn thương mại.\n"
+"Cho phép lọc nhanh các đơn trộn thử trong danh sách đơn hàng."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__mix_note
+msgid "Mix Note"
+msgstr "Ghi chú cấp phối"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_concrete_load__mix_note
+msgid "Mixing note obtained from the Bill of Materials of the product."
+msgstr "Ghi chú cấp phối được lấy từ BOM của sản phẩm"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__sale_order__so_type__normal
+msgid "Normal"
+msgstr "Thông thường"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_bom__note
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.mrp_bom_form_view_inherit_max_betong_sale
+msgid "Note"
+msgstr "Ghi chú"
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/betong_load.py:0
+#, python-format
+msgid "Only Loads in Draft can be deleted."
+msgstr "Chỉ xóa được Load ở trạng thái Nháp."
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "Order has been confirmed (no MO/DO generated)"
+msgstr "Đơn hàng đã được xác nhận (chưa tạo MO / DO)"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__sale_order__state__planned
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+msgid "Planned"
+msgstr "Đã lên kế hoạch"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__product_id
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__sale_order__so_type__bom
+msgid "Pump"
+msgstr "Bơm"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__related_pump_so_id
+msgid ""
+"Pump order automatically created when Has Pump is checked and moved to "
+"Planned"
+msgstr ""
+"SO bơm được tạo tự động khi tùy chọn \"Có bơm\" được chọn và chuyển sang "
+"trạng thái \"Đã lên kế hoạch"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
+msgid "Refresh"
+msgstr "Tải lại"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
+msgid "Refresh Localization"
+msgstr "Tải lại vị trí địa lý"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__related_pump_so_id
+msgid "Related Pump SO"
+msgstr "Liên kết đến SO bơm"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__remix_swapped
+msgid "Remix&Swapped"
+msgstr ""
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+msgid "SO Concrete"
+msgstr "SO Bê tông"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__sale_concrete_id
+msgid "SO Concrete Origin"
+msgstr "SO Bê tông gốc"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+msgid "SO Pumb"
+msgstr "SO bơm"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__so_type
+msgid "SO Type"
+msgstr "Loại SO"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+msgid "Sale"
+msgstr "Bán hàng"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__sale_order_id
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__sale_order_id
+msgid "Sale Order"
+msgstr "SO"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__so_type
+msgid ""
+"Sale Order Type\n"
+"Concrete SO: for concrete products, managed separately according to "
+"Concrete business.\n"
+"Pump SO: for concrete pumping services, managed separately according to "
+"Pump business.\n"
+"Normal SO: standard sales order, follows default Odoo flow."
+msgstr ""
+"Loại Đơn bán hàng (SO)\n"
+"SO Bê Tông: dùng cho sản phẩm bê tông, quản lý riêng theo nghiệp vụ Bê "
+"tông.\n"
+"SO Bơm: dùng cho dịch vụ bơm bê tông, quản lý riêng theo nghiệp vụ bơm.\n"
+"SO Thông Thường: đơn hàng bán hàng tiêu chuẩn, theo luồng Odoo mặc định."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__sale_pumb_ids
+msgid "Sale Pumbs"
+msgstr "SO bơm"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Sale order"
+msgstr "SO"
+
+#. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+msgid "Select Vehicle - Station"
+msgstr "Chọn Trạm của xe"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+msgid "Send"
+msgstr "Báo giá đã gửi"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
+msgid "Set to Draft"
+msgstr "Đặt về nháp"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_concrete_load_config_settings
+#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_load_setting
+msgid "Settings"
+msgstr "Cài đặt"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+msgid "Split Load"
+msgstr "Chia Load"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__state
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "State"
+msgstr "Trạng thái"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__concrete_station_id
+msgid "Station"
+msgstr "Trạm"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_concrete_load__vehicle_station_id
+msgid ""
+"Station associated with the selected vehicle. Automatically filled based on "
+"vehicle configuration."
+msgstr ""
+"Trạm gắn với xe được chọn.\n"
+"Tự động lấy từ thông tin trạm của xe\n"
+"Người dùng có thể chọn lại từ danh sách trạm đang hoạt động."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__state
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__state
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.res_config_settings_view_form_inherit_max_betong_sale
+msgid ""
+"The default weight value is used to divide the load for concrete orders. "
+"The value must be greater than 0."
+msgstr ""
+"Giá trị khối lượng mặc định dùng để chia Load cho các đơn hàng loại Bê "
+"tông. Giá trị phải lớn hơn 0."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_concrete_load__load_station_id
+msgid ""
+"The station handling this Load, inherited from the Sale Order.\n"
+"Automatically assigned when creating Load from SO.\n"
+"Users may change it manually from available stations."
+msgstr ""
+"Trạm thực hiện Load, thừa hưởng từ đơn hàng SO.\n"
+"Khi tạo Load từ SO, hệ thống tự động gán trạm theo SO.\n"
+"Người dùng có thể chọn lại từ danh sách trạm đang hoạt động."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__ticket_ids
+msgid "Ticket"
+msgstr ""
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__name
+msgid "Ticket Name"
+msgstr "Tên Ticket"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__dispatching_date
+msgid "Time when moved to Dispatching status"
+msgstr "Thời điểm chuyển sang trạng thái Đang điều phối"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__volume_allocated
+msgid "Total volume from linked Loads (m³)"
+msgstr "Tổng khối lượng đã chia load (m³)"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__trial_mix
+msgid "Trial Mix"
+msgstr "Trộn thử"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
+msgid "Type to find a product..."
+msgstr "Nhập để tìm kiếm sản phẩm..."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__volume_unallocated
+msgid "Unallocated Volume"
+msgstr "Khối lượng chưa chia Load"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__product_uom
+msgid "UoM"
+msgstr "ĐVT"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
+msgid "Updated on:"
+msgstr "Cập nhật vào:"
+
+#. module: max_betong_sale
+#: model:res.groups,name:max_betong_sale.group_betong_load_user
+msgid "User"
+msgstr "Người dùng"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__vehicle_id
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__vehicle_id
+msgid "Vehicle"
+msgstr "Mã xe"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__vehicle_station_id
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__vehicle_station_id
+msgid "Vehicle Station"
+msgstr "Trạm của xe"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_concrete_load__vehicle_id
+msgid "Vehicle used to deliver the concrete."
+msgstr "Xe thực hiện giao bê tông."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__volume
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__volume
+msgid "Volume"
+msgstr "Khối lượng"
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/betong_load.py:0
+#, python-format
+msgid "Volume must be greater than 0."
+msgstr "Khối lượng phải lớn hơn 0."
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__volume_unallocated
+msgid "Volume not yet allocated to Load (m³)"
+msgstr "Khối lượng chưa chia load (m³)"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__volume
+msgid "Volume of Concrete product in the order (m³)"
+msgstr "Khối lượng của sản phẩm bê tông trong đơn hàng (m³)"
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "volume unallocated must be greater than 0."
+msgstr "Khối lượng chưa chia load phải lớn hơn 0."
