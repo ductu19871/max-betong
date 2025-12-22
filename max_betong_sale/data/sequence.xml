@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo noupdate='0'>
+    
+    <record id="seq_betong_load" model="ir.sequence">
+        <field name="name">Seq Concrete Load</field>
+        <field name="code">seq.betong.load</field>
+        <field name="prefix">L%(year)s%(month)s%(day)s-</field>
+        <field eval="6" name="padding"/>
+    </record>
+</odoo>
+

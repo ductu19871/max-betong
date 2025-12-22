@@ -12,9 +12,8 @@ class ProductTemplate(models.Model):
         help='Mark if this product is Concrete, managed separately according to Concrete product business.'
     )
 
-    concrete_lifespan = fields.Float(
+    concrete_lifespan = fields.Integer(
         string='Concrete Lifespan',
-        digits=(16, 2),
         help='Time concrete can be used after mixing (in minutes). '
              'Used for quality control and delivery coordination. '
              'If transport or waiting time exceeds this value, concrete quality is not guaranteed.'

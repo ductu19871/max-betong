@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <record id="mrp_production_form_view_inherit_max_betong_sale" model="ir.ui.view">
+        <field name="name">mrp.production.form.view.inherit.max.betong.sale</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+			<xpath expr="//header" position="inside">
+			    <button name="action_on_hold" 
+			            string="On Hold" 
+			            type="object"
+			            class="oe_stat_button"
+			            invisible="state == 'on_hold'"
+			            confirm="Are you sure you want to switch on hold? Switching on hold will not revert to the previous state."/>
+			</xpath>
+            <xpath expr="//group[@name='group_extra_info']" position="after">
+            	<group>
+					<field name="mix_note"/>
+	                <field name="load_id" invisible='1'/>
+	                <field name="sale_order_id"/>
+	                <field name="vehicle_id"/>
+	                <field name="vehicle_station_id"/>
+	                <field name="delivery_address_id"/>
+                </group>
+                <group>
+					<field name="assigned_datetime"/>
+	                <field name="loading_datetime"/>
+	                <field name="loaded_datetime"/>
+	                <field name="leave_datetime"/>
+	                <field name="distance_km"/>
+				</group>
+            </xpath>
+            <xpath expr="//field[@name='components_availability']" position="before">
+            	<field name="eta"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="view_mrp_production_filter_inherit_betong" model="ir.ui.view">
+        <field name="name">view_mrp_production_filter_inherit_betong</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+            	<field name="sale_order_id"/>
+            	<field name="vehicle_station_id"/>
+            	<field name="vehicle_id"/>
+            	<field name="eta"/>
+            	<field name="delivery_address_id"/>
+            	<field name="create_date"/>
+            	<field name="create_uid"/>
+            	<field name="user_id"/>
+            	<filter string="Draft" name="state_draft"
+				        domain="[('state','=','draft')]"/>
+				
+				<filter string="Assigned" name="state_assigned"
+				        domain="[('state','=','assigned')]"/>
+				
+				<filter string="Loading" name="state_loading"
+				        domain="[('state','=','loading')]"/>
+				
+				<filter string="Loaded" name="state_loaded"
+				        domain="[('state','=','loaded')]"/>
+				
+				<filter string="Leave" name="state_leave"
+				        domain="[('state','=','leave')]"/>
+				
+				<filter string="Arrived" name="state_arrived"
+				        domain="[('state','=','arrived')]"/>
+				
+				<filter string="Unloading" name="state_unloading"
+				        domain="[('state','=','unloading')]"/>
+				
+				<filter string="Return" name="state_return"
+				        domain="[('state','=','return')]"/>
+				
+				<filter string="Completed" name="state_completed"
+				        domain="[('state','=','completed')]"/>
+				
+				<filter string="On Hold" name="state_on_hold"
+				        domain="[('state','=','on_hold')]"/>
+				
+				<filter string="Dump" name="state_dump"
+				        domain="[('state','=','dump')]"/>
+				
+				<filter string="Remix &amp; Swapped" name="state_remix"
+				        domain="[('state','=','remix')]"/>
+				
+				<filter string="Cancelled" name="state_cancel"
+				        domain="[('state','=','cancel')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='date']" position="after">
+            	<filter string="Sales Order"
+            			name="sale_order"
+			            context="{'group_by':'sale_order_id'}"/>
+			    <filter string="Station"
+			    		name="plant"
+			            context="{'group_by':'vehicle_station_id'}"/>
+			    <filter string="Vehicle"
+			    		name="vehicle"
+			            context="{'group_by':'vehicle_id'}"/>
+			    <filter string="Construction Site"
+			    		name="construction"
+			            context="{'group_by':'delivery_address_id'}"/>
+			    <filter string="ETA"
+			    		name="eta"
+			            context="{'group_by':'eta'}"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="mrp_production_tree_view_inherit_max_betong_sale" model="ir.ui.view">
+        <field name="name">mrp.production.tree.view.inherit.max.betong.sale</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+            	<field name="eta" optional="show"/>
+            	<field name="vehicle_station_id" optional="show"/>
+            	<field name="vehicle_id" optional="show"/>
+            	<field name="sale_order_id" optional="show"/>
+            	<field name="create_date" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    
+   <record id="mrp.mrp_production_action" model="ir.actions.act_window">
+        <field name="name">Ticket</field>
+    </record>
+    
+    <menuitem action="mrp.mrp_production_action"
+            id="mrp.menu_mrp_production_action"
+            parent="mrp.menu_mrp_manufacturing"
+            name="Ticket"
+            sequence="1"/>
+    
+</odoo>

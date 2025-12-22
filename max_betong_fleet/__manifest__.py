@@ -5,7 +5,7 @@
     'category': 'fleet',
     'description': """""",
     'author': 'Maxsolution',
-    'depends': ['fleet','max_betong_sale'],
+    'depends': ['fleet','mrp'],
     'data': [
         'views/fleet_vehicle_views.xml'
     ],
