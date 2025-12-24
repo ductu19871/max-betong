@@ -227,11 +227,10 @@ class SaleOrder(models.Model):
         if normal_orders:
             super(SaleOrder, normal_orders).action_confirm()
         for order in betong_orders:
-            if order.state == 'draft':
-                order.write({
-                    'state': 'sale',
-                })
-                order.message_post(body=_('Order has been confirmed (no MO/DO generated)'))
+            order.write({
+                'state': 'sale',
+            })
+            order.message_post(body=_('Order has been confirmed (no MO/DO generated)'))
         return True
 
     def action_betong_set_planned(self):
