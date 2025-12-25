@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- MRP Production State Form View -->
+    <record model="ir.ui.view" id="mrp_production_state_view_form">
+        <field name="model">mrp.production.state</field>
+        <field name="arch" type="xml">
+            <form string="State Mapping">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="e.g., Preparing Materials"/>
+                            <field name="code" placeholder="e.g., preparing"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="original_state" widget="radio" options="{'horizontal': true}"/>
+                            <field name="description" placeholder="Description of this state..."/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MRP Production State Tree View -->
+    <record model="ir.ui.view" id="mrp_production_state_view_tree">
+        <field name="model">mrp.production.state</field>
+        <field name="arch" type="xml">
+            <tree string="State Mappings" decoration-muted="active == False">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="original_state"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- MRP Production State Search View -->
+    <record model="ir.ui.view" id="mrp_production_state_view_search">
+        <field name="model">mrp.production.state</field>
+        <field name="arch" type="xml">
+            <search string="State Mappings">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="original_state"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('original_state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('original_state', '=', 'confirmed')]"/>
+                <filter string="In Progress" name="progress" domain="[('original_state', '=', 'progress')]"/>
+                <filter string="To Close" name="to_close" domain="[('original_state', '=', 'to_close')]"/>
+                <filter string="Done" name="done" domain="[('original_state', '=', 'done')]"/>
+                <filter string="Cancelled" name="cancel" domain="[('original_state', '=', 'cancel')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for MRP Production State -->
+    <record model="ir.actions.act_window" id="action_mrp_production_state">
+        <field name="name">State Mappings</field>
+        <field name="res_model">mrp.production.state</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new State Mapping
+            </p>
+            <p>
+                Define custom dynamic states for manufacturing orders and map them to original states.
+                This allows you to customize the workflow and status tracking for production orders.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_mrp_production_state"
+              name="Stages"
+              parent="mrp.menu_mrp_configuration"
+              action="action_mrp_production_state"
+              sequence="99"/>
+</odoo>
+
