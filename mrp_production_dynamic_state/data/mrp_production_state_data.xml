@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default States Mapping for MRP Production -->
+        
+        <!-- Draft State -->
+        <record id="mrp_production_state_draft" model="mrp.production.state">
+            <field name="name">Draft</field>
+            <field name="code">draft</field>
+            <field name="original_state">draft</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+            <field name="description">Manufacturing order is in draft state</field>
+        </record>
+
+        <!-- Confirmed State -->
+        <record id="mrp_production_state_confirmed" model="mrp.production.state">
+            <field name="name">Confirmed</field>
+            <field name="code">confirmed</field>
+            <field name="original_state">confirmed</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+            <field name="description">Manufacturing order is confirmed</field>
+        </record>
+
+        <!-- In Progress State -->
+        <record id="mrp_production_state_progress" model="mrp.production.state">
+            <field name="name">In Progress</field>
+            <field name="code">progress</field>
+            <field name="original_state">progress</field>
+            <field name="sequence">30</field>
+            <field name="active">True</field>
+            <field name="description">Manufacturing order is in progress</field>
+        </record>
+
+        <!-- To Close State -->
+        <record id="mrp_production_state_to_close" model="mrp.production.state">
+            <field name="name">To Close</field>
+            <field name="code">to_close</field>
+            <field name="original_state">to_close</field>
+            <field name="sequence">40</field>
+            <field name="active">True</field>
+            <field name="description">Manufacturing order is ready to be closed</field>
+        </record>
+
+        <!-- Done State -->
+        <record id="mrp_production_state_done" model="mrp.production.state">
+            <field name="name">Done</field>
+            <field name="code">done</field>
+            <field name="original_state">done</field>
+            <field name="sequence">50</field>
+            <field name="active">True</field>
+            <field name="description">Manufacturing order is completed</field>
+        </record>
+
+        <!-- Cancelled State -->
+        <record id="mrp_production_state_cancel" model="mrp.production.state">
+            <field name="name">Cancelled</field>
+            <field name="code">cancel</field>
+            <field name="original_state">cancel</field>
+            <field name="sequence">60</field>
+            <field name="active">True</field>
+            <field name="description">Manufacturing order is cancelled</field>
+        </record>
+
+    </data>
+</odoo>
+
