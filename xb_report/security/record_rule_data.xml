@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="report_template_config_rule_multi_company" model="ir.rule">
+        <field name="name">Report Template Config multi-company</field>
+        <field name="model_id" ref="xb_report.model_report_template_config"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+</odoo>

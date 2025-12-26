@@ -1,0 +1,2 @@
+py3o.template==0.10.0
+genshi==0.7.7
