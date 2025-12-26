@@ -9,8 +9,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <field name="so_type"/>
-                    <field name="trial_mix" invisible="so_type != 'concrete'" readonly="has_pump" force_save="1"/>
-                    <field name="has_pump" invisible="so_type != 'concrete'" readonly="trial_mix" force_save="1"/>
+                    <field name="trial_mix" invisible="so_type != 'concrete'" 
+                    readonly="has_pump or state in ('sale','planned','dispatching','done')" force_save="1"/>
+                    <field name="has_pump" invisible="so_type != 'concrete'" 
+                    readonly="trial_mix or state in ('sale','planned','dispatching','done')" force_save="1"/>
                     <field name="sale_concrete_id" invisible="so_type != 'bom'"/>
                     <field name="sale_pumb_ids" invisible="1"/>
                 </xpath>
@@ -89,6 +91,12 @@
 	                invisible="so_type != 'bom' or not sale_concrete_id">
                 </button>
 			 </div>
+			 <xpath expr="//field[@name='order_line']//tree//field[@name='qty_delivered']" position="attributes">
+	           		<attribute name="column_invisible">parent.state not in ('sale','planned','dispatching','done')</attribute>
+             </xpath>
+             <xpath expr="//field[@name='order_line']//tree//field[@name='qty_invoiced']" position="attributes">
+	           		<attribute name="column_invisible">parent.state not in ('sale','planned','dispatching','done')</attribute>
+             </xpath>
 			 <xpath expr="//field[@name='order_line']//tree//field[@name='product_template_id']" position="attributes">
 	           		<attribute name="column_invisible">parent.so_type == 'concrete'</attribute>
              </xpath>
