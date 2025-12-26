@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inh_act_report_xml_view" model="ir.ui.view">
+        <field name="name">ir.actions.report.extended</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_view"/>
+        <field name="arch" type="xml">
+            <field name="attachment_use" position="before">
+                <field name="template_id" invisible="report_type != 'controller'" required="report_type == 'controller'" domain="[('mimetype','=','application/vnd.oasis.opendocument.text')]" context="{'form_view_ref': 'base.view_attachment_form'}"/>
+                <field name="template_multi_doc" invisible="report_type != 'controller'" required="report_type == 'controller'"/>
+                <field name="output_file" invisible="report_type != 'controller'" required="1"/>
+                <field name="password_name" invisible="report_type != 'controller' or output_file != 'pdf'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
