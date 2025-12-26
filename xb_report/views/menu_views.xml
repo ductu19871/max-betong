@@ -1,0 +1,7 @@
+<odoo>
+
+    <menuitem id="menu_report_contract_template_parameter" name="Report Template Config" parent="base.menu_administration" sequence="20"/>
+    <menuitem id="menu_parameter" name="Parameter" parent="menu_report_contract_template_parameter" action="action_config_template_report_parameter" sequence="10"/>
+    <menuitem id="menu_config" name="Config" parent="menu_report_contract_template_parameter" action="action_config_template_report" sequence="20"/>
+    
+</odoo>

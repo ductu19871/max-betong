@@ -1,0 +1,1 @@
+- pfunction for vietnamese string

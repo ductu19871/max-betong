@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="email_template_view_form_mailmerge_template" model="ir.ui.view">
+        <field name="name">mail template with mailmerge</field>
+        <field name="model">mail.template</field>
+        <field name="inherit_id" ref="mail.email_template_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="mailmerge_template_id"/>
+                <field name="mailmerge_output_type"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

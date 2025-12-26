@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_group_system_ir_actions_report_execution,access_group_system_ir_actions_report_execution,model_ir_actions_report_execution,base.group_system,1,1,1,1
+access_group_system_report_template_union,access_group_system_report_template_union,model_report_template_union,base.group_system,1,1,1,1
+access_report_template_config,report_template_config,model_report_template_config,base.group_user,1,1,1,1
+access_report_template_parameter,report_template_parameter,model_report_template_parameter,base.group_user,1,1,1,1
