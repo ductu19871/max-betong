@@ -20,6 +20,9 @@ and status tracking for production orders.
         'views/mrp_production_state_views.xml',
         'views/mrp_production_views.xml',
     ],
+    'depends': [
+        'mrp',
+    ],
     'installable' : True,
     'application' : False,
     'auto_install' : False,
