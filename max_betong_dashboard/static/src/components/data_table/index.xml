@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Data Table Header -->
+    <t t-name="max_betong_dashboard.DataTableHeader">
+        <tr>
+            <t t-foreach="props.columns" t-as="col" t-key="col.key">
+                <th class="column-header" 
+                    t-att-class="{'sortable': isSortable(col.key), 'text-center': col.textCenter}"
+                    t-att-data-column-key="col.key"
+                    t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px; position: relative;'"
+                    t-att-draggable="true"
+                    t-on-dragstart="(ev) => this.onDragStart(ev, col.key)"
+                    t-on-dragover.prevent="(ev) => ev.preventDefault()"
+                    t-on-drop="(ev) => this.onDrop(ev, col.key)"
+                    t-on-click="() => this.onColumnClick(col.key)">
+                    <div class="column-header-content">
+                        <span class="column-label">
+                            <t t-esc="col.label"/>
+                            <t t-if="isSortable(col.key)">
+                                <i t-att-class="getSortIcon(col.key)" class="sort-icon"></i>
+                            </t>
+                        </span>
+                    </div>
+                    <div class="column-resize-handle" 
+                         t-on-mousedown.stop="(ev) => this.onResizeStart(ev, col.key)"
+                         t-att-title="getResizeTitle()"></div>
+                </th>
+            </t>
+        </tr>
+    </t>
+
+    <!-- Empty State -->
+    <t t-name="max_betong_dashboard.EmptyState">
+        <tr>
+            <td t-att-colspan="props.colspan" class="empty-state">
+                <i t-att-class="props.icon + ' icon-xl'"></i>
+                <p><t t-esc="props.message"/></p>
+            </td>
+        </tr>
+    </t>
+
+</templates>
+

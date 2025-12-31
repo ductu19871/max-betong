@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard.SearchInput">
+        <div t-att-class="'search-input ' + (props.size === 'small' ? 'search-small' : '')">
+            <i t-att-class="'fa fa-search ' + (props.size === 'small' ? 'icon-sm' : '')"></i>
+            <input type="text" 
+                   t-att-placeholder="props.placeholder"
+                   t-att-value="props.value"
+                   t-on-input="onInputChange"/>
+        </div>
+    </t>
+
+</templates>
+

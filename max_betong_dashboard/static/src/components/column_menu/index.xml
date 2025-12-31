@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard.ColumnMenu">
+        <div t-if="props.show" 
+             class="column-menu"
+             t-att-style="style"
+             t-on-click.stop="">
+            <div class="column-menu-header">
+                <h4><t t-esc="getCustomizeColumnsText()"/></h4>
+                <button class="column-menu-close" t-on-click.stop="close">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="column-menu-body">
+                <t t-foreach="props.columns" t-as="col" t-key="col.key">
+                    <div class="column-menu-item">
+                        <label class="column-checkbox">
+                            <input type="checkbox" 
+                                   t-att-checked="col.visible"
+                                   t-on-change.stop="() => this.toggleColumn(col.key)"/>
+                            <span><t t-esc="col.label"/></span>
+                        </label>
+                    </div>
+                </t>
+            </div>
+            <div class="column-menu-footer">
+                <button class="btn btn-secondary btn-sm" t-on-click.stop="reset">
+                    <t t-esc="getResetToDefaultText()"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>
+

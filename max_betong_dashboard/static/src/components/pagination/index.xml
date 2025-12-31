@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard.DashboardPagination">
+        <div class="pagination-container" t-if="showPagination">
+            <div class="pagination-info">
+                <t t-esc="getPaginationInfoText()"/>
+            </div>
+            <div class="pagination-buttons">
+                <!-- First Page -->
+                <button class="pagination-btn" 
+                        t-att-disabled="props.data.page === 1"
+                        t-on-click="goToFirst">
+                    <i class="fa fa-angle-double-left icon-md"></i>
+                </button>
+                
+                <!-- Previous Page -->
+                <button class="pagination-btn" 
+                        t-att-disabled="props.data.page === 1"
+                        t-on-click="goToPrevious">
+                    <i class="fa fa-chevron-left icon-md"></i>
+                </button>
+                
+                <!-- Page Numbers -->
+                <t t-foreach="visiblePages" t-as="pageNum" t-key="pageNum">
+                    <button t-att-class="{'pagination-btn': true, 'active': pageNum === props.data.page}"
+                            t-on-click="() => this.goToPage(pageNum)">
+                        <t t-esc="pageNum"/>
+                    </button>
+                </t>
+                
+                <!-- Page Input -->
+                <div class="pagination-input-group">
+                    <span class="pagination-input-label"><t t-esc="getPageLabelText()"/></span>
+                    <input type="number" 
+                           class="pagination-input" 
+                           t-att-value="props.data.page"
+                           t-att-min="1"
+                           t-att-max="props.data.totalPages"
+                           t-on-keydown="onPageInputKeydown"
+                           t-on-blur="onPageInputBlur"/>
+                    <span class="pagination-input-separator">/</span>
+                    <span class="pagination-total-pages"><t t-esc="props.data.totalPages"/></span>
+                </div>
+                
+                <!-- Next Page -->
+                <button class="pagination-btn" 
+                        t-att-disabled="props.data.page === props.data.totalPages"
+                        t-on-click="goToNext">
+                    <i class="fa fa-chevron-right icon-md"></i>
+                </button>
+                
+                <!-- Last Page -->
+                <button class="pagination-btn" 
+                        t-att-disabled="props.data.page === props.data.totalPages"
+                        t-on-click="goToLast">
+                    <i class="fa fa-angle-double-right icon-md"></i>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>
+
