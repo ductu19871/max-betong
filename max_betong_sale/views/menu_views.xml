@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+		<menuitem name="Concrete Coordination" id="menu_concrete_coordination_root"
+           web_icon="max_betong_sale,static/description/icon_betong.png" sequence="199"/>
+		
+		<menuitem id="menu_concrete_load" 
+		name="Concrete Load" 
+		parent="menu_concrete_coordination_root" 
+		sequence="20" 
+		action="action_concrete_load"/>
+		
+		<menuitem id="menu_concrete_load_setting" 
+		name="Settings" 
+		parent="menu_concrete_coordination_root" 
+		sequence="100" 
+		action="action_concrete_load_config_settings"/>
+    
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_fleet.SelectionStateBadgeField">
+        <t t-if="record and fieldName">
+            <div class="o_field_selection_state_badge" t-att-class="{'dropdown-open': state.isOpen}" t-ref="el">
+                <button 
+                    type="button" 
+                    class="selection-state-badge-btn"
+                    t-att-style="'background-color: ' + currentConfig.color + '; border-color: ' + currentConfig.color"
+                    t-on-click.stop="toggleDropdown"
+                    t-att-disabled="readonly">
+                    <span class="badge-content">
+                        <i t-att-class="'fa ' + currentConfig.icon" class="badge-icon"></i>
+                        <span class="badge-label"><t t-esc="currentLabel"/></span>
+                        <i class="fa fa-chevron-down dropdown-arrow"></i>
+                    </span>
+                </button>
+                
+                <div t-if="state.isOpen" class="selection-state-dropdown" t-on-click.stop="">
+                    <t t-foreach="options" t-as="group" t-key="group.group">
+                        <t t-if="group_index > 0">
+                            <div class="dropdown-divider"></div>
+                        </t>
+                        <t t-foreach="group.options" t-as="option" t-key="option.value">
+                            <div 
+                                class="selection-state-dropdown-item"
+                                t-att-class="{'selection-state-dropdown-item-selected': isSelected(option.value)}"
+                                t-att-style="'--item-color: ' + option.config.color"
+                                t-on-click="() => this.selectOption(option.value)">
+                                <i t-att-class="'fa ' + option.config.icon" class="item-icon"></i>
+                                <span class="item-label"><t t-esc="option.label"/></span>
+                                <i t-if="isSelected(option.value)" class="fa fa-check item-check"></i>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o_field_selection_state_badge">
+                <span class="text-muted">Loading...</span>
+            </div>
+        </t>
+    </t>
+
+</templates>
+

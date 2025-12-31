@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	<record model="ir.module.category" id="module_category_betong_load">
+        <field name="name">Concrete Load</field>
+        <field name="sequence">60</field>
+    </record>
+	
+    <record id="group_betong_load_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="max_betong_sale.module_category_betong_load"/>
+    </record>
+    
+    <record id="group_betong_load_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="implied_ids" eval="[(4, ref('max_betong_sale.group_betong_load_user'))]"/>
+        <field name="category_id" ref="max_betong_sale.module_category_betong_load"/>
+    </record>
+
+    <record id="group_betong_load_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="implied_ids" eval="[(4, ref('max_betong_sale.group_betong_load_manager'))]"/>
+        <field name="category_id" ref="max_betong_sale.module_category_betong_load"/>
+    </record>
+
+</odoo>

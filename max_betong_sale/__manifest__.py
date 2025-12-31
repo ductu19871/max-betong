@@ -7,9 +7,27 @@
     'description': """
     """,
     'author': 'Maxsolution',
-    'depends': ['max_betong_product','sale_management','sale_mrp'],
+    'depends': ['max_betong_product','sale_management',
+                'sale_mrp','max_betong_fleet','base_geolocalize'],
     'data': [
+        #data
+        #wizard
+        "wizard/wizard_confirm_fields.xml",
+        "wizard/wizard_change_state.xml",
+        #view
         'views/sale_order_views.xml',
+        'views/betong_load_views.xml',
+        'views/mrp_bom_view.xml',
+        'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
+        'views/res_company_views.xml',
+        'views/mrp_production_views.xml',
+        #menu
+        'views/menu_views.xml',
+        #security
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        
     ],
     'installable': True,
     'application': False,
