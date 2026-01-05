@@ -40,19 +40,6 @@ class Production(models.Model):
         store =True
     )
     
-    # state = fields.Selection(selection_add=[
-    #     ('loading', 'Loading'),
-    #     ('loaded', 'Loaded'),
-    #     ('leave', 'Leave'),
-    #     ('arrived', 'Arrived'),
-    #     ('unloading', 'Unloading'),
-    #     ('return', 'Return'),
-    #     ('completed', 'Completed'),
-    #     ('on_hold', 'On Hold'),
-    #     ('dump', 'Dump'),
-    #     ('remix', 'Remix & Swapped'),
-    # ])
-    
     state_concrete = fields.Selection(
         selection=[
             ('draft', 'Draft'),
@@ -74,7 +61,6 @@ class Production(models.Model):
         tracking=True,
         copy=False
     )
-    
     
     assigned_datetime = fields.Datetime(
         string='Assigned Time',
@@ -98,6 +84,23 @@ class Production(models.Model):
         help='Distance from plant to site'
     )
     eta = fields.Datetime(compute="_compute_eta",string='ETA',store =True)
+    
+    do_ids = fields.One2many('stock.picking','ticket_id',string='Do')
+    do_count = fields.Integer(compute='_compute_do_count',store =True)
+    
+    def action_view_do(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Delivery Orders',
+            'res_model': 'stock.picking',
+            'view_mode': 'tree,form',
+            'domain': [('ticket_id', '=', self.id)],
+        }
+    
+    @api.depends('do_ids')
+    def _compute_do_count(self):
+        for mo in self:
+            mo.do_count = len(mo.do_ids)
     
     def action_loading(self):
         self.write({'loading_datetime':fields.Datetime.now(),

@@ -28,6 +28,11 @@ class WizardChangeState(models.TransientModel):
             if record.state_concrete ==self.state_ticket:
                 return
             record.vehicle_id.state_concrete = self.state_ticket
+        if self.state_ticket == 'completed':
+            for do in record.do_ids:
+                if do.state not in ('done','cancel'):
+                    do.action_assign()
+                    do.button_validate()
         record.message_post(
                 body=f"""Note: {self.note}""")
         record.state_concrete = self.state_ticket

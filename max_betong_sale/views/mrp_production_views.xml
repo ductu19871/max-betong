@@ -48,6 +48,15 @@
             <xpath expr="//field[@name='components_availability']" position="before">
             	<field name="eta"/>
             </xpath>
+            <div name="button_box" position="inside">
+				<button name="action_view_do"
+				        type="object"
+				        class="oe_stat_button"
+				        invisible="do_count == 0"
+				        icon="fa-truck">
+				    <field name="do_count" widget="statinfo" string="Delivery Order"/>
+				</button>
+			 </div>
         </field>
     </record>
     
