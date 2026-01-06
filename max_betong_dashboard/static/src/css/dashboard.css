@@ -1183,9 +1183,14 @@ body .o_action_manager .o_view_controller .o_content,
     border: 2px solid #1C75BC;
 }
 
+.concrete-dashboard .status-dot-inactive-no-border {
+    background-color: #ffffff;
+    border: none;
+}
+
 .concrete-dashboard .status-dot-gray {
     background-color: #B2BABB;
-    border: 1px solid #B2BABB;
+    border: none;
     box-shadow: none;
 }
 
@@ -1758,6 +1763,82 @@ body .o_action_manager .o_view_controller .o_content,
 
 .concrete-dashboard .dropdown-item:hover {
     background: var(--slate-100);
+}
+
+/* ========================================
+   STATE CELL AND DROPDOWN
+   ======================================== */
+
+.state-cell {
+    min-width: 120px;
+    cursor: pointer;
+}
+
+.state-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    color: var(--slate-700);
+    font-size: 13px;
+}
+
+.state-value:hover {
+    background: var(--slate-100);
+    color: var(--slate-900);
+}
+
+.state-value .dropdown-icon-small {
+    font-size: 10px;
+    color: var(--slate-400);
+    opacity: 0.7;
+    transition: transform 0.2s ease;
+}
+
+.state-value:hover .dropdown-icon-small {
+    opacity: 1;
+}
+
+.concrete-dashboard .state-dropdown-menu {
+    position: fixed;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    min-width: 140px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001;
+    border: 1px solid var(--slate-200);
+    padding: 4px 0;
+}
+
+.concrete-dashboard .state-dropdown-menu .dropdown-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s ease;
+    color: var(--slate-700);
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+}
+
+.concrete-dashboard .state-dropdown-menu .dropdown-item:hover {
+    background: var(--slate-100);
+    color: var(--slate-900);
+}
+
+.concrete-dashboard .state-dropdown-menu .dropdown-item:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.concrete-dashboard .state-dropdown-menu .dropdown-item:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
 /* ========================================

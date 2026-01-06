@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Select Vehicle - Station">
                 <group>
-                    <field name="vehicle_id" required='1'/>
+                    <field name="vehicle_id" required='1' domain="[('state_concrete','=','available')]"/>
                     <field name="vehicle_station_id" required='1'/>
                 </group>
 

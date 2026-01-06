@@ -292,7 +292,7 @@
                                 <div class="section-actions">
                                     <SearchInput placeholder="t('search_vehicles')" value="state.vehiclesSearch" onInput.bind="onVehiclesSearchChange"/>
                                     <StationDropdown 
-                                        show="state.vehicleStationDropdown.show"
+                                        show="state.vehicleStationFilterDropdown.show"
                                         stations="state.stations"
                                         selectedId="state.selectedVehicleStation"
                                         displayName="getVehicleStationDisplayName()"
@@ -306,9 +306,9 @@
                             <div t-if="!state.vehiclesFullscreen" class="panel-header">
                                 <SearchInput size="'small'" placeholder="t('search_vehicles')" value="state.vehiclesSearch" onInput.bind="onVehiclesSearchChange"/>
                                 <StationDropdown 
-                                    show="state.vehicleStationDropdown.show"
+                                    show="state.vehicleStationFilterDropdown.show"
                                     stations="state.stations"
-                                    selectedId="state.selectedStation"
+                                    selectedId="state.selectedVehicleStation"
                                     displayName="getVehicleStationDisplayName()"
                                     onToggle.bind="toggleVehicleStationDropdown"
                                     onChange.bind="onVehicleStationChange"/>
@@ -352,17 +352,49 @@
                                                                 <span><t t-esc="(state.vehicles.page - 1) * state.vehicles.limit + vehicle_index + 1"/></span>
                                                             </div>
                                                         </t>
-                                                        <t t-elif="col.key === 'name'">
+                                                        <t t-elif="col.key === 'license_plate'">
                                                             <a href="#" class="link-primary font-medium" t-on-click.stop.prevent="() => this.openRecord('fleet.vehicle', vehicle.id)">
                                                                 <t t-esc="vehicle.license_plate || vehicle.name"/>
                                                             </a>
                                                         </t>
                                                         <t t-elif="col.key === 'station'">
-                                                            <t t-esc="vehicle.station || 'MC01'"/>
-                                                            <i class="fa fa-chevron-down dropdown-icon-small"></i>
+                                                            <div class="station-cell" t-on-click.stop="(ev) => this.showVehicleStationDropdown(ev, vehicle.id)">
+                                                                <span class="station-value">
+                                                                    <t t-esc="vehicle.station || ''"/>
+                                                                    <i class="fa fa-chevron-down dropdown-icon-small"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div t-if="state.vehicleStationDropdown.show &amp;&amp; state.vehicleStationDropdown.vehicleId === vehicle.id" 
+                                                                 class="station-dropdown-menu"
+                                                                 t-attf-style="left: {{ state.vehicleStationDropdown.x }}px; top: {{ state.vehicleStationDropdown.y }}px;">
+                                                                <t t-foreach="state.stations" t-as="station" t-key="station.id">
+                                                                    <div class="dropdown-item" t-on-click.stop="() => this.selectVehicleStation(vehicle.id, station.id)">
+                                                                        <t t-esc="station.name"/>
+                                                                    </div>
+                                                                </t>
+                                                            </div>
                                                         </t>
-                                                        <t t-elif="col.key === 'status'">
-                                                            <t t-esc="vehicle.status_display"/>
+                                                        <t t-elif="col.key === 'state_concrete'">
+                                                            <div class="state-cell" t-on-click.stop="(ev) => this.showVehicleStateDropdown(ev, vehicle.id)">
+                                                                <span class="state-value">
+                                                                    <t t-esc="vehicle.state_display || vehicle.state_concrete"/>
+                                                                    <i class="fa fa-chevron-down dropdown-icon-small"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div t-if="state.vehicleStateDropdown.show &amp;&amp; state.vehicleStateDropdown.vehicleId === vehicle.id" 
+                                                                 class="state-dropdown-menu"
+                                                                 t-attf-style="left: {{ state.vehicleStateDropdown.x }}px; top: {{ state.vehicleStateDropdown.y }}px;">
+                                                                <div t-if="canSelectAvailable(vehicle.state_concrete)" 
+                                                                     class="dropdown-item" 
+                                                                     t-on-click.stop="() => this.selectVehicleState(vehicle.id, 'available')">
+                                                                    <t t-esc="getAvailableText()"/>
+                                                                </div>
+                                                                <div t-if="canSelectBroken(vehicle.state_concrete)" 
+                                                                     class="dropdown-item"
+                                                                     t-on-click.stop="() => this.selectVehicleState(vehicle.id, 'broken')">
+                                                                    <t t-esc="getBrokenText()"/>
+                                                                </div>
+                                                            </div>
                                                         </t>
                                                     </td>
                                                 </t>

@@ -79,6 +79,23 @@ class Production(models.Model):
         readonly=True
     )
     
+    arrived_state_tracking_datetime = fields.Datetime(
+        string='Arrived State Tracking Time',
+        readonly=True
+    )
+    unloading_state_tracking_datetime = fields.Datetime(
+        string='Unloading State Tracking Time',
+        readonly=True
+    )
+    return_state_tracking_datetime = fields.Datetime(
+        string='Return State Tracking Time',
+        readonly=True
+    )
+    completed_state_tracking_datetime = fields.Datetime(
+        string='Completed State Tracking Time',
+        readonly=True
+    )
+    
     distance_km = fields.Float(
         string='Distance (km)',
         help='Distance from plant to site'
@@ -204,6 +221,24 @@ class Production(models.Model):
         return super().create(vals)
     
     def write(self, vals):
+        if 'state_concrete' in vals and self.mo_type == 'concrete':
+            new_state = vals['state_concrete']
+            state_to_datetime_field = {
+                'assigned': 'assigned_datetime',
+                'loading': 'loading_datetime',
+                'loaded': 'loaded_datetime',
+                'leave': 'leave_datetime',
+                'arrived': 'arrived_state_tracking_datetime',
+                'unloading': 'unloading_state_tracking_datetime',
+                'return': 'return_state_tracking_datetime',
+                'completed': 'completed_state_tracking_datetime',
+            }
+            if new_state in state_to_datetime_field:
+                datetime_field = state_to_datetime_field[new_state]
+                for record in self:
+                    if not getattr(record, datetime_field, False):
+                        vals[datetime_field] = fields.Datetime.now()
+        
         result = super().write(vals)
         if 'state' in vals:
             for mo in self:

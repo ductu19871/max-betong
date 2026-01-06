@@ -28,25 +28,23 @@
            		<field name="state_concrete" widget="statusbar"
            			invisible="mo_type != 'concrete'"/>
            </xpath>
-            <xpath expr="//group[@name='group_extra_info']" position="after">
-            	<group>
-					<field name="mix_note"/>
-	                <field name="load_id" invisible='1'/>
-	                <field name="sale_order_id"/>
-	                <field name="vehicle_id"/>
-	                <field name="vehicle_station_id"/>
-	                <field name="delivery_address_id"/>
-                </group>
-                <group>
-					<field name="assigned_datetime"/>
-	                <field name="loading_datetime"/>
-	                <field name="loaded_datetime"/>
-	                <field name="leave_datetime"/>
-	                <field name="distance_km"/>
-				</group>
+            <xpath expr="//group[1]//group[1]" position="inside">
+				<field name="mix_note"/>
+                <field name="load_id" invisible='1'/>
+                <field name="sale_order_id"/>
+                <field name="vehicle_id"/>
+                <field name="vehicle_station_id"/>
+                <field name="delivery_address_id"/>
             </xpath>
             <xpath expr="//field[@name='components_availability']" position="before">
             	<field name="eta"/>
+            </xpath>
+            <xpath expr="//field[@name='production_location_id']" position="after">
+            	<field name="assigned_datetime"/>
+                <field name="loading_datetime"/>
+                <field name="loaded_datetime"/>
+                <field name="leave_datetime"/>
+                <field name="distance_km"/>
             </xpath>
             <div name="button_box" position="inside">
 				<button name="action_view_do"

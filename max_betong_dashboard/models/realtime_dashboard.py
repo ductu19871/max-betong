@@ -332,14 +332,32 @@ class FleetVehicleRealtimeDashboard(RealtimeDashboardMixin, models.Model):
     def _prepare_dashboard_data(self):
         """Prepare vehicle data for dashboard realtime update"""
         self.ensure_one()
+        
+        state_labels = {
+            'not_available': _('Not Available'),
+            'available': _('Available'),
+            'assigned': _('Assigned'),
+            'loading': _('Loading'),
+            'loaded': _('Loaded'),
+            'leave': _('Leave'),
+            'arrived': _('Arrived'),
+            'unloading': _('Unloading'),
+            'return': _('Return'),
+            'completed': _('Completed'),
+            'on_hold': _('On Hold'),
+            'broken': _('Broken'),
+        }
+        
+        state_concrete = self.state_concrete or 'not_available'
+        
         return {
             'id': self.id,
             'name': self.name,
             'license_plate': self.license_plate or '',
             'station': self.station_id.name if self.station_id else '',
             'station_id': self.station_id.id if self.station_id else False,
-            'status': 'available',
-            'status_display': _('Available'),
+            'state_concrete': state_concrete,
+            'state_display': state_labels.get(state_concrete, state_concrete),
         }
 
     def _send_dashboard_notification(self, action, changed_fields=None):
@@ -456,9 +474,7 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
         
         state_labels = {
             'draft': _('Draft'),
-            'confirmed': _('Assigned'),
             'assigned': _('Assigned'),
-            'progress': _('In Progress'),
             'loading': _('Loading'),
             'loaded': _('Loaded'),
             'leave': _('Leave'),
@@ -471,6 +487,42 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
             'remix': _('Remix & Swapped'),
             'cancel': _('Cancelled'),
         }
+        
+        state_concrete = self.state_concrete or 'draft'
+        
+        PROGRESS_STATES = ['assigned', 'loading', 'loaded', 'leave', 'arrived', 'unloading', 'return', 'completed']
+        
+        # Find the highest index state that was passed
+        # Method 1: Check if current state is in PROGRESS_STATES (before on_hold/cancel)
+        highest_passed_index = -1
+        if state_concrete in PROGRESS_STATES:
+            highest_passed_index = PROGRESS_STATES.index(state_concrete)
+        
+        # Method 2: Check datetime fields (use existing fields for assigned/loading/loaded/leave, tracking fields for others)
+        for i in range(len(PROGRESS_STATES) - 1, -1, -1):
+            state = PROGRESS_STATES[i]
+            datetime_field = None
+            if state == 'assigned':
+                datetime_field = self.assigned_datetime
+            elif state == 'loading':
+                datetime_field = self.loading_datetime
+            elif state == 'loaded':
+                datetime_field = self.loaded_datetime
+            elif state == 'leave':
+                datetime_field = self.leave_datetime
+            elif state == 'arrived':
+                datetime_field = getattr(self, 'arrived_state_tracking_datetime', False) and self.arrived_state_tracking_datetime or False
+            elif state == 'unloading':
+                datetime_field = getattr(self, 'unloading_state_tracking_datetime', False) and self.unloading_state_tracking_datetime or False
+            elif state == 'return':
+                datetime_field = getattr(self, 'return_state_tracking_datetime', False) and self.return_state_tracking_datetime or False
+            elif state == 'completed':
+                datetime_field = getattr(self, 'completed_state_tracking_datetime', False) and self.completed_state_tracking_datetime or False
+            
+            if datetime_field:
+                if i > highest_passed_index:
+                    highest_passed_index = i
+                break
         
         return {
             'id': self.id,
@@ -489,16 +541,17 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
             'vehicle': self.vehicle_id.license_plate or self.vehicle_id.name if self.vehicle_id else '',
             'vehicle_id': self.vehicle_id.id if self.vehicle_id else False,
             'eta': self.eta.isoformat() if self.eta else '',
-            'state': self.state,
-            'state_display': str(state_labels.get(self.state, self.state)),
+            'state': state_concrete,
+            'state_display': str(state_labels.get(state_concrete, state_concrete)),
             'assigned_datetime': self.assigned_datetime.isoformat() if self.assigned_datetime else False,
             'loading_datetime': self.loading_datetime.isoformat() if self.loading_datetime else False,
             'loaded_datetime': self.loaded_datetime.isoformat() if self.loaded_datetime else False,
             'leave_datetime': self.leave_datetime.isoformat() if self.leave_datetime else False,
-            'arrived_datetime': getattr(self, 'arrived_datetime', False) and self.arrived_datetime.isoformat() or False,
-            'unloading_datetime': getattr(self, 'unloading_datetime', False) and self.unloading_datetime.isoformat() or False,
-            'return_datetime': getattr(self, 'return_datetime', False) and self.return_datetime.isoformat() or False,
-            'completed_datetime': getattr(self, 'completed_datetime', False) and self.completed_datetime.isoformat() or False,
+            'arrived_datetime': getattr(self, 'arrived_state_tracking_datetime', False) and self.arrived_state_tracking_datetime.isoformat() or False,
+            'unloading_datetime': getattr(self, 'unloading_state_tracking_datetime', False) and self.unloading_state_tracking_datetime.isoformat() or False,
+            'return_datetime': getattr(self, 'return_state_tracking_datetime', False) and self.return_state_tracking_datetime.isoformat() or False,
+            'completed_datetime': getattr(self, 'completed_state_tracking_datetime', False) and self.completed_state_tracking_datetime.isoformat() or False,
+            'highest_passed_state_index': highest_passed_index,  # Highest index state that was passed
         }
 
     def _send_dashboard_notification(self, action, changed_fields=None):
@@ -510,7 +563,7 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
         affects_filter = bool(set(changed_fields) & set(filter_fields))
         
         for record in self:
-            if record.state == 'draft':
+            if record.mo_type != 'concrete' or (record.state_concrete and record.state_concrete == 'draft'):
                 continue
             
             payload = {
@@ -525,7 +578,7 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
             channel = self._get_dashboard_notify_channel()
             self._send_notification_to_all_users(channel, payload)
         
-        if 'state' in changed_fields:
+        if 'state' in changed_fields or 'state_concrete' in changed_fields:
             for record in self:
                 if record.vehicle_id:
                     record.vehicle_id._send_dashboard_notification('update', ['status'])
@@ -533,41 +586,61 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
-        records._send_dashboard_notification('create', list(vals_list[0].keys()) if vals_list else [])
+        concrete_records = records.filtered(lambda r: r.mo_type == 'concrete' and r.state_concrete and r.state_concrete != 'draft')
+        if concrete_records:
+            concrete_records._send_dashboard_notification('create', list(vals_list[0].keys()) if vals_list else [])
         return records
 
     def write(self, vals):
-        old_states = {r.id: r.state for r in self}
+        old_mo_types = {r.id: r.mo_type for r in self}
+        old_state_concretes = {r.id: r.state_concrete for r in self}
+        state_concrete_changing = 'state_concrete' in vals or 'mo_type' in vals
         
         res = super().write(vals)
         
         for record in self:
-            old_state = old_states.get(record.id)
-            was_visible = old_state != 'draft'
-            is_visible = record.state != 'draft'
+            old_mo_type = old_mo_types.get(record.id)
+            old_state_concrete = old_state_concretes.get(record.id)
             
-            if was_visible and not is_visible:
-                payload = {
-                    'action': 'delete',
-                    'model': 'mrp.production',
-                    'record_id': record.id,
-                    'data': None,
-                    'affects_filter': True,
-                    'changed_fields': list(vals.keys()),
-                }
-                channel = self._get_dashboard_notify_channel()
-                self._send_notification_to_all_users(channel, payload)
-            elif not was_visible and is_visible:
-                payload = {
-                    'action': 'create',
-                    'model': 'mrp.production',
-                    'record_id': record.id,
-                    'data': record._prepare_dashboard_data(),
-                    'affects_filter': True,
-                    'changed_fields': list(vals.keys()),
-                }
-                channel = self._get_dashboard_notify_channel()
-                self._send_notification_to_all_users(channel, payload)
+            was_visible = old_mo_type == 'concrete' and old_state_concrete and old_state_concrete != 'draft'
+            is_visible = record.mo_type == 'concrete' and record.state_concrete and record.state_concrete != 'draft'
+            
+            if state_concrete_changing:
+                if was_visible and not is_visible:
+                    payload = {
+                        'action': 'delete',
+                        'model': 'mrp.production',
+                        'record_id': record.id,
+                        'data': None,
+                        'affects_filter': True,
+                        'changed_fields': list(vals.keys()),
+                    }
+                    channel = self._get_dashboard_notify_channel()
+                    self._send_notification_to_all_users(channel, payload)
+                elif not was_visible and is_visible:
+                    payload = {
+                        'action': 'create',
+                        'model': 'mrp.production',
+                        'record_id': record.id,
+                        'data': record._prepare_dashboard_data(),
+                        'affects_filter': True,
+                        'changed_fields': list(vals.keys()),
+                    }
+                    channel = self._get_dashboard_notify_channel()
+                    self._send_notification_to_all_users(channel, payload)
+                elif was_visible and is_visible:
+                    filter_fields = SEARCH_FILTER_FIELDS.get('mrp.production', [])
+                    affects_filter = bool(set(vals.keys()) & set(filter_fields))
+                    payload = {
+                        'action': 'update',
+                        'model': 'mrp.production',
+                        'record_id': record.id,
+                        'data': record._prepare_dashboard_data(),
+                        'affects_filter': affects_filter,
+                        'changed_fields': list(vals.keys()),
+                    }
+                    channel = self._get_dashboard_notify_channel()
+                    self._send_notification_to_all_users(channel, payload)
             elif was_visible and is_visible:
                 filter_fields = SEARCH_FILTER_FIELDS.get('mrp.production', [])
                 affects_filter = bool(set(vals.keys()) & set(filter_fields))
@@ -582,7 +655,7 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
                 channel = self._get_dashboard_notify_channel()
                 self._send_notification_to_all_users(channel, payload)
         
-        if 'state' in vals:
+        if 'state' in vals or 'state_concrete' in vals:
             for record in self:
                 if record.vehicle_id:
                     record.vehicle_id._send_dashboard_notification('update', ['status'])
@@ -592,7 +665,7 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
     def unlink(self):
         ids_to_notify = []
         for record in self:
-            if record.state != 'draft':
+            if record.mo_type == 'concrete' and record.state_concrete and record.state_concrete != 'draft':
                 ids_to_notify.append(record.id)
         
         res = super().unlink()

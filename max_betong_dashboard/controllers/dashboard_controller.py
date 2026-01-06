@@ -104,3 +104,19 @@ class ConcreteDashboardController(http.Controller):
         """
         dashboard = request.env['concrete.dashboard']
         return dashboard.get_user_permissions()
+
+    @http.route('/concrete/dashboard/update_vehicle_station', type='json', auth='user')
+    def update_vehicle_station(self, vehicle_id, station_id):
+        """
+        API endpoint to update vehicle station
+        """
+        dashboard = request.env['concrete.dashboard']
+        return dashboard.update_vehicle_station(vehicle_id, station_id)
+
+    @http.route('/concrete/dashboard/update_vehicle_state', type='json', auth='user')
+    def update_vehicle_state(self, vehicle_id, state_concrete):
+        """
+        API endpoint to update vehicle state
+        """
+        dashboard = request.env['concrete.dashboard']
+        return dashboard.update_vehicle_state(vehicle_id, state_concrete)

@@ -194,34 +194,49 @@ class ConcreteDashboard(models.AbstractModel):
             domain.append(('station_id', '=', station_id))
         
         if search:
-            domain.append('|')
             domain.append(('license_plate', 'ilike', search))
-            domain.append(('name', 'ilike', search))
         
-        total_count = self.env['fleet.vehicle'].search_count(domain)
-        vehicles = self.env['fleet.vehicle'].search(domain, limit=limit, offset=offset)
+        all_vehicles = self.env['fleet.vehicle'].search(domain)
+        total_count = len(all_vehicles)
+        
+        available_vehicles = all_vehicles.filtered(lambda v: v.state_concrete == 'available')
+        other_vehicles = all_vehicles.filtered(lambda v: v.state_concrete != 'available')
+        
+        sorted_available = available_vehicles.sorted(key=lambda v: v.write_date or v.create_date)
+        sorted_other = other_vehicles.sorted(key=lambda v: v.write_date or v.create_date)
+        
+        sorted_vehicles = sorted_available + sorted_other
+        
+        paginated_vehicles = sorted_vehicles[offset:offset + limit]
+        
+        state_labels = {
+            'not_available': _('Not Available'),
+            'available': _('Available'),
+            'assigned': _('Assigned'),
+            'loading': _('Loading'),
+            'loaded': _('Loaded'),
+            'leave': _('Leave'),
+            'arrived': _('Arrived'),
+            'unloading': _('Unloading'),
+            'return': _('Return'),
+            'completed': _('Completed'),
+            'on_hold': _('On Hold'),
+            'broken': _('Broken'),
+        }
         
         data = []
-        for v in vehicles:
-            active_ticket = self.env['mrp.production'].search([
-                ('vehicle_id', '=', v.id),
-                ('state', 'not in', ['completed', 'dump', 'remix', 'cancel'])
-            ], limit=1)
-            
-            status = 'busy' if active_ticket else 'available'
-            
+        for v in paginated_vehicles:
+            state_concrete = v.state_concrete or 'not_available'
             data.append({
                 'id': v.id,
                 'name': v.name,
-                'license_plate': v.license_plate or '',
+                'license_plate': v.license_plate or v.name or '',
                 'station': v.station_id.name if v.station_id else '',
                 'station_id': v.station_id.id if v.station_id else False,
-                # 'status': status,
-                # 'status_display': _('Busy') if status == 'busy' else _('Available'),
-                'status': 'available',
-                'status_display': _('Available'),
+                'state_concrete': state_concrete,
+                'state_display': state_labels.get(state_concrete, state_concrete),
             })
-        print('data111', data)
+        
         return {
             'data': data,
             'total': total_count,
@@ -252,7 +267,7 @@ class ConcreteDashboard(models.AbstractModel):
             'volume': 'product_qty',
             'vehicle': 'vehicle_id',
             'eta': 'eta',
-            'state': 'state',
+            'state': 'state_concrete',
         }
         
         if sort_field in field_mapping:
@@ -261,7 +276,10 @@ class ConcreteDashboard(models.AbstractModel):
             order_str = f'{sort_field} {sort_order}'
         
         search = params.get('search', '')
-        domain = [('state', '!=', 'draft')]
+        domain = [
+            ('mo_type', '=', 'concrete'),
+            ('state_concrete', '!=', 'draft')
+        ]
         
         station_id = params.get('station_id')
         if station_id:
@@ -287,9 +305,7 @@ class ConcreteDashboard(models.AbstractModel):
         
         state_labels = {
             'draft': _('Draft'),
-            'confirmed': _('Assigned'),
             'assigned': _('Assigned'),
-            'progress': _('In Progress'),
             'loading': _('Loading'),
             'loaded': _('Loaded'),
             'leave': _('Leave'),
@@ -304,7 +320,43 @@ class ConcreteDashboard(models.AbstractModel):
         }
         
         data = []
+        PROGRESS_STATES = ['assigned', 'loading', 'loaded', 'leave', 'arrived', 'unloading', 'return', 'completed']
+        
         for t in tickets:
+            state_concrete = t.state_concrete or 'draft'
+            
+            # Find the highest index state that was passed
+            # Method 1: Check if current state is in PROGRESS_STATES (before on_hold/cancel)
+            highest_passed_index = -1
+            if state_concrete in PROGRESS_STATES:
+                highest_passed_index = PROGRESS_STATES.index(state_concrete)
+            
+            # Method 2: Check datetime fields (use existing fields for assigned/loading/loaded/leave, tracking fields for others)
+            for i in range(len(PROGRESS_STATES) - 1, -1, -1):
+                state = PROGRESS_STATES[i]
+                datetime_field = None
+                if state == 'assigned':
+                    datetime_field = t.assigned_datetime
+                elif state == 'loading':
+                    datetime_field = t.loading_datetime
+                elif state == 'loaded':
+                    datetime_field = t.loaded_datetime
+                elif state == 'leave':
+                    datetime_field = t.leave_datetime
+                elif state == 'arrived':
+                    datetime_field = getattr(t, 'arrived_state_tracking_datetime', False) and t.arrived_state_tracking_datetime or False
+                elif state == 'unloading':
+                    datetime_field = getattr(t, 'unloading_state_tracking_datetime', False) and t.unloading_state_tracking_datetime or False
+                elif state == 'return':
+                    datetime_field = getattr(t, 'return_state_tracking_datetime', False) and t.return_state_tracking_datetime or False
+                elif state == 'completed':
+                    datetime_field = getattr(t, 'completed_state_tracking_datetime', False) and t.completed_state_tracking_datetime or False
+                
+                if datetime_field:
+                    if i > highest_passed_index:
+                        highest_passed_index = i
+                    break
+            
             data.append({
                 'id': t.id,
                 'name': t.name,
@@ -322,16 +374,17 @@ class ConcreteDashboard(models.AbstractModel):
                 'vehicle': t.vehicle_id.license_plate or t.vehicle_id.name if t.vehicle_id else '',
                 'vehicle_id': t.vehicle_id.id if t.vehicle_id else False,
                 'eta': t.eta.isoformat() if t.eta else '',
-                'state': t.state,
-                'state_display': state_labels.get(t.state, t.state),
+                'state': state_concrete,
+                'state_display': state_labels.get(state_concrete, state_concrete),
                 'assigned_datetime': t.assigned_datetime.isoformat() if t.assigned_datetime else False,
                 'loading_datetime': t.loading_datetime.isoformat() if t.loading_datetime else False,
                 'loaded_datetime': t.loaded_datetime.isoformat() if t.loaded_datetime else False,
                 'leave_datetime': t.leave_datetime.isoformat() if t.leave_datetime else False,
-                'arrived_datetime': getattr(t, 'arrived_datetime', False) and t.arrived_datetime.isoformat() or False,
-                'unloading_datetime': getattr(t, 'unloading_datetime', False) and t.unloading_datetime.isoformat() or False,
-                'return_datetime': getattr(t, 'return_datetime', False) and t.return_datetime.isoformat() or False,
-                'completed_datetime': getattr(t, 'completed_datetime', False) and t.completed_datetime.isoformat() or False,
+                'arrived_datetime': getattr(t, 'arrived_state_tracking_datetime', False) and t.arrived_state_tracking_datetime.isoformat() or False,
+                'unloading_datetime': getattr(t, 'unloading_state_tracking_datetime', False) and t.unloading_state_tracking_datetime.isoformat() or False,
+                'return_datetime': getattr(t, 'return_state_tracking_datetime', False) and t.return_state_tracking_datetime.isoformat() or False,
+                'completed_datetime': getattr(t, 'completed_state_tracking_datetime', False) and t.completed_state_tracking_datetime.isoformat() or False,
+                'highest_passed_state_index': highest_passed_index,  # Highest index state that was passed
             })
         
         return {
@@ -468,6 +521,43 @@ class ConcreteDashboard(models.AbstractModel):
         
         try:
             load.write({'load_station_id': station_id})
+            return {'success': True}
+        except Exception as e:
+            return {'success': False, 'error': str(e)}
+
+    @api.model
+    def update_vehicle_station(self, vehicle_id, station_id):
+        vehicle = self.env['fleet.vehicle'].browse(vehicle_id)
+        if not vehicle.exists():
+            return {'success': False, 'error': _('Vehicle not found')}
+        
+        try:
+            vehicle.write({'station_id': station_id})
+            return {'success': True}
+        except Exception as e:
+            return {'success': False, 'error': str(e)}
+
+    @api.model
+    def update_vehicle_state(self, vehicle_id, state_concrete):
+        vehicle = self.env['fleet.vehicle'].browse(vehicle_id)
+        if not vehicle.exists():
+            return {'success': False, 'error': _('Vehicle not found')}
+        
+        valid_states = ['available', 'broken']
+        if state_concrete not in valid_states:
+            return {'success': False, 'error': _('Invalid state')}
+        
+        current_state = vehicle.state_concrete or 'not_available'
+        
+        if state_concrete == 'available':
+            if current_state not in ['completed', 'not_available', 'broken']:
+                return {'success': False, 'error': _('Cannot change to Available from current state')}
+        elif state_concrete == 'broken':
+            if current_state in ['completed', 'not_available', 'broken']:
+                return {'success': False, 'error': _('Cannot change to Broken from current state')}
+        
+        try:
+            vehicle.write({'state_concrete': state_concrete})
             return {'success': True}
         except Exception as e:
             return {'success': False, 'error': str(e)}

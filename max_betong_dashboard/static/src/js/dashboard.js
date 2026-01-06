@@ -99,9 +99,9 @@ const DEFAULT_COLUMNS = {
     ],
     vehicles: [
         { key: 'stt', label: 'No', visible: true, width: 60, order: 0 },
-        { key: 'name', label: 'Vehicle Code', visible: true, width: 120, order: 1 },
+        { key: 'license_plate', label: 'Vehicle Code', visible: true, width: 120, order: 1 },
         { key: 'station', label: 'Station', visible: true, width: 100, order: 2 },
-        { key: 'status', label: 'Status', visible: true, width: 120, order: 3 },
+        { key: 'state_concrete', label: 'State', visible: true, width: 120, order: 3 },
     ],
 };
 
@@ -186,7 +186,7 @@ export class ConcreteDashboard extends Component {
             selectedStation: null, // For orders/loads (if needed in future)
             selectedVehicleStation: null, // For vehicles only
             stations: [],
-            vehicleStationDropdown: { show: false },
+            vehicleStationFilterDropdown: { show: false },
             
             // Column configurations
             ticketsColumns: loadColumnConfig('tickets'),
@@ -238,6 +238,12 @@ export class ConcreteDashboard extends Component {
             // Station dropdown for editing
             stationDropdown: { show: false, type: null, id: null, x: 0, y: 0 },
             
+            // Vehicle station dropdown
+            vehicleStationDropdown: { show: false, vehicleId: null, x: 0, y: 0 },
+            
+            // Vehicle state dropdown
+            vehicleStateDropdown: { show: false, vehicleId: null, x: 0, y: 0 },
+            
             // Confirmation modal
             confirmModal: { show: false, title: '', message: '', action: null },
             
@@ -280,11 +286,26 @@ export class ConcreteDashboard extends Component {
     // ===== Event Handlers for Click Outside =====
     
     handleClickOutside(event) {
-        if (this.state.vehicleStationDropdown.show) {
-            const dropdown = event.target.closest('.station-dropdown');
+        if (this.state.stationDropdown.show) {
+            const dropdown = event.target.closest('.station-dropdown-menu');
             if (!dropdown) {
-                this.closeVehicleStationDropdown();
+                this.state.stationDropdown.show = false;
             }
+        }
+        if (this.state.vehicleStationDropdown.show) {
+            const dropdown = event.target.closest('.station-dropdown-menu');
+            if (!dropdown) {
+                this.state.vehicleStationDropdown.show = false;
+            }
+        }
+        if (this.state.vehicleStateDropdown.show) {
+            const dropdown = event.target.closest('.state-dropdown-menu');
+            if (!dropdown) {
+                this.state.vehicleStateDropdown.show = false;
+            }
+        }
+        if (this.state.columnMenu.show) {
+            this.state.columnMenu.show = false;
         }
     }
 
@@ -379,7 +400,7 @@ export class ConcreteDashboard extends Component {
     handleRealtimeUpdate(tableName, payload) {
         if (!payload) return;
         
-        const { action, record_id, data, affects_filter } = payload;
+        const { action, record_id, data, affects_filter, changed_fields } = payload;
         const hasActiveSearch = this.hasActiveSearchOrFilter(tableName);
         
         if (action === 'create' || action === 'delete') {
@@ -388,6 +409,12 @@ export class ConcreteDashboard extends Component {
         }
         
         if (action === 'update') {
+            // For vehicles, if state_concrete changes, always reload to maintain sorting
+            if (tableName === 'vehicles' && changed_fields && changed_fields.includes('state_concrete')) {
+                this.reloadTable(tableName);
+                return;
+            }
+            
             if (hasActiveSearch && affects_filter) {
                 this.reloadTable(tableName);
             } else {
@@ -724,11 +751,11 @@ export class ConcreteDashboard extends Component {
     // ===== Vehicle Station Dropdown =====
     
     toggleVehicleStationDropdown() {
-        this.state.vehicleStationDropdown.show = !this.state.vehicleStationDropdown.show;
+        this.state.vehicleStationFilterDropdown.show = !this.state.vehicleStationFilterDropdown.show;
     }
 
     closeVehicleStationDropdown() {
-        this.state.vehicleStationDropdown.show = false;
+        this.state.vehicleStationFilterDropdown.show = false;
     }
 
     async onVehicleStationChange(stationId) {
@@ -927,6 +954,118 @@ export class ConcreteDashboard extends Component {
         this.closeConfirmModal();
     }
 
+    // ===== Vehicle Station Dropdown =====
+    
+    showVehicleStationDropdown(event, vehicleId) {
+        event.preventDefault();
+        event.stopPropagation();
+        const rect = event.currentTarget.getBoundingClientRect();
+        this.state.vehicleStationDropdown = {
+            show: true,
+            vehicleId,
+            x: rect.left,
+            y: rect.bottom + 4,
+        };
+    }
+
+    async selectVehicleStation(vehicleId, stationId) {
+        this.state.confirmModal = {
+            show: true,
+            title: _t('Confirm Change Station'),
+            message: _t('Are you sure you want to change the Station for this Vehicle?'),
+            action: async () => await this.updateVehicleStation(vehicleId, stationId)
+        };
+        this.state.vehicleStationDropdown.show = false;
+    }
+
+    async updateVehicleStation(vehicleId, stationId) {
+        try {
+            const result = await this.rpc('/concrete/dashboard/update_vehicle_station', {
+                vehicle_id: vehicleId,
+                station_id: stationId
+            });
+            if (result.success) {
+                this.notification.add(_t("Station updated successfully"), { type: "success" });
+                await this.loadVehicles();
+            } else {
+                this.notification.add(result.error || _t("Failed to update station"), { type: "danger" });
+            }
+        } catch (error) {
+            console.error("Error updating vehicle station:", error);
+            this.notification.add(_t("Failed to update station"), { type: "danger" });
+        }
+        this.closeConfirmModal();
+    }
+
+    // ===== Vehicle State Dropdown =====
+    
+    showVehicleStateDropdown(event, vehicleId) {
+        event.preventDefault();
+        event.stopPropagation();
+        const rect = event.currentTarget.getBoundingClientRect();
+        this.state.vehicleStateDropdown = {
+            show: true,
+            vehicleId,
+            x: rect.left,
+            y: rect.bottom + 4,
+        };
+    }
+
+    canSelectAvailable(currentState) {
+        return ['completed', 'not_available', 'broken'].includes(currentState);
+    }
+
+    canSelectBroken(currentState) {
+        return !['completed', 'not_available', 'broken'].includes(currentState);
+    }
+
+    getAvailableText() {
+        return _t('Available');
+    }
+
+    getBrokenText() {
+        return _t('Broken');
+    }
+
+    async selectVehicleState(vehicleId, stateConcrete) {
+        const vehicle = this.state.vehicles.data.find(v => v.id === vehicleId);
+        if (!vehicle) return;
+        
+        if (stateConcrete === 'available' && !this.canSelectAvailable(vehicle.state_concrete)) {
+            return;
+        }
+        if (stateConcrete === 'broken' && !this.canSelectBroken(vehicle.state_concrete)) {
+            return;
+        }
+        
+        this.state.confirmModal = {
+            show: true,
+            title: _t('Confirm Change State'),
+            message: _t(`Are you sure you want to change the State to ${stateConcrete === 'available' ? _t('Available') : _t('Broken')}?`),
+            action: async () => await this.updateVehicleState(vehicleId, stateConcrete)
+        };
+        this.state.vehicleStateDropdown.show = false;
+    }
+
+    async updateVehicleState(vehicleId, stateConcrete) {
+        try {
+            const result = await this.rpc('/concrete/dashboard/update_vehicle_state', {
+                vehicle_id: vehicleId,
+                state_concrete: stateConcrete
+            });
+            if (result.success) {
+                this.notification.add(_t("State updated successfully"), { type: "success" });
+                await this.loadVehicles();
+            } else {
+                this.notification.add(result.error || _t("Failed to update state"), { type: "danger" });
+            }
+        } catch (error) {
+            console.error("Error updating vehicle state:", error);
+            this.notification.add(_t("Failed to update state"), { type: "danger" });
+        }
+        this.closeConfirmModal();
+    }
+
     // ===== Confirmation Modal =====
     
     confirmAction() {
@@ -960,7 +1099,7 @@ export class ConcreteDashboard extends Component {
             return;
         }
 
-        if (selectedVehicleData.status !== 'available') {
+        if (selectedVehicleData.state_concrete !== 'available') {
             this.notification.add(_t("Cannot Assign Ticket: Vehicle is not Available."), { type: "danger" });
             return;
         }
