@@ -11,6 +11,7 @@
                 <field name="load_station_id"/>
                 <field name="sale_order_id"/>
                 <field name="product_id"/>
+                <field name="bom_id"/>
                 <field name="mix_note"/>
                 <field name="delivery_address_id"/>
                 <field name="vehicle_id"/>
@@ -28,8 +29,9 @@
         <field name="arch" type="xml">
             <form string="Load">
 				<header>
-                    <button string="Mark as Completed" type="object" name="action_set_completed"
-                            invisible="state == 'completed'"/>
+                    <button string="Assign Ticket" type="object" name="action_assign_ticket"
+                            invisible="state == 'completed'"
+                            groups="max_betong_sale.group_betong_load_manager"/>
                     <button string="Set to Draft" type="object" name="action_set_draft"
                             invisible="state =='draft'"/>
                     <button
@@ -42,6 +44,14 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,completed"/>
                 </header>
                 <sheet>
+					<div name="button_box" >
+		                <button name="action_view_ticket" 
+		                	type="object" class="oe_stat_button" 
+		                	icon="fa-pencil-square-o"
+		                	string="Tickets"
+		                	invisible="not production_ids">
+		                </button>
+					 </div>
 					<div class="oe_title">
 						<label for="name"/>
                         <h1>
@@ -53,10 +63,12 @@
                             <field name="volume" readonly="state != 'draft'"/>
                             <field name="load_station_id" readonly="state != 'draft'"/>
                             <field name="delivery_address_id" readonly="1"/>
+                            <field name="production_ids" invisible="1"/>
                         </group>
                         <group>
                             <field name="sale_order_id"/>
                             <field name="product_id"/>
+                            <field name="bom_id"/>
                             <field name="mix_note"/>
                         </group>
                         <group>

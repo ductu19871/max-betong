@@ -104,6 +104,24 @@ class SaleOrder(models.Model):
     sale_concrete_id = fields.Many2one('sale.order',string='SO Concrete Origin',readonly =True)
     sale_pumb_ids = fields.One2many('sale.order','sale_concrete_id',string='Sale Pumbs')
     product_uom = fields.Many2one(related='order_line.product_uom',string='UoM',store =True)
+    bom_id = fields.Many2one('mrp.bom',string='Mix',compute="compute_bom",store =True)
+    mix_note = fields.Text(string='Mix Note',compute="compute_bom",store =True)
+    
+    @api.depends('order_line','order_line.product_id')
+    def compute_bom(self):
+        for so in self:
+            bom_id = False
+            mix_note = ''
+            if so.order_line:
+                product_tmpl_id = so.order_line[0].product_template_id
+                if product_tmpl_id:
+                    bom_mix_id = self.env['mrp.bom'].with_context(active_test=False).search([('product_tmpl_id','=',product_tmpl_id.id),
+                                                             ('type','=','mix')],limit=1)
+                    if bom_mix_id:
+                        bom_id = bom_mix_id.id
+                        mix_note = bom_mix_id.note
+            so.bom_id = bom_id
+            so.mix_note = mix_note
     
     @api.depends('load_ids')
     def _compute_count_load(self):
@@ -209,11 +227,10 @@ class SaleOrder(models.Model):
         if normal_orders:
             super(SaleOrder, normal_orders).action_confirm()
         for order in betong_orders:
-            if order.state == 'draft':
-                order.write({
-                    'state': 'sale',
-                })
-                order.message_post(body=_('Order has been confirmed (no MO/DO generated)'))
+            order.write({
+                'state': 'sale',
+            })
+            order.message_post(body=_('Order has been confirmed (no MO/DO generated)'))
         return True
 
     def action_betong_set_planned(self):
@@ -274,17 +291,16 @@ class SaleOrder(models.Model):
     def _prepare_load_vals(self, quantity):
         order_line = self.order_line.filtered(lambda l: not l.display_type)[:1]
         product = order_line.product_id
-        mix_note = ''
-        bom = self.env['mrp.bom']._bom_find(products=product).get(product)
-        if bom:
-            mix_note = bom.note or ''
+        # mix_note = ''
+        # bom = self.env['mrp.bom']._bom_find(products=product).get(product)
+        # if bom:
+        #     mix_note = bom.note or ''
         return {
             'volume': quantity,
             'sale_order_id': self.id,
             'product_id': product.id,
             'load_station_id': self.concrete_station_id.id,
             'delivery_address_id': self.partner_shipping_id.id,
-            'mix_note': mix_note,
             'company_id':self.company_id.id,
         }
     

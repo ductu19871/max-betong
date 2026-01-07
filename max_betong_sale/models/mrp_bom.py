@@ -6,6 +6,7 @@ class MrpBom(models.Model):
     _inherit = 'mrp.bom'
     
     note = fields.Text()
+    type = fields.Selection(selection_add=[('mix','Mix')],ondelete={'mix': 'set default'})
     
     
     

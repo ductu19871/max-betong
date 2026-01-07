@@ -20,6 +20,7 @@
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
+        'views/mrp_production_views.xml',
         #menu
         'views/menu_views.xml',
         #security
