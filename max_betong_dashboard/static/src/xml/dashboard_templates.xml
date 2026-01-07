@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard.ConcreteDashboard">
+        <div class="concrete-dashboard">
+            <!-- Loading Overlay -->
+            <LoadingOverlay show="state.loading"/>
+
+            <!-- Global Station Filter -->
+<!--            <div class="dashboard-header">-->
+<!--                <div class="global-filters">-->
+<!--                    <label>Trạm:</label>-->
+<!--                    <select class="station-select" t-on-change="onGlobalStationChange">-->
+<!--                        <option value="">Tất cả trạm</option>-->
+<!--                        <t t-foreach="state.stations" t-as="station" t-key="station.id">-->
+<!--                            <option t-att-value="station.id" t-att-selected="state.selectedStation === station.id">-->
+<!--                                <t t-esc="station.name"/>-->
+<!--                            </option>-->
+<!--                        </t>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div class="dashboard-content">
+                <!-- 1. TICKET Section -->
+                <section t-att-class="{'dashboard-section': true, 'fullscreen': state.ticketsFullscreen, 'section-hidden': state.ordersFullscreen || state.loadsFullscreen || state.vehiclesFullscreen}">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            Ticket
+                            <span class="badge"><t t-esc="state.tickets.total"/></span>
+                        </h2>
+                        <div class="section-actions">
+                            <SearchInput 
+                                placeholder="t('search_tickets')"
+                                value="state.ticketsSearch"
+                                onInput.bind="onTicketsSearchChange"/>
+                            <button t-if="!state.ticketsFullscreen" 
+                                    class="icon-btn" 
+                                    t-on-click="(ev) => this.showColumnMenu(ev, 'tickets')" 
+                                    t-att-title="t('customize_columns')">
+                                <i class="fa fa-columns"></i>
+                            </button>
+                            <button class="icon-btn" t-on-click="toggleTicketsFullscreen" t-att-title="t('expand_collapse')">
+                                <i class="fa fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container custom-scrollbar">
+                        <table class="data-table ticket-table column-customizable">
+                            <thead>
+                                <tr>
+                                    <t t-foreach="getVisibleColumns('tickets')" t-as="col" t-key="col.key">
+                                        <th class="column-header" 
+                                            t-att-class="{'sortable': isSortableColumn('tickets', col.key), 'text-center': col.key === 'volume' || col.key === 'state' || isProgressColumn(col.key), 'progress-col': isProgressColumn(col.key)}"
+                                            t-att-data-column-key="col.key"
+                                            t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px; position: relative;'"
+                                            t-att-draggable="true"
+                                            t-on-dragstart="(ev) => this.startDrag(ev, 'tickets', col.key)"
+                                            t-on-dragover.prevent="(ev) => ev.preventDefault()"
+                                            t-on-drop="(ev) => this.handleColumnDrop(ev, 'tickets', col.key)"
+                                            t-on-click="() => this.handleColumnClick('tickets', col.key)">
+                                            <div class="column-header-content">
+                                                <span class="column-label">
+                                                    <t t-esc="col.label"/>
+                                                    <t t-if="isSortableColumn('tickets', col.key)">
+                                                        <i t-att-class="state.ticketsSort.field === col.key ? (state.ticketsSort.order === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down') : 'fa fa-sort'" class="sort-icon"></i>
+                                                    </t>
+                                                </span>
+                                            </div>
+                                            <div class="column-resize-handle" 
+                                                 t-on-mousedown.stop="(ev) => this.startResize(ev, 'tickets', col.key)"
+                                                 t-att-title="t('drag_to_resize')"></div>
+                                        </th>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.tickets.data" t-as="ticket" t-key="ticket.id">
+                                    <tr t-att-class="{'row-even': ticket_index % 2 === 0, 'row-odd': ticket_index % 2 !== 0}">
+                                        <t t-foreach="getVisibleColumns('tickets')" t-as="col" t-key="col.key">
+                                            <td t-att-class="{
+                                                'text-center text-muted': col.key === 'stt',
+                                                'font-medium': col.key === 'name' || col.key === 'vehicle',
+                                                'text-center font-medium': col.key === 'volume',
+                                                'text-muted text-xs': col.key === 'eta',
+                                                'text-center': col.key === 'state' || isProgressColumn(col.key),
+                                                'truncate-cell': col.key === 'product' || col.key === 'mix_note'
+                                            }"
+                                            t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px;'">
+                                                <t t-if="col.key === 'stt'">
+                                                    <t t-esc="(state.tickets.page - 1) * state.tickets.limit + ticket_index + 1"/>
+                                                </t>
+                                                <t t-elif="col.key === 'name'">
+                                                    <a href="#" class="link-primary" t-on-click.stop.prevent="() => this.openRecord('mrp.production', ticket.id)">
+                                                        <t t-esc="ticket.name"/>
+                                                    </a>
+                                                </t>
+                                                <t t-elif="col.key === 'delivery_address'">
+                                                    <a t-if="ticket.delivery_address_id" href="#" class="link-secondary" 
+                                                       t-on-click.stop.prevent="() => this.openRecord('res.partner', ticket.delivery_address_id)">
+                                                        <t t-esc="ticket.delivery_address"/>
+                                                    </a>
+                                                    <span t-else=""><t t-esc="ticket.delivery_address"/></span>
+                                                </t>
+                                                <t t-elif="col.key === 'sale_order'">
+                                                    <a t-if="ticket.sale_order_id" href="#" class="link-primary" 
+                                                       t-on-click.stop.prevent="() => this.openRecord('sale.order', ticket.sale_order_id)">
+                                                        <t t-esc="ticket.sale_order"/>
+                                                    </a>
+                                                    <span t-else=""><t t-esc="ticket.sale_order"/></span>
+                                                </t>
+                                                <t t-elif="col.key === 'product'">
+                                                    <a t-if="ticket.product_template_id" href="#" class="link-primary" 
+                                                       t-on-click.stop.prevent="() => this.openRecord('product.template', ticket.product_template_id)">
+                                                        <t t-esc="ticket.product"/>
+                                                    </a>
+                                                    <span t-else=""><t t-esc="ticket.product"/></span>
+                                                </t>
+                                                <t t-elif="col.key === 'mix_note'"><t t-esc="ticket.mix_note"/></t>
+                                                <t t-elif="col.key === 'station'"><t t-esc="ticket.station"/></t>
+                                                <t t-elif="col.key === 'volume'"><t t-esc="formatNumber(ticket.volume)"/></t>
+                                                <t t-elif="col.key === 'vehicle'">
+                                                    <a t-if="ticket.vehicle_id" href="#" class="link-primary" 
+                                                       t-on-click.stop.prevent="() => this.openRecord('fleet.vehicle', ticket.vehicle_id)">
+                                                        <t t-esc="ticket.vehicle"/>
+                                                    </a>
+                                                    <span t-else=""><t t-esc="ticket.vehicle"/></span>
+                                                </t>
+                                                <t t-elif="col.key === 'eta'"><t t-esc="formatDateTime(ticket.eta)"/></t>
+                                                <t t-elif="col.key === 'state'">
+                                                    <StatusBadge state="ticket.state" label="ticket.state_display"/>
+                                                </t>
+                                                <t t-elif="isProgressColumn(col.key)">
+                                                    <ProgressDots ticket="ticket" displayState="col.key"/>
+                                                </t>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                                <t t-if="state.tickets.data.length === 0">
+                                    <EmptyState icon="'fa fa-ticket'" message="t('no_tickets')" colspan="getVisibleColumns('tickets').length"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Tickets Pagination -->
+                    <DashboardPagination data="state.tickets" onPageChange.bind="onTicketsPageChange"/>
+                </section>
+
+                <!-- 2. LOAD AND VEHICLE Section -->
+                <section t-att-class="{'dashboard-section': true, 'section-hidden': state.ticketsFullscreen || state.ordersFullscreen}">
+                    <div t-if="!state.loadsFullscreen &amp;&amp; !state.vehiclesFullscreen" class="section-header">
+                        <h2 class="section-title" t-esc="t('loads_and_vehicles')"/>
+                        <button t-if="state.permissions.can_assign_ticket"
+                                class="btn btn-assign" 
+                                t-att-class="{'btn-assign': true, 'btn-assign-disabled': !canAssignTicket()}"
+                                t-att-disabled="!canAssignTicket()"
+                                t-on-click="assignTicket">
+                            <i class="fa fa-refresh icon-md"></i> ASSIGN TICKET
+                        </button>
+                    </div>
+                    
+                    <div t-att-class="{'split-panel': !state.loadsFullscreen &amp;&amp; !state.vehiclesFullscreen}">
+                        <!-- Load List Panel -->
+                        <div t-att-class="{'panel panel-load': true, 'panel-fullscreen': state.loadsFullscreen, 'panel-hidden': state.vehiclesFullscreen &amp;&amp; !state.loadsFullscreen}">
+                            <div t-if="state.loadsFullscreen" class="section-header panel-fullscreen-header">
+                                <h2 class="section-title">
+                                    <t t-esc="t('load_list')"/>
+                                    <span class="badge"><t t-esc="state.loads.total"/></span>
+                                </h2>
+                                <div class="section-actions">
+                                    <SearchInput placeholder="t('search_loads')" value="state.loadsSearch" onInput.bind="onLoadsSearchChange"/>
+                                    <button class="icon-btn" t-on-click="toggleLoadsFullscreen" t-att-title="t('collapse')">
+                                        <i class="fa fa-compress"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div t-if="!state.loadsFullscreen" class="panel-header">
+                                <SearchInput size="'small'" placeholder="t('search_loads')" value="state.loadsSearch" onInput.bind="onLoadsSearchChange"/>
+                                <button class="icon-btn" t-on-click="(ev) => this.showColumnMenu(ev, 'loads')" t-att-title="t('customize_columns')">
+                                    <i class="fa fa-columns icon-md"></i>
+                                </button>
+                                <button class="icon-btn" t-on-click="toggleLoadsFullscreen" t-att-title="t('expand')">
+                                    <i class="fa fa-expand icon-md"></i>
+                                </button>
+                            </div>
+                            <div class="panel-body custom-scrollbar">
+                                <table class="data-table table-small column-customizable">
+                                    <thead>
+                                        <tr>
+                                            <t t-foreach="getVisibleColumns('loads')" t-as="col" t-key="col.key">
+                                                <th class="column-header" 
+                                                    t-att-class="{'sortable': isSortableColumn('loads', col.key), 'text-center': col.key === 'volume'}"
+                                                    t-att-data-column-key="col.key"
+                                                    t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px; position: relative;'"
+                                                    t-att-draggable="true"
+                                                    t-on-dragstart="(ev) => this.startDrag(ev, 'loads', col.key)"
+                                                    t-on-dragover.prevent="(ev) => ev.preventDefault()"
+                                                    t-on-drop="(ev) => this.handleColumnDrop(ev, 'loads', col.key)"
+                                                    t-on-click="() => this.handleColumnClick('loads', col.key)">
+                                                    <div class="column-header-content">
+                                                        <span class="column-label">
+                                                            <t t-esc="col.label"/>
+                                                            <t t-if="isSortableColumn('loads', col.key)">
+                                                                <i t-att-class="state.loadsSort.field === col.key ? (state.loadsSort.order === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down') : 'fa fa-sort'" class="sort-icon-sm"></i>
+                                                            </t>
+                                                        </span>
+                                                    </div>
+                                                    <div class="column-resize-handle" t-on-mousedown.stop="(ev) => this.startResize(ev, 'loads', col.key)" t-att-title="t('drag_to_resize')"></div>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.loads.data" t-as="load" t-key="load.id">
+                                            <tr t-att-class="{'row-even': load_index % 2 === 0, 'row-odd': load_index % 2 !== 0, 'selected': isLoadSelected(load.id)}"
+                                                t-on-click="() => this.toggleLoadSelection(load.id)"
+                                                t-on-contextmenu="(ev) => this.onLoadContextMenu(ev, load.id)">
+                                                <t t-foreach="getVisibleColumns('loads')" t-as="col" t-key="col.key">
+                                                    <td t-att-class="{
+                                                        'checkbox-cell': col.key === 'stt',
+                                                        'font-medium': col.key === 'name',
+                                                        'text-center font-medium': col.key === 'volume',
+                                                        'truncate-cell': col.key === 'product' || col.key === 'mix_note',
+                                                        'station-cell': col.key === 'station'
+                                                    }"
+                                                    t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px;'">
+                                                        <t t-if="col.key === 'stt'">
+                                                            <div class="flex-center">
+                                                                <div t-att-class="{'radio-circle': true, 'radio-selected': isLoadSelected(load.id)}"></div>
+                                                                <span><t t-esc="(state.loads.page - 1) * state.loads.limit + load_index + 1"/></span>
+                                                            </div>
+                                                        </t>
+                                                        <t t-elif="col.key === 'name'">
+                                                            <a href="#" class="link-primary" t-on-click.stop.prevent="() => this.openRecord('concrete.load', load.id)">
+                                                                <t t-esc="load.name"/>
+                                                            </a>
+                                                        </t>
+                                                        <t t-elif="col.key === 'delivery_address'">
+                                                            <a t-if="load.delivery_address_id" href="#" class="link-secondary" t-on-click.stop.prevent="() => this.openRecord('res.partner', load.delivery_address_id)">
+                                                                <t t-esc="load.delivery_address"/>
+                                                            </a>
+                                                            <span t-else=""><t t-esc="load.delivery_address"/></span>
+                                                        </t>
+                                                        <t t-elif="col.key === 'sale_order'">
+                                                            <a t-if="load.sale_order_id" href="#" class="link-primary" t-on-click.stop.prevent="() => this.openRecord('sale.order', load.sale_order_id)">
+                                                                <t t-esc="load.sale_order"/>
+                                                            </a>
+                                                            <span t-else=""><t t-esc="load.sale_order"/></span>
+                                                        </t>
+                                                        <t t-elif="col.key === 'product'">
+                                                            <a t-if="load.product_id" href="#" class="link-secondary" t-on-click.stop.prevent="() => this.openRecord('product.product', load.product_id)">
+                                                                <t t-esc="load.product"/>
+                                                            </a>
+                                                            <span t-else=""><t t-esc="load.product"/></span>
+                                                        </t>
+                                                        <t t-elif="col.key === 'mix_note'"><t t-esc="load.mix_note"/></t>
+                                                        <t t-elif="col.key === 'station'">
+                                                            <span t-if="state.permissions.can_edit" 
+                                                                  class="station-value" 
+                                                                  t-on-click.stop="(ev) => this.showStationDropdown(ev, 'load', load.id)">
+                                                                <t t-esc="load.station || t('select_station')"/>
+                                                                <i class="fa fa-chevron-down icon-xs"></i>
+                                                            </span>
+                                                            <span t-else="" class="station-value">
+                                                                <t t-esc="load.station || t('select_station')"/>
+                                                            </span>
+                                                        </t>
+                                                        <t t-elif="col.key === 'volume'"><t t-esc="formatNumber(load.volume)"/></t>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                        <t t-if="state.loads.data.length === 0">
+                                            <EmptyState icon="'fa fa-cubes'" message="t('no_loads')" colspan="getVisibleColumns('loads').length"/>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <DashboardPagination t-if="state.loads.totalPages > 1" data="state.loads" onPageChange.bind="onLoadsPageChange"/>
+                        </div>
+
+                        <!-- Vehicle List Panel -->
+                        <div t-att-class="{'panel panel-vehicle': true, 'panel-fullscreen': state.vehiclesFullscreen, 'panel-hidden': state.loadsFullscreen &amp;&amp; !state.vehiclesFullscreen}">
+                            <div t-if="state.vehiclesFullscreen" class="section-header panel-fullscreen-header">
+                                <h2 class="section-title">
+                                    <t t-esc="t('vehicle_list')"/>
+                                    <span class="badge"><t t-esc="state.vehicles.total"/></span>
+                                </h2>
+                                <div class="section-actions">
+                                    <SearchInput placeholder="t('search_vehicles')" value="state.vehiclesSearch" onInput.bind="onVehiclesSearchChange"/>
+                                    <StationDropdown 
+                                        show="state.vehicleStationFilterDropdown.show"
+                                        stations="state.stations"
+                                        selectedId="state.selectedVehicleStation"
+                                        displayName="getVehicleStationDisplayName()"
+                                        onToggle.bind="toggleVehicleStationDropdown"
+                                        onChange.bind="onVehicleStationChange"/>
+                                    <button class="icon-btn" t-on-click="toggleVehiclesFullscreen" t-att-title="t('collapse')">
+                                        <i class="fa fa-compress"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div t-if="!state.vehiclesFullscreen" class="panel-header">
+                                <SearchInput size="'small'" placeholder="t('search_vehicles')" value="state.vehiclesSearch" onInput.bind="onVehiclesSearchChange"/>
+                                <StationDropdown 
+                                    show="state.vehicleStationFilterDropdown.show"
+                                    stations="state.stations"
+                                    selectedId="state.selectedVehicleStation"
+                                    displayName="getVehicleStationDisplayName()"
+                                    onToggle.bind="toggleVehicleStationDropdown"
+                                    onChange.bind="onVehicleStationChange"/>
+                                <button class="icon-btn" t-on-click="(ev) => this.showColumnMenu(ev, 'vehicles')" t-att-title="t('customize_columns')">
+                                    <i class="fa fa-columns icon-md"></i>
+                                </button>
+                                <button class="icon-btn" t-on-click="toggleVehiclesFullscreen" t-att-title="t('expand')">
+                                    <i class="fa fa-expand icon-md"></i>
+                                </button>
+                            </div>
+                            <div class="panel-body custom-scrollbar">
+                                <table class="data-table table-small column-customizable">
+                                    <thead>
+                                        <tr>
+                                            <t t-foreach="getVisibleColumns('vehicles')" t-as="col" t-key="col.key">
+                                                <th class="column-header" 
+                                                    t-att-data-column-key="col.key"
+                                                    t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px; position: relative;'"
+                                                    t-att-draggable="true"
+                                                    t-on-dragstart="(ev) => this.startDrag(ev, 'vehicles', col.key)"
+                                                    t-on-dragover.prevent="(ev) => ev.preventDefault()"
+                                                    t-on-drop="(ev) => this.handleColumnDrop(ev, 'vehicles', col.key)">
+                                                    <div class="column-header-content">
+                                                        <span class="column-label"><t t-esc="col.label"/></span>
+                                                    </div>
+                                                    <div class="column-resize-handle" t-on-mousedown.stop="(ev) => this.startResize(ev, 'vehicles', col.key)" t-att-title="t('drag_to_resize')"></div>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.vehicles.data" t-as="vehicle" t-key="vehicle.id">
+                                            <tr t-att-class="{'row-even': vehicle_index % 2 === 0, 'row-odd': vehicle_index % 2 !== 0, 'selected': isVehicleSelected(vehicle.id)}"
+                                                t-on-click="() => this.selectVehicle(vehicle.id)">
+                                                <t t-foreach="getVisibleColumns('vehicles')" t-as="col" t-key="col.key">
+                                                    <td t-att-class="col.key === 'stt' ? 'checkbox-cell' : ''"
+                                                        t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px;'">
+                                                        <t t-if="col.key === 'stt'">
+                                                            <div class="flex-center">
+                                                                <div t-att-class="{'radio-circle': true, 'radio-selected': isVehicleSelected(vehicle.id)}"></div>
+                                                                <span><t t-esc="(state.vehicles.page - 1) * state.vehicles.limit + vehicle_index + 1"/></span>
+                                                            </div>
+                                                        </t>
+                                                        <t t-elif="col.key === 'license_plate'">
+                                                            <a href="#" class="link-primary font-medium" t-on-click.stop.prevent="() => this.openRecord('fleet.vehicle', vehicle.id)">
+                                                                <t t-esc="vehicle.license_plate || vehicle.name"/>
+                                                            </a>
+                                                        </t>
+                                                        <t t-elif="col.key === 'station'">
+                                                            <div class="station-cell" t-on-click.stop="(ev) => this.showVehicleStationDropdown(ev, vehicle.id)">
+                                                                <span class="station-value">
+                                                                    <t t-esc="vehicle.station || ''"/>
+                                                                    <i class="fa fa-chevron-down dropdown-icon-small"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div t-if="state.vehicleStationDropdown.show &amp;&amp; state.vehicleStationDropdown.vehicleId === vehicle.id" 
+                                                                 class="station-dropdown-menu"
+                                                                 t-attf-style="left: {{ state.vehicleStationDropdown.x }}px; top: {{ state.vehicleStationDropdown.y }}px;">
+                                                                <t t-foreach="state.stations" t-as="station" t-key="station.id">
+                                                                    <div class="dropdown-item" t-on-click.stop="() => this.selectVehicleStation(vehicle.id, station.id)">
+                                                                        <t t-esc="station.name"/>
+                                                                    </div>
+                                                                </t>
+                                                            </div>
+                                                        </t>
+                                                        <t t-elif="col.key === 'state_concrete'">
+                                                            <div class="state-cell" t-on-click.stop="(ev) => this.showVehicleStateDropdown(ev, vehicle.id)">
+                                                                <span class="state-value">
+                                                                    <t t-esc="vehicle.state_display || vehicle.state_concrete"/>
+                                                                    <i class="fa fa-chevron-down dropdown-icon-small"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div t-if="state.vehicleStateDropdown.show &amp;&amp; state.vehicleStateDropdown.vehicleId === vehicle.id" 
+                                                                 class="state-dropdown-menu"
+                                                                 t-attf-style="left: {{ state.vehicleStateDropdown.x }}px; top: {{ state.vehicleStateDropdown.y }}px;">
+                                                                <div t-if="canSelectAvailable(vehicle.state_concrete)" 
+                                                                     class="dropdown-item" 
+                                                                     t-on-click.stop="() => this.selectVehicleState(vehicle.id, 'available')">
+                                                                    <t t-esc="getAvailableText()"/>
+                                                                </div>
+                                                                <div t-if="canSelectBroken(vehicle.state_concrete)" 
+                                                                     class="dropdown-item"
+                                                                     t-on-click.stop="() => this.selectVehicleState(vehicle.id, 'broken')">
+                                                                    <t t-esc="getBrokenText()"/>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                        <t t-if="state.vehicles.data.length === 0">
+                                            <EmptyState icon="'fa fa-truck'" message="t('no_vehicles')" colspan="getVisibleColumns('vehicles').length"/>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <DashboardPagination t-if="state.vehicles.totalPages > 1" data="state.vehicles" onPageChange.bind="onVehiclesPageChange"/>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. ORDERS Section -->
+                <section t-att-class="{'dashboard-section': true, 'fullscreen': state.ordersFullscreen, 'section-hidden': state.ticketsFullscreen || state.loadsFullscreen || state.vehiclesFullscreen}">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <t t-esc="t('orders_list')"/>
+                            <span class="badge"><t t-esc="state.orders.total"/></span>
+                        </h2>
+                        <div class="section-actions">
+                            <SearchInput placeholder="t('search_orders')" value="state.ordersSearch" onInput.bind="onOrdersSearchChange"/>
+                            <button t-if="!state.ordersFullscreen" class="icon-btn" t-on-click="(ev) => this.showColumnMenu(ev, 'orders')" t-att-title="t('customize_columns')">
+                                <i class="fa fa-columns"></i>
+                            </button>
+                            <button class="icon-btn" t-on-click="toggleOrdersFullscreen" t-att-title="t('expand_collapse')">
+                                <i class="fa fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container custom-scrollbar">
+                        <table class="data-table orders-table column-customizable">
+                            <thead>
+                                <tr>
+                                    <t t-foreach="getVisibleColumns('orders')" t-as="col" t-key="col.key">
+                                        <th class="column-header" 
+                                            t-att-class="{'sortable': isSortableColumn('orders', col.key), 'text-center': col.key === 'volume' || col.key === 'volume_allocated' || col.key === 'volume_unallocated' || col.key === 'state' || col.key === 'volume_delivered' || col.key === 'action'}"
+                                            t-att-data-column-key="col.key"
+                                            t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px; position: relative;'"
+                                            t-att-draggable="true"
+                                            t-on-dragstart="(ev) => this.startDrag(ev, 'orders', col.key)"
+                                            t-on-dragover.prevent="(ev) => ev.preventDefault()"
+                                            t-on-drop="(ev) => this.handleColumnDrop(ev, 'orders', col.key)"
+                                            t-on-click="() => this.handleColumnClick('orders', col.key)">
+                                            <div class="column-header-content">
+                                                <span class="column-label">
+                                                    <t t-esc="col.label"/>
+                                                    <t t-if="isSortableColumn('orders', col.key)">
+                                                        <i t-att-class="state.ordersSort.field === col.key ? (state.ordersSort.order === 'asc' ? 'fa fa-sort-up' : 'fa fa-sort-down') : 'fa fa-sort'" class="sort-icon"></i>
+                                                    </t>
+                                                </span>
+                                            </div>
+                                            <div class="column-resize-handle" t-on-mousedown.stop="(ev) => this.startResize(ev, 'orders', col.key)" t-att-title="t('drag_to_resize')"></div>
+                                        </th>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.orders.data" t-as="order" t-key="order.id">
+                                    <tr t-att-class="{'row-even': order_index % 2 === 0, 'row-odd': order_index % 2 !== 0, 'selected': isOrderSelected(order.id)}"
+                                        t-on-click="() => this.selectOrder(order.id)">
+                                        <t t-foreach="getVisibleColumns('orders')" t-as="col" t-key="col.key">
+                                            <td t-att-class="{
+                                                'text-center text-muted': col.key === 'stt',
+                                                'font-medium': col.key === 'name',
+                                                'text-center font-medium': col.key === 'volume' || col.key === 'volume_allocated' || col.key === 'volume_unallocated' || col.key === 'volume_delivered',
+                                                'text-center': col.key === 'state' || col.key === 'action',
+                                                'truncate-cell': col.key === 'product' || col.key === 'mix_note',
+                                                'station-cell': col.key === 'station'
+                                            }"
+                                            t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px;'">
+                                                <t t-if="col.key === 'stt'">
+                                                    <t t-esc="(state.orders.page - 1) * state.orders.limit + order_index + 1"/>
+                                                </t>
+                                                <t t-elif="col.key === 'name'">
+                                                    <a href="#" class="link-primary" t-on-click.stop.prevent="() => this.openRecord('sale.order', order.id)">
+                                                        <t t-esc="order.name"/>
+                                                    </a>
+                                                </t>
+                                                <t t-elif="col.key === 'delivery_address'">
+                                                    <a t-if="order.delivery_address_id" href="#" class="link-secondary" t-on-click.stop.prevent="() => this.openRecord('res.partner', order.delivery_address_id)">
+                                                        <t t-esc="order.delivery_address"/>
+                                                    </a>
+                                                    <span t-else=""><t t-esc="order.delivery_address"/></span>
+                                                </t>
+                                                <t t-elif="col.key === 'product'">
+                                                    <a t-if="order.product_id" href="#" class="link-secondary" t-on-click.stop.prevent="() => this.openRecord('product.product', order.product_id)">
+                                                        <t t-esc="order.product"/>
+                                                    </a>
+                                                    <span t-else=""><t t-esc="order.product"/></span>
+                                                </t>
+                                                <t t-elif="col.key === 'mix_note'"><t t-esc="order.mix_note"/></t>
+                                                        <t t-elif="col.key === 'station'">
+                                                            <span t-if="state.permissions.can_edit" 
+                                                                  class="station-value" 
+                                                                  t-on-click.stop="(ev) => this.showStationDropdown(ev, 'order', order.id)">
+                                                                <t t-esc="order.station || t('select_station')"/>
+                                                                <i class="fa fa-chevron-down icon-xs"></i>
+                                                            </span>
+                                                            <span t-else="" class="station-value">
+                                                                <t t-esc="order.station || t('select_station')"/>
+                                                            </span>
+                                                        </t>
+                                                <t t-elif="col.key === 'volume'"><t t-esc="formatNumber(order.volume)"/></t>
+                                                <t t-elif="col.key === 'volume_allocated'"><t t-esc="formatNumber(order.volume_allocated)"/></t>
+                                                <t t-elif="col.key === 'volume_unallocated'"><t t-esc="formatNumber(order.volume_unallocated)"/></t>
+                                                <t t-elif="col.key === 'state'">
+                                                    <StatusBadge state="order.state" label="order.state_display"/>
+                                                </t>
+                                                <t t-elif="col.key === 'volume_delivered'"><t t-esc="formatNumber(order.delivered_volume)"/></t>
+                                                <t t-elif="col.key === 'action'">
+                                                    <button t-if="state.permissions.can_split_load"
+                                                            t-att-class="order.volume_unallocated > 0 ? 'btn btn-sm btn-split-load' : 'btn btn-sm btn-split-load-disabled'"
+                                                            t-att-disabled="order.volume_unallocated &lt;= 0"
+                                                            t-on-click.stop="() => order.volume_unallocated > 0 &amp;&amp; this.splitLoad(order.id)">
+                                                        <t t-esc="t('split_load')"/>
+                                                    </button>
+                                                </t>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                                <t t-if="state.orders.data.length === 0">
+                                    <EmptyState icon="'fa fa-shopping-cart'" message="t('no_orders')" colspan="getVisibleColumns('orders').length"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Orders Pagination -->
+                    <DashboardPagination data="state.orders" onPageChange.bind="onOrdersPageChange"/>
+                </section>
+            </div>
+
+            <!-- Context Menu for Load -->
+            <ContextMenu 
+                show="state.contextMenu.show"
+                position="{x: state.contextMenu.x, y: state.contextMenu.y}"
+                items="getContextMenuItems()"/>
+
+            <!-- Station Dropdown for Editing -->
+            <div t-if="state.stationDropdown.show" 
+                 class="station-dropdown-menu"
+                 t-attf-style="left: {{ state.stationDropdown.x }}px; top: {{ state.stationDropdown.y }}px;">
+                <t t-foreach="state.stations" t-as="station" t-key="station.id">
+                    <div class="dropdown-item" t-on-click.stop="() => this.selectStation(station.id)">
+                        <t t-esc="station.name"/>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Confirmation Modal -->
+            <ConfirmModal 
+                show="state.confirmModal.show"
+                title="state.confirmModal.title"
+                message="state.confirmModal.message"
+                onConfirm.bind="confirmAction"
+                onCancel.bind="closeConfirmModal"/>
+
+            <!-- Column Customization Menu -->
+            <ColumnMenu 
+                show="state.columnMenu.show"
+                columns="getColumns(state.columnMenu.table)"
+                position="{x: state.columnMenu.x, y: state.columnMenu.y}"
+                onToggleVisibility="(key) => this.toggleColumnVisibility(state.columnMenu.table, key)"
+                onReset="() => this.resetColumns(state.columnMenu.table)"
+                onClose.bind="closeColumnMenu"/>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<record id="template_delivery_concrete" model="ir.attachment">
+	        <field name="name">report_delivery_concrete.odt</field>
+	        <field name="type">binary</field>
+	        <field name="datas" type="base64" file="max_betong_sale/report/report_delivery_concrete.odt"/>
+	    </record>
+	
+	    <record id="report_delivery_concrete" model="ir.actions.report">
+	        <field name="report_name">report_delivery_concrete</field>
+	        <field name="model">stock.picking</field>
+	        <field name='report_type'>controller</field>
+	        <field name="print_report_name">'Delivery Concrete - %s' % (object.name)</field>
+	        <field name="name">Report Delivery Concrete</field>
+	        <field name="output_file">pdf</field>
+	        <field name="template_id" ref="template_delivery_concrete"/>
+	        <field name="binding_model_id" ref="model_stock_picking"/>
+	    </record>
+	    
+    </data>
+</odoo>

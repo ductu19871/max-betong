@@ -9,6 +9,6 @@ class StockScrap(models.Model):
     
     def action_validate(self):
         for this in self:
-            if this.production_id:
-                this.production_id.write({'state':'dump'})
+            if this.production_id and this.production_id.mo_type == 'concrete':
+                this.production_id.write({'state_concrete':'dump'})
         return super().action_validate()

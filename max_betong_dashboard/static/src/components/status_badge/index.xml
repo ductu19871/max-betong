@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard.StatusBadge">
+        <span t-att-class="'status-badge ' + stateClass">
+            <t t-esc="displayLabel"/>
+        </span>
+    </t>
+
+</templates>
+

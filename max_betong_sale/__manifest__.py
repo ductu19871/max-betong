@@ -13,6 +13,7 @@
         #data
         #wizard
         "wizard/wizard_confirm_fields.xml",
+        "wizard/wizard_change_state.xml",
         #view
         'views/sale_order_views.xml',
         'views/betong_load_views.xml',
@@ -21,11 +22,14 @@
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
         'views/mrp_production_views.xml',
+        'views/stock_picking_view.xml',
         #menu
         'views/menu_views.xml',
         #security
         'security/security.xml',
         'security/ir.model.access.csv',
+        #report
+        'report/template.xml',
         
     ],
     'installable': True,

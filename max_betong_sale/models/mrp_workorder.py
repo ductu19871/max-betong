@@ -10,15 +10,6 @@ class MrpWorkorder(models.Model):
         if vals.get('state') == 'progress':
             for wo in self:
                 production = wo.production_id
-                if production.state == 'confirmed':
+                if production.state == 'progress' and production.mo_type == 'concrete':
                     production.action_loading()
-        if vals.get('state') == 'done':
-            for wo in self:
-                production = wo.production_id
-                all_done = all(
-                    w.state == 'done'
-                    for w in production.workorder_ids
-                )
-                if all_done:
-                    production.action_loaded()
         return res

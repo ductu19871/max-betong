@@ -1,0 +1,781 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* max_betong_dashboard
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20251121\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-06 07:43+0000\n"
+"PO-Revision-Date: 2026-01-06 14:55+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/xml/dashboard_templates.xml:0
+#, python-format
+msgid "ASSIGN TICKET"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Action"
+msgstr "Hành động"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/station_dropdown/index.js:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "All Vehicles"
+msgstr "Tất cả xe"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Allocated Volume (m³)"
+msgstr "Khối lượng đã chia (m³)"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid ""
+"Are you sure you want to change the State to ${stateConcrete === "
+"'available' ? _t('Available') : _t('Broken')}?"
+msgstr ""
+"Bạn có chắc muốn đổi trạng thái sang ${stateConcrete === 'available' ? "
+"_t('Available') : _t('Broken')}?"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid ""
+"Are you sure you want to change the Station for this ${type === 'order' ? "
+"'order' : 'Load'}?"
+msgstr ""
+"Bạn có chắc muốn thay đổi Trạm cho ${type === 'order' ? 'order' : 'Load'}?"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Are you sure you want to change the Station for this Vehicle?"
+msgstr "Bạn có chắc muốn đổi Trạm của xe?"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid ""
+"Are you sure you want to delete this Load? The volume will be returned to "
+"the unallocated volume of the SO."
+msgstr ""
+"Bạn có chắc chắn muốn xóa Load này không? Hành động này sẽ cập nhật lại "
+"Khối lượng chưa chia Lóa của SO."
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/confirm_modal/index.js:0
+#, python-format
+msgid "Are you sure you want to perform this action?"
+msgstr "Bạn có chắc chắn muốn thực hiện hành động này không?"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Arrived"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Assigned"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Available"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Broken"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/confirm_modal/index.js:0
+#, python-format
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#, python-format
+msgid "Cancelled"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Cannot Assign Ticket: Load station and Vehicle station do not match."
+msgstr ""
+"Không thể phân bổ Ticket: Trạm của Load và Trạm của xe không trùng khớp."
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Cannot Assign Ticket: Vehicle is not Available."
+msgstr "Không thể phân bổ Ticket: Xe không Sẵn sàng."
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "Cannot change to Available from current state"
+msgstr "Không thể đổi trạng thái Available "
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "Cannot change to Broken from current state"
+msgstr "Không thể đổi trạng thái Broken "
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Collapse"
+msgstr "Thu"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Completed"
+msgstr ""
+
+#. module: max_betong_dashboard
+#: model:ir.model,name:max_betong_dashboard.model_concrete_dashboard
+msgid "Concrete Dashboard"
+msgstr "Bảng điều khiển Ticket"
+
+#. module: max_betong_dashboard
+#: model:ir.actions.client,name:max_betong_dashboard.action_concrete_tag_dashboard
+msgid "Concrete Dispatching"
+msgstr "Đang điều phối bê tông"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/confirm_modal/index.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Confirm Change State"
+msgstr "Xác nhận điều chỉnh trạng thái"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Confirm Change Station"
+msgstr "Xác nhận đổi Trạm"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Confirm Delete Load"
+msgstr "Xác nhận xóa Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Construction Site Address"
+msgstr "Địa chỉ công trường"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/column_menu/index.js:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Customize Columns"
+msgstr "Điều chỉnh cột"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Delete Load"
+msgstr "Xóa Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Delivered Volume (m³)"
+msgstr "Khối lượng đã giao (m³)"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#, python-format
+msgid "Draft"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/data_table/index.js:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Drag to resize width"
+msgstr "Kéo để thay đổi chiều rộng"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#, python-format
+msgid "Dump"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "ETA"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Expand"
+msgstr "Phóng"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Expand/Collapse"
+msgstr "Thu/Phóng"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Failed to assign ticket"
+msgstr "Không thể phân bổ Ticket"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Failed to delete load"
+msgstr "Không thể xóa Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Failed to load dashboard data"
+msgstr "Không thể tải dữ lieu bảng điều khiển"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Failed to split load"
+msgstr "Không thể chia Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Failed to update state"
+msgstr "Không thể cập nhật trạng thái"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Failed to update station"
+msgstr "Không thể cập nhật Trạm"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "Invalid state"
+msgstr "Trạng thái không hợp lệ"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Leave"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Load Code"
+msgstr "Mã Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Load List"
+msgstr "Danh sách Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Load List and Vehicle List"
+msgstr "Danh sách Load và xe"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Load deleted successfully"
+msgstr "Xóa Load thành công"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Load information not found"
+msgstr "Không tìm thấy thông tin Load"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "Load not found"
+msgstr "Không tìm thấy Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Load split successfully"
+msgstr "Chia Load thành công"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Loaded"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Loading"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Mix Note"
+msgstr "Ghi chú cấp phối"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "No"
+msgstr "STT"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/data_table/index.js:0
+#, python-format
+msgid "No data"
+msgstr "Không có dữ liệu"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "No loads"
+msgstr "Không có Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "No orders"
+msgstr "Không có SO"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "No tickets"
+msgstr "Không có Ticket"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "No vehicles"
+msgstr "Không có xe"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#, python-format
+msgid "Not Available"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#, python-format
+msgid "On Hold"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "Order not found"
+msgstr "Không tìm thấy SO"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Orders being delivered and pending delivery"
+msgstr "Đơn hàng đang được giao và đang chờ giao"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/pagination/index.js:0
+#, python-format
+msgid "Page:"
+msgstr "Trang:"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Please select a Vehicle"
+msgstr "Chọn xe"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Please select at least one Load"
+msgstr "Chọn Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: max_betong_dashboard
+#: model:ir.model,name:max_betong_dashboard.model_concrete_load
+#: model:ir.model,name:max_betong_dashboard.model_fleet_vehicle
+#: model:ir.model,name:max_betong_dashboard.model_mrp_production
+#: model:ir.model,name:max_betong_dashboard.model_realtime_dashboard_mixin
+#: model:ir.model,name:max_betong_dashboard.model_sale_order
+msgid "Realtime Dashboard Mixin"
+msgstr "Bảng điều khiển thời gian thực Mixin"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#, python-format
+msgid "Remix & Swapped"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/column_menu/index.js:0
+#, python-format
+msgid "Reset to Default"
+msgstr "Đặt lại Nháp"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Return"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "SO"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Search by Load code..."
+msgstr "Tìm kiếm theo mã Load..."
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Search by ticket code, product,..."
+msgstr "Tìm kiếm theo mã Ticket, sản phẩm,..."
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Search by vehicle code..."
+msgstr "Tìm kiếm theo mã xe..."
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/components/search_input/index.js:0
+#, python-format
+msgid "Search..."
+msgstr "Tìm kiếm..."
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Search: SO, Address, Product, Note..."
+msgstr "Tìm kiếm: SO, Địa chỉ, Sản phẩm, Ghi chú..."
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Select station"
+msgstr "Chọn Trạm"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Split Load"
+msgstr "Chia Load"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "State"
+msgstr "Trạng thái"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "State updated successfully"
+msgstr "Cập nhật trạng thái thành công"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Station"
+msgstr "Trạm"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Station updated successfully"
+msgstr "Cập nhật Trạm thành công"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/xml/dashboard_templates.xml:0
+#, python-format
+msgid "Ticket"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Ticket Code"
+msgstr "Mã Ticket"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Ticket assigned successfully"
+msgstr "Phân bổ Ticket thành công"
+
+#. module: max_betong_dashboard
+#: model:ir.ui.menu,name:max_betong_dashboard.menu_concrete_dashboard
+msgid "Tickets"
+msgstr "Ticket"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Unallocated Volume (m³)"
+msgstr "Khối lượng chưa chia Load (m³)"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Unloading"
+msgstr ""
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Vehicle"
+msgstr "Xe"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Vehicle Code"
+msgstr "Mã xe"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Vehicle List"
+msgstr "Danh sách xe"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Vehicle information not found"
+msgstr "Không tìm thấy thông tin xe"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "Vehicle not found"
+msgstr "Không tìm thấy xe"
+
+#. module: max_betong_dashboard
+#. odoo-javascript
+#: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
+#, python-format
+msgid "Volume (m³)"
+msgstr "Khối lượng (m³)"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "You do not have permission to assign ticket"
+msgstr "Bạn không có quyền phân bổ Ticket"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "You do not have permission to delete load"
+msgstr "Bạn không có quyền xóa Load"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "You do not have permission to edit"
+msgstr "Bạn không có quyền điều chỉnh"
+
+#. module: max_betong_dashboard
+#. odoo-python
+#: code:addons/max_betong_dashboard/models/dashboard.py:0
+#, python-format
+msgid "You do not have permission to split load"
+msgstr "Bạn không có quyền chia Load"

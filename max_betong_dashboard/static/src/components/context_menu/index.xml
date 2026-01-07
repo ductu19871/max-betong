@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard.ContextMenu">
+        <div t-if="props.show &amp;&amp; props.items.length > 0" 
+             class="context-menu"
+             t-att-style="style">
+            <t t-foreach="props.items" t-as="item" t-key="item.label">
+                <div t-att-class="'context-menu-item ' + (item.danger ? 'danger' : '')" 
+                     t-on-click.stop="() => this.onItemClick(item)">
+                    <i t-if="item.icon" t-att-class="item.icon + ' icon-md'"></i>
+                    <t t-esc="item.label"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
+

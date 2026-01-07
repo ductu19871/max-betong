@@ -7,8 +7,17 @@
     'author': 'Maxsolution',
     'depends': ['fleet','mrp'],
     'data': [
-        'views/fleet_vehicle_views.xml'
+        'security/ir.model.access.csv',
+        'wizard/wizard_change_state.xml',
+        'views/fleet_vehicle_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'max_betong_fleet/static/src/css/selection_state_badge.css',
+            'max_betong_fleet/static/src/js/selection_state_badge.js',
+            'max_betong_fleet/static/src/xml/selection_state_badge.xml',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,

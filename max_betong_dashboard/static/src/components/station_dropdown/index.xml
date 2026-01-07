@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard.StationDropdown">
+        <div class="station-dropdown" t-att-class="{'dropdown-open': props.show}">
+            <button class="dropdown-btn" t-on-click="toggle">
+                <t t-esc="props.displayName"/>
+                <i class="fa fa-chevron-up icon-sm"></i>
+            </button>
+            <div t-if="props.show" class="dropdown-menu" t-on-click.stop="">
+                <!-- "All Vehicles" option -->
+                <div class="dropdown-item" 
+                     t-att-class="{'dropdown-item-active': isActive(null)}"
+                     t-on-click="() => this.selectStation(null)">
+                    <t t-esc="getAllVehiclesText()"/>
+                </div>
+                <!-- Station options -->
+                <t t-foreach="props.stations" t-as="station" t-key="station.id">
+                    <div class="dropdown-item" 
+                         t-att-class="{'dropdown-item-active': isActive(station.id)}"
+                         t-on-click="() => this.selectStation(station.id)">
+                        <t t-esc="station.name"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>
+

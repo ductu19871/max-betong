@@ -5,6 +5,15 @@ from datetime import date,timedelta
 class Production(models.Model):
     _inherit = 'mrp.production'
     
+    mo_type = fields.Selection(
+        [
+            ('concrete', 'Concrete'),
+            ('normal', 'Normal'),
+        ],
+        string='MO Type',
+        default='normal',
+        required=True,
+    )
     load_id = fields.Many2one('concrete.load',string='Concrete Load',ondelete="set null")
     vehicle_id = fields.Many2one(
         related="load_id.vehicle_id",
@@ -31,18 +40,27 @@ class Production(models.Model):
         store =True
     )
     
-    state = fields.Selection(selection_add=[
-        ('loading', 'Loading'),
-        ('loaded', 'Loaded'),
-        ('leave', 'Leave'),
-        ('arrived', 'Arrived'),
-        ('unloading', 'Unloading'),
-        ('return', 'Return'),
-        ('completed', 'Completed'),
-        ('on_hold', 'On Hold'),
-        ('dump', 'Dump'),
-        ('remix', 'Remix & Swapped'),
-    ])
+    state_concrete = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('assigned', 'Assigned'),
+            ('loading', 'Loading'),
+            ('loaded', 'Loaded'),
+            ('leave', 'Leave'),
+            ('arrived', 'Arrived'),
+            ('unloading', 'Unloading'),
+            ('return', 'Return'),
+            ('completed', 'Completed'),
+            ('on_hold', 'On Hold'),
+            ('dump', 'Dump'),
+            ('remix', 'Remix & Swapped'),
+            ('cancel', 'Canceled'),
+        ],
+        string='Concrete State',
+        default="draft",
+        tracking=True,
+        copy=False
+    )
     
     assigned_datetime = fields.Datetime(
         string='Assigned Time',
@@ -61,23 +79,57 @@ class Production(models.Model):
         readonly=True
     )
     
+    arrived_state_tracking_datetime = fields.Datetime(
+        string='Arrived State Tracking Time',
+        readonly=True
+    )
+    unloading_state_tracking_datetime = fields.Datetime(
+        string='Unloading State Tracking Time',
+        readonly=True
+    )
+    return_state_tracking_datetime = fields.Datetime(
+        string='Return State Tracking Time',
+        readonly=True
+    )
+    completed_state_tracking_datetime = fields.Datetime(
+        string='Completed State Tracking Time',
+        readonly=True
+    )
+    
     distance_km = fields.Float(
         string='Distance (km)',
         help='Distance from plant to site'
     )
     eta = fields.Datetime(compute="_compute_eta",string='ETA',store =True)
     
+    do_ids = fields.One2many('stock.picking','ticket_id',string='Do')
+    do_count = fields.Integer(compute='_compute_do_count',store =True)
+    
+    def action_view_do(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Delivery Orders',
+            'res_model': 'stock.picking',
+            'view_mode': 'tree,form',
+            'domain': [('ticket_id', '=', self.id)],
+        }
+    
+    @api.depends('do_ids')
+    def _compute_do_count(self):
+        for mo in self:
+            mo.do_count = len(mo.do_ids)
+    
     def action_loading(self):
         self.write({'loading_datetime':fields.Datetime.now(),
-                   'state':'loading'})
+                   'state_concrete':'loading'})
     
     def action_loaded(self):
         self.write({'loaded_datetime':fields.Datetime.now(),
-                   'state':'loaded'})
+                   'state_concrete':'loaded'})
         
     def action_leave(self):
         self.write({'leave_datetime':fields.Datetime.now(),
-                   'state':'leave'})
+                   'state_concrete':'leave'})
     
     def action_confirm(self):
         res = super().action_confirm()
@@ -86,7 +138,7 @@ class Production(models.Model):
         return res
             
     def action_on_hold(self):
-        self.write({'state':'on_hold'})
+        self.write({'state_concrete':'on_hold'})
     
     def _get_avg_mixing_time(self):
         tickets = self.search([
@@ -167,5 +219,52 @@ class Production(models.Model):
             )
         vals['name'] = seq
         return super().create(vals)
+    
+    def write(self, vals):
+        if 'state_concrete' in vals and self.mo_type == 'concrete':
+            new_state = vals['state_concrete']
+            state_to_datetime_field = {
+                'assigned': 'assigned_datetime',
+                'loading': 'loading_datetime',
+                'loaded': 'loaded_datetime',
+                'leave': 'leave_datetime',
+                'arrived': 'arrived_state_tracking_datetime',
+                'unloading': 'unloading_state_tracking_datetime',
+                'return': 'return_state_tracking_datetime',
+                'completed': 'completed_state_tracking_datetime',
+            }
+            if new_state in state_to_datetime_field:
+                datetime_field = state_to_datetime_field[new_state]
+                for record in self:
+                    if not getattr(record, datetime_field, False):
+                        vals[datetime_field] = fields.Datetime.now()
+        
+        result = super().write(vals)
+        if 'state' in vals:
+            for mo in self:
+                if mo.mo_type == 'concrete':
+                    mo.update_state_concrete()
+        return result
+    
+    def update_state_concrete(self):
+        if self.state =='confirmed':
+            self.state_concrete = 'assigned'
+            self.vehicle_id.state_concrete='assigned'
+        if self.state =='progress':
+            self.action_loading()
+            self.vehicle_id.state_concrete='loading'
+        if self.state =='done':
+            self.action_loaded()
+            self.vehicle_id.state_concrete='loaded'
+    
+    def action_cancel(self):
+        res = super().action_cancel()
+        for mo in self:
+            mo.state_concrete = 'cancel'
+        return res
+    
+    
+    
+    
     
     

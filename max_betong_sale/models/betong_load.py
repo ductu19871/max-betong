@@ -114,10 +114,55 @@ class ConcreteLoad(models.Model):
               'product_qty':self.volume,
               'product_id':self.product_id.id,
               'bom_id':bom.id,
+              'mo_type':'concrete',
               'warehouse_id':self.sale_order_id.warehouse_id.id}
         production_id = self.env['mrp.production'].create(vals)
         production_id.action_confirm()
         self.write({'state':'completed'})
+        self._create_delivery_order(production_id)
+        
+    def _create_delivery_order(self,mo):
+        group_id = self.env['procurement.group'].search([('sale_id','=',self.sale_order_id.id)],limit=1)
+        if not group_id:
+            group_id = self.env['procurement.group'].create(self._prepare_procurement_group_vals(self.sale_order_id))
+            self.sale_order_id.procurement_group_id = group_id.id
+        picking_type = self.env['stock.picking.type'].search([
+            ('code', '=', 'outgoing'),
+            ('warehouse_id', '=', self.sale_order_id.warehouse_id.id),
+        ], limit=1)
+        if not picking_type:
+            raise UserError(_("Operation Type is not define."))
+        if not picking_type.default_location_src_id:
+            raise UserError(_("Source location is not define."))
+        if not picking_type.default_location_dest_id:
+            raise UserError(_("Dest location is not define."))
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type.id,
+            'location_id': picking_type.default_location_src_id.id,
+            'location_dest_id': picking_type.default_location_dest_id.id,
+            'ticket_id': mo.id,
+            'partner_id':self.delivery_address_id.id,
+            'origin': self.name,
+        })
+        self.env['stock.move'].create({
+            'name': self.product_id.display_name,
+            'product_id': self.product_id.id,
+            'product_uom_qty': self.volume,
+            'product_uom': self.product_id.uom_id.id,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'sale_line_id':self.sale_order_id.order_line[0].id,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()    
+    
+    def _prepare_procurement_group_vals(self,sale_id):
+        return {
+            'name': sale_id.name,
+            'move_type': sale_id.picking_policy,
+            'sale_id': sale_id.id,
+            'partner_id': sale_id.partner_shipping_id.id,
+        }
     
     def action_view_ticket(self):
         return {
@@ -127,3 +172,28 @@ class ConcreteLoad(models.Model):
             'view_mode': 'tree,form',
             'domain': [('id', 'in', self.production_ids.ids)],
         } 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+    
+    

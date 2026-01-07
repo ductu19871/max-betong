@@ -9,3 +9,4 @@ from . import res_company
 from . import mrp_production
 from . import mrp_workorder
 from . import stock_scrap
+from . import stock_picking

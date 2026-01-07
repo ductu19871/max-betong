@@ -1,0 +1,31 @@
+<odoo>
+	<record id="view_wizard_change_state_form" model="ir.ui.view">
+	    <field name="name">wizard.change.state.form</field>
+	    <field name="model">wizard.change.state</field>
+	    <field name="arch" type="xml">
+	        <form string="Change State">
+	            <group>
+	                <field name="state" required="1"/>
+	            </group>
+	            <footer>
+	                <button name="action_confirm"
+	                        type="object"
+	                        string="Confirm"
+	                        class="btn-primary" confirm="Are you sure you've selected the correct information above?"/>
+	                <button string="Cancel"
+	                        special="cancel"
+	                        class="btn-secondary"/>
+	            </footer>
+	        </form>
+	    </field>
+	</record>
+	
+	<record id="action_wizard_change_state" model="ir.actions.act_window">
+	    <field name="name">Change State</field>
+	    <field name="res_model">wizard.change.state</field>
+	    <field name="view_mode">form</field>
+	    <field name="target">new</field>
+	    <field name="view_id" ref="view_wizard_change_state_form"/>
+	</record>
+	
+</odoo>

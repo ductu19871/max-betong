@@ -18,3 +18,26 @@ class FleetVehicle(models.Model):
             "Used to determine the batching plant when the vehicle participates in concrete delivery."
         )
     )
+    
+    state_concrete = fields.Selection(
+        selection=[
+            ('not_available', 'Not Available'),
+            ('available', 'Available'),
+            ('assigned', 'Assigned'),
+            ('loading', 'Loading'),
+            ('loaded', 'Loaded'),
+            ('leave', 'Leave'),
+            ('arrived', 'Arrived'),
+            ('unloading', 'Unloading'),
+            ('return', 'Return'),
+            ('completed', 'Completed'),
+            ('on_hold', 'On Hold'),
+            ('broken', 'Broken'),
+        ],
+        string='Concrete State',
+        default='not_available',
+        tracking=True,
+        copy=False
+    )
+    
+    

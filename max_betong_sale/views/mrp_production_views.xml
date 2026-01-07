@@ -11,29 +11,50 @@
 			            string="On Hold" 
 			            type="object"
 			            class="oe_stat_button"
-			            invisible="state == 'on_hold'"
+			            invisible="state_concrete not in('loading','loaded','leave','arrived','unloading','return') or mo_type !='concrete'"
 			            confirm="Are you sure you want to switch on hold? Switching on hold will not revert to the previous state."/>
+			   <button string="Update State" 
+		        		class="btn btn-primary"
+		        		type="action" name="%(max_betong_sale.action_wizard_change_state_ticket)d"
+		        		invisible="state_concrete in ('completed','on_hold','dump','remix','cancel') or mo_type !='concrete'"/>
 			</xpath>
-            <xpath expr="//group[@name='group_extra_info']" position="after">
-            	<group>
-					<field name="mix_note"/>
-	                <field name="load_id" invisible='1'/>
-	                <field name="sale_order_id"/>
-	                <field name="vehicle_id"/>
-	                <field name="vehicle_station_id"/>
-	                <field name="delivery_address_id"/>
-                </group>
-                <group>
-					<field name="assigned_datetime"/>
-	                <field name="loading_datetime"/>
-	                <field name="loaded_datetime"/>
-	                <field name="leave_datetime"/>
-	                <field name="distance_km"/>
-				</group>
+			<xpath expr="//field[@name='product_id']" position="before">
+                <field name="mo_type"/>
+            </xpath>
+			<xpath expr="//field[@name='state']" position="attributes">
+           		<attribute name="invisible">mo_type == 'concrete'</attribute>
+           </xpath>
+           <xpath expr="//field[@name='state']" position="after">
+           		<field name="state_concrete" widget="statusbar"
+           			invisible="mo_type != 'concrete'"/>
+           </xpath>
+            <xpath expr="//group[1]//group[1]" position="inside">
+				<field name="mix_note"/>
+                <field name="load_id" invisible='1'/>
+                <field name="sale_order_id"/>
+                <field name="vehicle_id"/>
+                <field name="vehicle_station_id"/>
+                <field name="delivery_address_id"/>
             </xpath>
             <xpath expr="//field[@name='components_availability']" position="before">
             	<field name="eta"/>
             </xpath>
+            <xpath expr="//field[@name='production_location_id']" position="after">
+            	<field name="assigned_datetime"/>
+                <field name="loading_datetime"/>
+                <field name="loaded_datetime"/>
+                <field name="leave_datetime"/>
+                <field name="distance_km"/>
+            </xpath>
+            <div name="button_box" position="inside">
+				<button name="action_view_do"
+				        type="object"
+				        class="oe_stat_button"
+				        invisible="do_count == 0"
+				        icon="fa-truck">
+				    <field name="do_count" widget="statinfo" string="Delivery Order"/>
+				</button>
+			 </div>
         </field>
     </record>
     

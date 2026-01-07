@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard.ConfirmModal">
+        <div t-if="props.show" class="modal-overlay" t-on-click="cancel">
+            <div class="modal-dialog" t-on-click.stop="">
+                <div class="modal-header">
+                    <h3><t t-esc="props.title"/></h3>
+                    <button class="modal-close" t-on-click.stop="cancel">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><t t-esc="props.message"/></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" t-on-click.stop="cancel"><t t-esc="getCancelText()"/></button>
+                    <button class="btn btn-primary" t-on-click.stop="confirm"><t t-esc="getConfirmText()"/></button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
+

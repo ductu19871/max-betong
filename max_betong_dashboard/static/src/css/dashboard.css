@@ -1,0 +1,1971 @@
+/* ========================================
+   CONCRETE DASHBOARD STYLES
+   Based on Tailwind CSS design
+   ======================================== */
+
+/* Font Awesome icons - Odoo core already includes Font Awesome */
+.concrete-dashboard .fa {
+    font-size: inherit !important;
+}
+
+/* Icon size utility classes */
+.concrete-dashboard .icon-xs { font-size: 12px !important; opacity: 0.7; }
+.concrete-dashboard .icon-sm { font-size: 14px !important; }
+.concrete-dashboard .icon-md { font-size: 18px !important; }
+.concrete-dashboard .icon-lg { font-size: 24px !important; }
+.concrete-dashboard .icon-xl { font-size: 48px !important; }
+
+/* Sort icon styles */
+.concrete-dashboard .sort-icon {
+    font-size: 14px !important;
+    vertical-align: middle;
+    margin-left: 2px;
+    opacity: 0.7;
+}
+
+.concrete-dashboard .sort-icon-sm {
+    font-size: 12px !important;
+    vertical-align: middle;
+    opacity: 0.7;
+}
+
+/* Dropdown icon */
+.concrete-dashboard .dropdown-icon-small {
+    font-size: 10px !important;
+    opacity: 0.7;
+}
+
+.concrete-dashboard .search-input .fa {
+    font-size: 18px !important;
+}
+
+.concrete-dashboard .search-small .fa {
+    font-size: 14px !important;
+}
+
+/* Panel fullscreen header style */
+.concrete-dashboard .panel-fullscreen-header {
+    padding: 16px 24px !important;
+    border-bottom: 1px solid var(--slate-200) !important;
+    background: white !important;
+}
+
+/* CSS Variables matching Tailwind config */
+:root {
+    --primary: #1C75BC;
+    --primary-header: #1C75BC;
+    --background-light: #f1f5f9;
+    --background-dark: #0f172a;
+    --surface-light: #ffffff;
+    --surface-dark: #1e293b;
+    --status-assigned: #94a3b8;
+    --status-loading: #1C75BC;
+    --status-leave: #10b981;
+    --status-unloading: #22c55e;
+    --status-hold: #f59e0b;
+    --status-cancelled: #ef4444;
+    --status-planed: #0ea5e9;
+    --status-dispatching: #f59e0b;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --blue-400: #60a5fa;
+    --blue-500: #1C75BC;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --emerald-500: #10b981;
+    --emerald-600: #059669;
+    --sky-100: #e0f2fe;
+    --sky-200: #bae6fd;
+    --sky-500: #0ea5e9;
+    --sky-700: #0369a1;
+    --amber-100: #fef3c7;
+    --amber-200: #fde68a;
+    --amber-500: #f59e0b;
+    --amber-700: #b45309;
+    --red-100: #fee2e2;
+    --red-200: #fecaca;
+    --red-500: #ef4444;
+    --red-700: #b91c1c;
+}
+
+/* ========================================
+   MAIN DASHBOARD CONTAINER
+   ======================================== */
+
+.concrete-dashboard {
+    position: relative !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    background: #f1f5f9 !important;
+    padding: 16px 24px !important;
+    padding-bottom: 40px !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    color: #475569 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    display: block !important;
+}
+
+/* Force parent to allow content to flow */
+.o_action_manager .o_action .o_controller .o_content .concrete-dashboard {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+}
+
+/* Override any fixed height on Odoo's content wrapper */
+.o_action_manager .o_action .o_controller .o_content {
+    position: relative !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+}
+
+/* Ensure parent containers allow scrolling - Override Odoo core styles */
+body .o_action_manager,
+body .o_action_manager .o_action,
+body .o_action_manager .o_view_controller,
+body .o_action_manager .o_view_controller .o_content,
+.o_main_content,
+.o_controller {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+/* Force Odoo main content to allow scrolling - Multiple selectors for Odoo 17 */
+.o_action_manager,
+.o_action_manager > .o_action,
+.o_action_manager .o_action,
+.o_action_manager .o_action .o_controller,
+.o_action_manager .o_action .o_controller .o_content,
+.o_action_manager .o_action .o_controller .o_content > * {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+}
+
+.o_action_manager .o_action {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.o_action_manager .o_action .o_controller {
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+}
+
+.o_action_manager .o_action .o_controller .o_content {
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+}
+
+/* Ensure client action container allows scrolling */
+.o_action_manager .o_action[data-action-type="ir.actions.client"],
+.o_action_manager .o_action .o_controller[data-action-type="ir.actions.client"] {
+    height: auto !important;
+    overflow-y: auto !important;
+}
+
+.o_action_manager .o_action[data-action-type="ir.actions.client"] .o_controller,
+.o_action_manager .o_action .o_controller[data-action-type="ir.actions.client"] {
+    height: auto !important;
+    overflow-y: visible !important;
+}
+
+.concrete-dashboard * {
+    box-sizing: border-box;
+}
+
+.concrete-dashboard .dashboard-content {
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    height: auto !important;
+}
+
+/* ========================================
+   LOADING OVERLAY
+   ======================================== */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--slate-200);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   DASHBOARD HEADER
+   ======================================== */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.dashboard-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--slate-800);
+    margin: 0;
+}
+
+.global-filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.global-filters label {
+    font-weight: 500;
+    color: var(--slate-600);
+}
+
+.station-select {
+    padding: 8px 12px;
+    border: 1px solid var(--slate-300);
+    border-radius: 9999px;
+    font-size: 14px;
+    min-width: 200px;
+    background: white;
+}
+
+.dashboard-content {
+    max-width: 1920px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+}
+
+/* ========================================
+   DASHBOARD SECTIONS
+   ======================================== */
+
+.concrete-dashboard .dashboard-section {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    padding: 20px !important;
+    border: 1px solid #e2e8f0 !important;
+    transition: all 0.3s ease;
+    margin-bottom: 24px !important;
+}
+
+.dashboard-section.fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 1000 !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+}
+
+.dashboard-section.fullscreen .table-container {
+    flex: 1 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+}
+
+.concrete-dashboard .dashboard-section.section-hidden {
+    display: none !important;
+}
+
+/* Panel fullscreen - for Load and Vehicle panels individually */
+.concrete-dashboard .panel-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 1000 !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: #f1f5f9 !important;
+    padding: 0 !important;
+}
+
+.concrete-dashboard .panel-fullscreen .section-header {
+    margin-bottom: 0 !important;
+    padding: 16px 24px !important;
+    background: white !important;
+    border-bottom: 1px solid var(--slate-200) !important;
+}
+
+.concrete-dashboard .panel-fullscreen .section-actions {
+    margin-left: 0 !important;
+}
+
+.concrete-dashboard .panel-fullscreen .panel-body {
+    flex: 1 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    padding: 24px !important;
+    background: transparent !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.concrete-dashboard .panel-fullscreen .panel-body .data-table {
+    background: white !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--slate-200) !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    overflow: hidden !important;
+}
+
+.concrete-dashboard .panel-fullscreen .table-container {
+    background: white !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--slate-200) !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    margin: 24px !important;
+    padding: 0 !important;
+    max-height: none !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+.concrete-dashboard .panel-hidden {
+    display: none !important;
+}
+
+.section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .section-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--slate-800);
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.section-title i {
+    font-size: 1.2rem;
+}
+
+.section-title .badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--primary);
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.section-title .filter-badge {
+    background: var(--amber-100);
+    color: var(--amber-700);
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.section-title .filter-badge i {
+    font-size: 0.7rem;
+}
+
+.concrete-dashboard .section-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    overflow: visible !important;
+}
+
+@media (min-width: 768px) {
+    .section-actions {
+        width: auto;
+    }
+}
+
+/* ========================================
+   SEARCH INPUT
+   ======================================== */
+
+/* Search input - scoped to concrete-dashboard only */
+.concrete-dashboard .search-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+@media (min-width: 768px) {
+    .concrete-dashboard .search-input {
+        flex: 0 0 auto;
+        min-width: 280px;
+    }
+}
+
+.concrete-dashboard .search-input {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.concrete-dashboard .search-input i {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #94a3b8 !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+    width: 18px !important;
+    height: 18px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 18 !important;
+}
+
+.concrete-dashboard .search-input input {
+    width: 100% !important;
+    padding: 8px 40px 8px 16px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 9999px !important;
+    background: white !important;
+    color: #334155 !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+    outline: none !important;
+    position: relative !important;
+    z-index: 2 !important;
+    box-sizing: border-box !important;
+    text-align: right !important;
+}
+
+.concrete-dashboard .search-input input:focus {
+    border-color: #1C75BC !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Removed - using .concrete-dashboard .search-input input:focus instead */
+
+.concrete-dashboard .search-input input::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1 !important;
+}
+
+.concrete-dashboard .search-small {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.concrete-dashboard .panel-header .search-small {
+    flex: 1 1 auto;
+    min-width: 150px;
+    max-width: 300px;
+}
+
+.concrete-dashboard .search-small input {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 6px 32px 6px 12px !important;
+    font-size: 12px !important;
+    min-width: auto !important;
+    position: relative !important;
+    z-index: 2 !important;
+    text-align: left !important;
+}
+
+.concrete-dashboard .search-small .fa {
+    font-size: 14px !important;
+    line-height: 1 !important;
+    right: 10px !important;
+    left: auto !important;
+    width: 14px !important;
+    height: 14px !important;
+    z-index: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+}
+
+/* ========================================
+   BUTTONS - Scoped to concrete-dashboard
+   ======================================== */
+
+.concrete-dashboard .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.concrete-dashboard .btn-sm {
+    padding: 6px 16px;
+    font-size: 11px;
+}
+
+.concrete-dashboard .btn-primary {
+    background: var(--blue-600);
+    color: white;
+}
+
+.concrete-dashboard .btn-primary:hover {
+    background: var(--blue-700);
+}
+
+.concrete-dashboard .btn-assign {
+    background: var(--blue-500) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--blue-500) !important;
+    padding: 8px 20px;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.concrete-dashboard .btn-assign:hover:not(:disabled) {
+    background: var(--blue-600) !important;
+    border-color: var(--blue-600) !important;
+}
+
+.concrete-dashboard .btn-assign i {
+    font-size: 18px;
+    color: #ffffff !important;
+}
+
+.concrete-dashboard .btn-assign:disabled,
+.concrete-dashboard .btn-assign-disabled {
+    background: var(--slate-200) !important;
+    color: var(--slate-400) !important;
+    border: 1px solid var(--slate-300) !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+.concrete-dashboard .btn-assign:disabled:hover,
+.concrete-dashboard .btn-assign-disabled:hover {
+    background: var(--slate-200) !important;
+}
+
+.concrete-dashboard .btn-assign:disabled i,
+.concrete-dashboard .btn-assign-disabled i {
+    color: var(--slate-400) !important;
+}
+
+.concrete-dashboard .btn-success {
+    background: var(--emerald-500);
+    color: white;
+}
+
+.concrete-dashboard .btn-success:hover {
+    background: var(--emerald-600);
+}
+
+.concrete-dashboard .btn-secondary {
+    background: white;
+    color: var(--blue-600);
+    border: 1px solid var(--blue-300);
+}
+
+.concrete-dashboard .btn-secondary:hover {
+    background: var(--slate-50);
+    border-color: var(--blue-400);
+}
+
+/* Split Load Button - Active State */
+.concrete-dashboard .btn-split-load {
+    background: var(--blue-600) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    cursor: pointer !important;
+    transition: background 0.2s ease !important;
+}
+
+.concrete-dashboard .btn-split-load:hover {
+    background: var(--blue-700) !important;
+}
+
+/* Split Load Button - Disabled State */
+.concrete-dashboard .btn-split-load-disabled {
+    background: white !important;
+    color: var(--blue-600) !important;
+    border: 1px solid var(--blue-600) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    cursor: not-allowed !important;
+}
+
+.concrete-dashboard .btn-split-load-disabled:hover {
+    background: white !important;
+    color: var(--slate-700) !important;
+}
+
+.concrete-dashboard .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--slate-500);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.concrete-dashboard .icon-btn:hover {
+    background: var(--slate-100);
+    color: var(--slate-700);
+}
+
+/* ========================================
+   TABLE STYLES
+   ======================================== */
+
+.concrete-dashboard .table-container {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    max-height: 500px !important;
+    min-height: 200px !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    background: white !important;
+    position: relative !important;
+}
+
+.concrete-dashboard .table-container.custom-scrollbar {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+.concrete-dashboard .custom-scrollbar::-webkit-scrollbar {
+    height: 6px !important;
+    width: 6px !important;
+    display: block !important;
+}
+
+.concrete-dashboard .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9 !important;
+    border-radius: 3px !important;
+}
+
+.concrete-dashboard .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1 !important;
+    border-radius: 3px !important;
+}
+
+.concrete-dashboard .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8 !important;
+}
+
+/* Ensure scrollbar is visible */
+.concrete-dashboard .table-container,
+.concrete-dashboard .panel-body {
+    scrollbar-width: thin !important;
+    scrollbar-color: #cbd5e1 #f1f5f9 !important;
+}
+
+/* Data table - scoped to concrete-dashboard only */
+.concrete-dashboard .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.concrete-dashboard .data-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.concrete-dashboard .data-table th {
+    background: #1C75BC !important;
+    color: white !important;
+    padding: 12px 16px !important;
+    text-align: left !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-right: 1px solid rgba(96, 165, 250, 0.3) !important;
+    white-space: nowrap !important;
+}
+
+.concrete-dashboard .data-table th:last-child {
+    border-right: none !important;
+}
+
+.concrete-dashboard .data-table th.last\:border-r-0 {
+    border-right: none !important;
+}
+
+.concrete-dashboard .data-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.concrete-dashboard .data-table th.sortable:hover {
+    background: var(--blue-600);
+}
+
+.concrete-dashboard .data-table th i {
+    margin-left: 4px;
+    font-size: 14px;
+    opacity: 0.7;
+    vertical-align: middle;
+}
+
+.concrete-dashboard .data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--slate-200);
+    vertical-align: middle;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    color: var(--slate-700);
+}
+
+/* But keep nowrap for specific cells */
+.concrete-dashboard .data-table td.checkbox-cell,
+.concrete-dashboard .data-table td.text-center:not(.truncate-cell) {
+    white-space: nowrap !important;
+}
+
+.concrete-dashboard .data-table tbody {
+    border-top: none;
+}
+
+.concrete-dashboard .data-table tbody tr {
+    border-bottom: 1px solid var(--slate-200);
+}
+
+.concrete-dashboard .data-table tr.row-even {
+    background: white;
+}
+
+.concrete-dashboard .data-table tr.row-odd {
+    background: var(--slate-50);
+}
+
+.concrete-dashboard .data-table tr.selected {
+    background: #e0f2fe !important;
+}
+
+.concrete-dashboard .data-table tr:hover {
+    background: var(--slate-50);
+}
+
+.concrete-dashboard .data-table .col-stt {
+    width: 48px;
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: var(--slate-500);
+}
+
+.text-xs {
+    font-size: 12px;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.truncate-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px;
+}
+
+/* When column is resized, show full text - apply to all tables with customizable columns */
+.concrete-dashboard .data-table td.truncate-cell {
+    max-width: none !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    text-overflow: clip !important;
+    overflow: visible !important;
+}
+
+/* But keep truncate for cells that haven't been resized yet (if needed) */
+.concrete-dashboard .data-table td.truncate-cell[style*="width"] {
+    /* Remove max-width restriction when width is set */
+    max-width: none !important;
+}
+
+.table-small {
+    font-size: 12px;
+}
+
+.table-small th,
+.table-small td {
+    padding: 8px 12px;
+}
+
+/* Ensure table cells respect column width */
+.concrete-dashboard .data-table th,
+.concrete-dashboard .data-table td {
+    box-sizing: border-box !important;
+}
+
+/* Note: Width is set inline for dynamic column resizing */
+
+.table-small th {
+    font-size: 11px;
+}
+
+/* ========================================
+   LINKS - Scoped to concrete-dashboard
+   ======================================== */
+
+.concrete-dashboard .link-primary {
+    color: var(--slate-900);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.concrete-dashboard .link-primary:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.concrete-dashboard .link-secondary {
+    color: var(--slate-600);
+    text-decoration: none;
+}
+
+.concrete-dashboard .link-secondary:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+/* ========================================
+   CHECKBOX & RADIO - Scoped to concrete-dashboard
+   ======================================== */
+
+.concrete-dashboard .checkbox-cell {
+    width: auto;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--slate-300);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkbox.checked {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.checkbox i {
+    font-size: 10px;
+}
+
+.radio {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--slate-300);
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.radio.checked {
+    border-color: var(--primary);
+}
+
+.radio.checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+.radio-circle {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--slate-300);
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.radio-circle.radio-selected {
+    border-color: var(--primary);
+}
+
+.radio-circle.radio-selected::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+/* ========================================
+   STATUS BADGES - Scoped to concrete-dashboard
+   ======================================== */
+
+.concrete-dashboard .status-badge {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    min-width: 80px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.concrete-dashboard .status-planned {
+    background: #4991C9 !important;
+    color: white !important;
+    border: 1px solid #4991C9 !important;
+}
+
+.concrete-dashboard .status-dispatching {
+    background: #FCD01B !important;
+    color: #000000 !important;
+    border: 1px solid #FCD01B !important;
+}
+
+/* Status colors according to specification - EXACT COLORS FROM IMAGE */
+/* Assigned, Loading, Loaded: Xám (#B2BABB) */
+.concrete-dashboard .status-confirmed,
+.concrete-dashboard .status-assigned {
+    background: #B2BABB !important;
+    color: #ffffff !important;
+    border: 1px solid #B2BABB !important;
+}
+
+.concrete-dashboard .status-loading {
+    background: #B2BABB !important;
+    color: #ffffff !important;
+    border: 1px solid #B2BABB !important;
+}
+
+.concrete-dashboard .status-loaded {
+    background: #B2BABB !important;
+    color: #ffffff !important;
+    border: 1px solid #B2BABB !important;
+}
+
+/* Leave, Arrived, Unloading, Return, Completed: Xanh lá nhạt (#58D68D) */
+.concrete-dashboard .status-leave {
+    background: #58D68D !important;
+    color: #ffffff !important;
+    border: 1px solid #58D68D !important;
+}
+
+.concrete-dashboard .status-arrived {
+    background: #58D68D !important;
+    color: #ffffff !important;
+    border: 1px solid #58D68D !important;
+}
+
+.concrete-dashboard .status-unloading {
+    background: #58D68D !important;
+    color: #ffffff !important;
+    border: 1px solid #58D68D !important;
+}
+
+.concrete-dashboard .status-return {
+    background: #58D68D !important;
+    color: #ffffff !important;
+    border: 1px solid #58D68D !important;
+}
+
+.concrete-dashboard .status-completed {
+    background: #58D68D !important;
+    color: #ffffff !important;
+    border: 1px solid #58D68D !important;
+}
+
+/* On Hold: Cam (#F5B041) */
+.concrete-dashboard .status-on-hold {
+    background: #F5B041 !important;
+    color: #ffffff !important;
+    border: 1px solid #F5B041 !important;
+}
+
+/* Dump, Remix & Swapped, Cancelled: Đỏ (#C0392B) */
+.concrete-dashboard .status-dump {
+    background: #C0392B !important;
+    color: #ffffff !important;
+    border: 1px solid #C0392B !important;
+}
+
+.concrete-dashboard .status-remix {
+    background: #C0392B !important;
+    color: #ffffff !important;
+    border: 1px solid #C0392B !important;
+}
+
+.concrete-dashboard .status-cancel,
+.concrete-dashboard .status-cancelled {
+    background: #C0392B !important;
+    color: #ffffff !important;
+    border: 1px solid #C0392B !important;
+}
+
+.concrete-dashboard .status-available {
+    color: var(--emerald-600);
+    font-weight: 500;
+}
+
+.concrete-dashboard .status-busy {
+    color: var(--red-600);
+    font-weight: 500;
+}
+
+/* ========================================
+   PROGRESS DOTS
+   ======================================== */
+
+.concrete-dashboard .progress-col {
+    width: 56px;
+    text-align: center;
+    font-size: 10px;
+    padding: 12px 8px !important;
+}
+
+.concrete-dashboard .status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.concrete-dashboard .status-dot-active {
+    background-color: #1C75BC;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.concrete-dashboard .status-dot-completed {
+    background-color: #ffffff;
+    border: 2px solid #1C75BC;
+}
+
+.concrete-dashboard .status-dot-inactive {
+    background-color: #ffffff;
+    border: 2px solid #1C75BC;
+}
+
+.concrete-dashboard .status-dot-inactive-no-border {
+    background-color: #ffffff;
+    border: none;
+}
+
+.concrete-dashboard .status-dot-gray {
+    background-color: #B2BABB;
+    border: none;
+    box-shadow: none;
+}
+
+/* ========================================
+   STATION CELL
+   ======================================== */
+
+.station-cell {
+    min-width: 120px;
+}
+
+.station-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.station-value:hover {
+    color: var(--primary);
+}
+
+.station-value i {
+    font-size: 12px;
+    color: var(--slate-400);
+    opacity: 0.7;
+}
+
+.dropdown-icon-small {
+    font-size: 10px;
+    margin-left: 4px;
+    color: var(--slate-400);
+    opacity: 0.7;
+    vertical-align: middle;
+}
+
+.dropdown-icon-small.fa {
+    font-size: 10px;
+}
+
+/* ========================================
+   SPLIT PANEL (Load and Vehicle)
+   ======================================== */
+
+.concrete-dashboard .split-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+@media (min-width: 1024px) {
+    .concrete-dashboard .split-panel {
+        grid-template-columns: 8fr 4fr;
+    }
+}
+
+.concrete-dashboard .panel {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--slate-200);
+    padding: 12px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.concrete-dashboard .panel.panel-fullscreen {
+    padding: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+}
+
+.concrete-dashboard .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 10000 !important;
+    overflow: visible !important;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.concrete-dashboard .panel-body {
+    flex: 1 !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    max-height: 400px !important;
+    min-height: 200px !important;
+    position: relative !important;
+}
+
+.concrete-dashboard .panel-body.custom-scrollbar {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+.concrete-dashboard .station-dropdown {
+    position: relative !important;
+    z-index: 10001 !important;
+}
+
+/* Station dropdown in fullscreen mode - must be above table */
+.concrete-dashboard .panel-fullscreen .station-dropdown {
+    z-index: 100002 !important;
+}
+
+.concrete-dashboard .panel-fullscreen .station-dropdown .dropdown-menu {
+    z-index: 100003 !important;
+}
+
+.concrete-dashboard .panel-fullscreen .section-header {
+    z-index: 100001 !important;
+    position: relative !important;
+}
+
+.concrete-dashboard .dropdown-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border: 1px solid var(--blue-600);
+    border-radius: 9999px;
+    background: var(--blue-50);
+    color: var(--blue-600);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.concrete-dashboard .dropdown-btn:hover {
+    background: var(--blue-100);
+}
+
+.concrete-dashboard .dropdown-btn i {
+    font-size: 14px;
+}
+
+.concrete-dashboard .station-dropdown .dropdown-menu {
+    position: absolute !important;
+    top: calc(100% + 2px) !important;
+    right: 0 !important;
+    background: white !important;
+    border: 1px solid var(--slate-200) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    min-width: 150px !important;
+    z-index: 10002 !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-top: 0 !important;
+}
+
+.concrete-dashboard .station-dropdown .dropdown-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease;
+    color: var(--slate-700);
+    border-bottom: 1px solid var(--slate-100);
+}
+
+.concrete-dashboard .station-dropdown .dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.concrete-dashboard .station-dropdown .dropdown-item:hover {
+    background: var(--slate-100);
+}
+
+.concrete-dashboard .station-dropdown .dropdown-item-active {
+    background: var(--blue-50);
+    color: var(--blue-600);
+    font-weight: 500;
+}
+
+.concrete-dashboard .station-dropdown .dropdown-item-active:hover {
+    background: var(--blue-100);
+}
+
+.concrete-dashboard .panel-pagination {
+    padding: 8px 12px;
+    background: #fafafa;
+    border-top: 1px solid var(--slate-200);
+    margin-top: 8px;
+}
+
+.concrete-dashboard .panel-pagination .pagination-container {
+    padding: 0;
+}
+
+/* ========================================
+   EMPTY STATE - Scoped to concrete-dashboard
+   ======================================== */
+
+.concrete-dashboard .empty-state {
+    text-align: center;
+    padding: 40px 20px !important;
+    color: var(--slate-400);
+}
+
+.concrete-dashboard .empty-state i {
+    font-size: 48px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.concrete-dashboard .empty-state p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ========================================
+   PAGINATION - Scoped to concrete-dashboard
+   ======================================== */
+
+.concrete-dashboard .pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #fafafa;
+    border-top: 1px solid var(--slate-200);
+}
+
+.concrete-dashboard .pagination-info {
+    font-size: 13px;
+    color: var(--slate-500);
+}
+
+.concrete-dashboard .pagination-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.concrete-dashboard .pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    border: 1px solid var(--slate-300);
+    border-radius: 4px;
+    background: white;
+    color: var(--slate-700);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.concrete-dashboard .pagination-input-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 8px;
+    padding: 0 8px;
+}
+
+.concrete-dashboard .pagination-input-label {
+    font-size: 13px;
+    color: var(--slate-600);
+    white-space: nowrap;
+}
+
+.concrete-dashboard .pagination-input {
+    width: 50px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--slate-300);
+    border-radius: 4px;
+    background: white;
+    color: var(--slate-700);
+    font-size: 13px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.concrete-dashboard .pagination-input:focus {
+    outline: none;
+    border-color: var(--blue-500);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.concrete-dashboard .pagination-input-separator {
+    font-size: 13px;
+    color: var(--slate-500);
+    margin: 0 2px;
+}
+
+.concrete-dashboard .pagination-total-pages {
+    font-size: 13px;
+    color: var(--slate-600);
+    font-weight: 500;
+    min-width: 20px;
+    text-align: center;
+}
+
+.concrete-dashboard .pagination-btn:hover:not(:disabled) {
+    background: var(--slate-100);
+    border-color: var(--primary);
+}
+
+.concrete-dashboard .pagination-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.concrete-dashboard .pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ========================================
+   COLUMN CUSTOMIZATION
+   ======================================== */
+
+.concrete-dashboard .column-customizable {
+    user-select: none;
+}
+
+.concrete-dashboard .column-header {
+    position: relative;
+    cursor: move;
+}
+
+.concrete-dashboard .column-header.dragging {
+    opacity: 0.5;
+}
+
+.concrete-dashboard .column-header-content {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+}
+
+.concrete-dashboard .column-resize-handle {
+    position: absolute !important;
+    top: 0 !important;
+    right: -2px !important;
+    width: 8px !important;
+    height: 100% !important;
+    cursor: col-resize !important;
+    z-index: 10 !important;
+    background: transparent !important;
+    transition: background 0.2s !important;
+    user-select: none !important;
+}
+
+.concrete-dashboard .column-resize-handle:hover {
+    background: var(--blue-500) !important;
+    opacity: 0.6 !important;
+}
+
+.concrete-dashboard .column-header:hover .column-resize-handle {
+    background: var(--slate-300) !important;
+    opacity: 0.3 !important;
+}
+
+.concrete-dashboard .column-header:hover .column-resize-handle:hover {
+    background: var(--blue-500) !important;
+    opacity: 0.8 !important;
+}
+
+/* Resizing state */
+.concrete-dashboard.resizing {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+.concrete-dashboard.resizing * {
+    cursor: col-resize !important;
+}
+
+/* Old drag handle - keep for compatibility */
+.concrete-dashboard .column-drag-handle {
+    cursor: col-resize;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    color: var(--slate-400);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.concrete-dashboard .column-header:hover .column-drag-handle {
+    opacity: 1;
+}
+
+.concrete-dashboard .column-drag-handle .fa {
+    font-size: 16px;
+}
+
+.concrete-dashboard .column-drag-handle:hover {
+    color: var(--blue-500);
+}
+
+.concrete-dashboard .column-label {
+    flex: 1;
+}
+
+.concrete-dashboard .column-menu {
+    position: fixed !important;
+    background: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    min-width: 250px !important;
+    width: 280px !important;
+    max-width: 300px !important;
+    max-height: 400px !important;
+    z-index: 10003 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.concrete-dashboard .column-menu-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--slate-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.concrete-dashboard .column-menu-header h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--slate-800);
+}
+
+.concrete-dashboard .column-menu-close {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--slate-400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.concrete-dashboard .column-menu-close:hover {
+    background: var(--slate-100);
+    color: var(--slate-700);
+}
+
+.concrete-dashboard .column-menu-body {
+    padding: 8px;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.concrete-dashboard .column-menu-item {
+    padding: 4px 0;
+}
+
+.concrete-dashboard .column-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+    font-size: 13px;
+    color: var(--slate-700);
+}
+
+.concrete-dashboard .column-checkbox:hover {
+    background: var(--slate-50);
+}
+
+.concrete-dashboard .column-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--blue-500);
+}
+
+.concrete-dashboard .column-menu-footer {
+    padding: 12px 16px;
+    border-top: 1px solid var(--slate-200);
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* .btn-sm is already scoped above */
+
+/* ========================================
+   CONTEXT MENU - Scoped to concrete-dashboard
+   ======================================== */
+
+.concrete-dashboard .context-menu {
+    position: fixed;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    z-index: 1001;
+    overflow: hidden;
+    border: 1px solid var(--slate-200);
+}
+
+.concrete-dashboard .context-menu-item {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease;
+    color: var(--slate-700);
+}
+
+.concrete-dashboard .context-menu-item .fa {
+    font-size: 18px;
+}
+
+.concrete-dashboard .context-menu-item:hover {
+    background: var(--slate-100);
+}
+
+.concrete-dashboard .context-menu-item.danger {
+    color: var(--red-500);
+}
+
+.concrete-dashboard .context-menu-item.danger:hover {
+    background: var(--red-50);
+}
+
+/* ========================================
+   STATION DROPDOWN MENU - Scoped to concrete-dashboard
+   ======================================== */
+
+.concrete-dashboard .station-dropdown-menu {
+    position: fixed;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001;
+    border: 1px solid var(--slate-200);
+}
+
+.concrete-dashboard .dropdown-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease;
+    color: var(--slate-700);
+}
+
+.concrete-dashboard .dropdown-item:hover {
+    background: var(--slate-100);
+}
+
+/* ========================================
+   STATE CELL AND DROPDOWN
+   ======================================== */
+
+.state-cell {
+    min-width: 120px;
+    cursor: pointer;
+}
+
+.state-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    color: var(--slate-700);
+    font-size: 13px;
+}
+
+.state-value:hover {
+    background: var(--slate-100);
+    color: var(--slate-900);
+}
+
+.state-value .dropdown-icon-small {
+    font-size: 10px;
+    color: var(--slate-400);
+    opacity: 0.7;
+    transition: transform 0.2s ease;
+}
+
+.state-value:hover .dropdown-icon-small {
+    opacity: 1;
+}
+
+.concrete-dashboard .state-dropdown-menu {
+    position: fixed;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    min-width: 140px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001;
+    border: 1px solid var(--slate-200);
+    padding: 4px 0;
+}
+
+.concrete-dashboard .state-dropdown-menu .dropdown-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s ease;
+    color: var(--slate-700);
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+}
+
+.concrete-dashboard .state-dropdown-menu .dropdown-item:hover {
+    background: var(--slate-100);
+    color: var(--slate-900);
+}
+
+.concrete-dashboard .state-dropdown-menu .dropdown-item:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.concrete-dashboard .state-dropdown-menu .dropdown-item:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+/* ========================================
+   CONFIRMATION MODAL
+   ======================================== */
+
+.concrete-dashboard .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999 !important;
+}
+
+.concrete-dashboard .modal-dialog {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    min-width: 400px;
+    max-width: 90vw;
+    z-index: 1000000 !important;
+    position: relative;
+}
+
+.concrete-dashboard .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--slate-200);
+}
+
+.concrete-dashboard .modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--slate-800);
+}
+
+.concrete-dashboard .modal-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--slate-500);
+    cursor: pointer;
+    padding: 0;
+}
+
+.concrete-dashboard .modal-close:hover {
+    color: var(--slate-700);
+}
+
+.concrete-dashboard .modal-body {
+    padding: 20px;
+}
+
+.concrete-dashboard .modal-body p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--slate-600);
+}
+
+.concrete-dashboard .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--slate-200);
+}
+
+.concrete-dashboard .modal-footer .btn {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.concrete-dashboard .modal-close {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .concrete-dashboard {
+        padding: 16px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .section-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .search-input input {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .pagination-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .split-panel {
+        grid-template-columns: 1fr;
+    }
+}
