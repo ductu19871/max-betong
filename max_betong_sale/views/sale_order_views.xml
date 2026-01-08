@@ -19,6 +19,9 @@
                 <xpath expr="//field[@name='state']" position="attributes">
 	           		<attribute name="invisible">so_type == 'concrete'</attribute>
 	           </xpath>
+	           <xpath expr="//button[@id='create_invoice_percentage']" position="attributes">
+	           		<attribute name="invisible">so_type == 'concrete' or invoice_status != 'no' or state != 'sale'</attribute>
+	           </xpath>
 	           <xpath expr="//field[@name='state']" position="after">
 	           		<field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,planned,dispatching,done" 
 	           			invisible="so_type != 'concrete'"/>

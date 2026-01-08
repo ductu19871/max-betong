@@ -11,7 +11,7 @@
 /* Icon size utility classes */
 .concrete-dashboard .icon-xs { font-size: 12px !important; opacity: 0.7; }
 .concrete-dashboard .icon-sm { font-size: 14px !important; }
-.concrete-dashboard .icon-md { font-size: 18px !important; }
+.concrete-dashboard .icon-md { font-size: 12px !important; }
 .concrete-dashboard .icon-lg { font-size: 24px !important; }
 .concrete-dashboard .icon-xl { font-size: 48px !important; }
 
@@ -36,7 +36,7 @@
 }
 
 .concrete-dashboard .search-input .fa {
-    font-size: 18px !important;
+    font-size: 12px !important;
 }
 
 .concrete-dashboard .search-small .fa {
@@ -269,7 +269,7 @@ body .o_action_manager .o_view_controller .o_content,
     margin: 0 auto !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 24px !important;
+    gap: 12px !important;
     overflow-x: hidden !important;
     overflow-y: visible !important;
     height: auto !important;
@@ -287,7 +287,7 @@ body .o_action_manager .o_view_controller .o_content,
     padding: 20px !important;
     border: 1px solid #e2e8f0 !important;
     transition: all 0.3s ease;
-    margin-bottom: 24px !important;
+    margin-bottom: 0px !important;
 }
 
 .dashboard-section.fullscreen {
@@ -383,7 +383,7 @@ body .o_action_manager .o_view_controller .o_content,
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 @media (min-width: 768px) {
@@ -395,7 +395,7 @@ body .o_action_manager .o_view_controller .o_content,
 }
 
 .section-title {
-    font-size: 1.125rem;
+    font-size: 0.675rem;
     font-weight: 700;
     color: var(--slate-800);
     text-transform: uppercase;
@@ -407,7 +407,7 @@ body .o_action_manager .o_view_controller .o_content,
 }
 
 .section-title i {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
 }
 
 .section-title .badge {
@@ -415,7 +415,7 @@ body .o_action_manager .o_view_controller .o_content,
     color: var(--primary);
     padding: 4px 10px;
     border-radius: 9999px;
-    font-size: 0.75rem;
+    font-size: 0.675rem;
     font-weight: 600;
     margin-left: 8px;
 }
@@ -499,18 +499,17 @@ body .o_action_manager .o_view_controller .o_content,
 
 .concrete-dashboard .search-input input {
     width: 100% !important;
-    padding: 8px 40px 8px 16px !important;
+    padding: 6px 32px 6px 12px !important;
     border: 1px solid #cbd5e1 !important;
     border-radius: 9999px !important;
     background: white !important;
     color: #334155 !important;
-    font-size: 14px !important;
+    font-size: 11px !important;
     transition: all 0.2s ease !important;
     outline: none !important;
     position: relative !important;
     z-index: 2 !important;
     box-sizing: border-box !important;
-    text-align: right !important;
 }
 
 .concrete-dashboard .search-input input:focus {
@@ -541,8 +540,8 @@ body .o_action_manager .o_view_controller .o_content,
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    padding: 6px 32px 6px 12px !important;
-    font-size: 12px !important;
+    padding: 5px 28px 5px 10px !important;
+    font-size: 11px !important;
     min-width: auto !important;
     position: relative !important;
     z-index: 2 !important;
@@ -550,12 +549,12 @@ body .o_action_manager .o_view_controller .o_content,
 }
 
 .concrete-dashboard .search-small .fa {
-    font-size: 14px !important;
+    font-size: 11px !important;
     line-height: 1 !important;
-    right: 10px !important;
+    right: 8px !important;
     left: auto !important;
-    width: 14px !important;
-    height: 14px !important;
+    width: 11px !important;
+    height: 11px !important;
     z-index: 1 !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -767,7 +766,7 @@ body .o_action_manager .o_view_controller .o_content,
 .concrete-dashboard .data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: 9px;
 }
 
 .concrete-dashboard .data-table thead {
@@ -779,10 +778,10 @@ body .o_action_manager .o_view_controller .o_content,
 .concrete-dashboard .data-table th {
     background: #1C75BC !important;
     color: white !important;
-    padding: 12px 16px !important;
+    padding: 8px 12px !important;
     text-align: left !important;
     font-weight: 600 !important;
-    font-size: 12px !important;
+    font-size: 9px !important;
     text-transform: uppercase !important;
     letter-spacing: 0.05em !important;
     border-right: 1px solid rgba(96, 165, 250, 0.3) !important;
@@ -814,13 +813,14 @@ body .o_action_manager .o_view_controller .o_content,
 }
 
 .concrete-dashboard .data-table td {
-    padding: 12px 16px;
+    padding: 6px 12px;
     border-bottom: 1px solid var(--slate-200);
     vertical-align: middle;
     white-space: normal !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
     color: var(--slate-700);
+    font-size: 9px;
 }
 
 /* But keep nowrap for specific cells */
@@ -898,12 +898,12 @@ body .o_action_manager .o_view_controller .o_content,
 }
 
 .table-small {
-    font-size: 12px;
+    font-size: 9px;
 }
 
 .table-small th,
 .table-small td {
-    padding: 8px 12px;
+    padding: 6px 12px !important;
 }
 
 /* Ensure table cells respect column width */
@@ -915,7 +915,7 @@ body .o_action_manager .o_view_controller .o_content,
 /* Note: Width is set inline for dynamic column resizing */
 
 .table-small th {
-    font-size: 11px;
+    font-size: 9px !important;
 }
 
 /* ========================================
@@ -1047,18 +1047,21 @@ body .o_action_manager .o_view_controller .o_content,
     text-align: center;
     min-width: 80px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    font-size: 9px
 }
 
 .concrete-dashboard .status-planned {
     background: #4991C9 !important;
     color: white !important;
     border: 1px solid #4991C9 !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-dispatching {
     background: #FCD01B !important;
     color: #000000 !important;
     border: 1px solid #FCD01B !important;
+    font-size: 9px
 }
 
 /* Status colors according to specification - EXACT COLORS FROM IMAGE */
@@ -1068,18 +1071,21 @@ body .o_action_manager .o_view_controller .o_content,
     background: #B2BABB !important;
     color: #ffffff !important;
     border: 1px solid #B2BABB !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-loading {
     background: #B2BABB !important;
     color: #ffffff !important;
     border: 1px solid #B2BABB !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-loaded {
     background: #B2BABB !important;
     color: #ffffff !important;
     border: 1px solid #B2BABB !important;
+    font-size: 9px
 }
 
 /* Leave, Arrived, Unloading, Return, Completed: Xanh lá nhạt (#58D68D) */
@@ -1087,30 +1093,35 @@ body .o_action_manager .o_view_controller .o_content,
     background: #58D68D !important;
     color: #ffffff !important;
     border: 1px solid #58D68D !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-arrived {
     background: #58D68D !important;
     color: #ffffff !important;
     border: 1px solid #58D68D !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-unloading {
     background: #58D68D !important;
     color: #ffffff !important;
     border: 1px solid #58D68D !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-return {
     background: #58D68D !important;
     color: #ffffff !important;
     border: 1px solid #58D68D !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-completed {
     background: #58D68D !important;
     color: #ffffff !important;
     border: 1px solid #58D68D !important;
+    font-size: 9px
 }
 
 /* On Hold: Cam (#F5B041) */
@@ -1118,6 +1129,7 @@ body .o_action_manager .o_view_controller .o_content,
     background: #F5B041 !important;
     color: #ffffff !important;
     border: 1px solid #F5B041 !important;
+    font-size: 9px
 }
 
 /* Dump, Remix & Swapped, Cancelled: Đỏ (#C0392B) */
@@ -1125,12 +1137,14 @@ body .o_action_manager .o_view_controller .o_content,
     background: #C0392B !important;
     color: #ffffff !important;
     border: 1px solid #C0392B !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-remix {
     background: #C0392B !important;
     color: #ffffff !important;
     border: 1px solid #C0392B !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-cancel,
@@ -1138,16 +1152,19 @@ body .o_action_manager .o_view_controller .o_content,
     background: #C0392B !important;
     color: #ffffff !important;
     border: 1px solid #C0392B !important;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-available {
     color: var(--emerald-600);
     font-weight: 500;
+    font-size: 9px
 }
 
 .concrete-dashboard .status-busy {
     color: var(--red-600);
     font-weight: 500;
+    font-size: 9px
 }
 
 /* ========================================
@@ -1283,7 +1300,6 @@ body .o_action_manager .o_view_controller .o_content,
     overflow-x: auto !important;
     overflow-y: auto !important;
     max-height: 400px !important;
-    min-height: 200px !important;
     position: relative !important;
 }
 
@@ -1420,33 +1436,33 @@ body .o_action_manager .o_view_controller .o_content,
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
+    padding: 8px 16px;
     background: #fafafa;
     border-top: 1px solid var(--slate-200);
 }
 
 .concrete-dashboard .pagination-info {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--slate-500);
 }
 
 .concrete-dashboard .pagination-buttons {
     display: flex;
-    gap: 4px;
+    gap: 3px;
 }
 
 .concrete-dashboard .pagination-btn {
-    min-width: 32px;
-    height: 32px;
+    min-width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 8px;
+    padding: 0 6px;
     border: 1px solid var(--slate-300);
     border-radius: 4px;
     background: white;
     color: var(--slate-700);
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -1454,26 +1470,26 @@ body .o_action_manager .o_view_controller .o_content,
 .concrete-dashboard .pagination-input-group {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin: 0 8px;
-    padding: 0 8px;
+    gap: 4px;
+    margin: 0 6px;
+    padding: 0 6px;
 }
 
 .concrete-dashboard .pagination-input-label {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--slate-600);
     white-space: nowrap;
 }
 
 .concrete-dashboard .pagination-input {
-    width: 50px;
-    height: 32px;
-    padding: 0 8px;
+    width: 40px;
+    height: 26px;
+    padding: 0 6px;
     border: 1px solid var(--slate-300);
     border-radius: 4px;
     background: white;
     color: var(--slate-700);
-    font-size: 13px;
+    font-size: 12px;
     text-align: center;
     transition: all 0.2s ease;
 }
@@ -1485,16 +1501,16 @@ body .o_action_manager .o_view_controller .o_content,
 }
 
 .concrete-dashboard .pagination-input-separator {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--slate-500);
     margin: 0 2px;
 }
 
 .concrete-dashboard .pagination-total-pages {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--slate-600);
     font-weight: 500;
-    min-width: 20px;
+    min-width: 18px;
     text-align: center;
 }
 

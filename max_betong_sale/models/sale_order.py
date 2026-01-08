@@ -157,7 +157,7 @@ class SaleOrder(models.Model):
         ]
         for order in confirmed_orders:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
-            if order.state != 'sale':
+            if order.state not in ('sale','done'):
                 order.invoice_status = 'no'
             elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
                 if any(invoice_status == 'no' for invoice_status in line_invoice_status):

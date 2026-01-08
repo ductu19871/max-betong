@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0-20251121\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-06 07:43+0000\n"
-"PO-Revision-Date: 2026-01-06 14:55+0700\n"
+"POT-Creation-Date: 2026-01-07 03:24+0000\n"
+"PO-Revision-Date: 2026-01-07 10:30+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: code:addons/max_betong_dashboard/static/src/xml/dashboard_templates.xml:0
 #, python-format
 msgid "ASSIGN TICKET"
-msgstr ""
+msgstr "ASSIGN TICKET"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -100,7 +100,7 @@ msgstr "Bạn có chắc chắn muốn thực hiện hành động này không?"
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Arrived"
-msgstr ""
+msgstr "Arrived"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -110,7 +110,7 @@ msgstr ""
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Assigned"
-msgstr ""
+msgstr "Assigned"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -120,7 +120,7 @@ msgstr ""
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Available"
-msgstr ""
+msgstr "Available"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -130,7 +130,7 @@ msgstr ""
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Broken"
-msgstr ""
+msgstr "Broken"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -145,7 +145,7 @@ msgstr "Hủy"
 #: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
 #, python-format
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelled"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -193,7 +193,7 @@ msgstr "Thu"
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Completed"
-msgstr ""
+msgstr "Completed"
 
 #. module: max_betong_dashboard
 #: model:ir.model,name:max_betong_dashboard.model_concrete_dashboard
@@ -268,7 +268,7 @@ msgstr "Khối lượng đã giao (m³)"
 #: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
 #, python-format
 msgid "Draft"
-msgstr ""
+msgstr "Draft"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -284,14 +284,14 @@ msgstr "Kéo để thay đổi chiều rộng"
 #: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
 #, python-format
 msgid "Dump"
-msgstr ""
+msgstr "Dump"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "ETA"
-msgstr ""
+msgstr "ETA"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -364,7 +364,7 @@ msgstr "Trạng thái không hợp lệ"
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Leave"
-msgstr ""
+msgstr "Leave"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -423,7 +423,7 @@ msgstr "Chia Load thành công"
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Loaded"
-msgstr ""
+msgstr "Loaded"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -433,7 +433,7 @@ msgstr ""
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "Loading"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -490,7 +490,7 @@ msgstr "Không có xe"
 #: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
 #, python-format
 msgid "Not Available"
-msgstr ""
+msgstr "Not Available"
 
 #. module: max_betong_dashboard
 #. odoo-python
@@ -498,7 +498,7 @@ msgstr ""
 #: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
 #, python-format
 msgid "On Hold"
-msgstr ""
+msgstr "On Hold"
 
 #. module: max_betong_dashboard
 #. odoo-python
@@ -557,7 +557,7 @@ msgstr "Bảng điều khiển thời gian thực Mixin"
 #: code:addons/max_betong_dashboard/models/realtime_dashboard.py:0
 #, python-format
 msgid "Remix & Swapped"
-msgstr ""
+msgstr "Remix & Swapped"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -574,14 +574,14 @@ msgstr "Đặt lại Nháp"
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Return"
-msgstr ""
+msgstr "Return"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "SO"
-msgstr ""
+msgstr "SO"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -672,7 +672,7 @@ msgstr "Trạng thái"
 #: code:addons/max_betong_dashboard/static/src/xml/dashboard_templates.xml:0
 #, python-format
 msgid "Ticket"
-msgstr ""
+msgstr "Ticket"
 
 #. module: max_betong_dashboard
 #. odoo-javascript
@@ -708,7 +708,7 @@ msgstr "Khối lượng chưa chia Load (m³)"
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Unloading"
-msgstr ""
+msgstr "Unloading"
 
 #. module: max_betong_dashboard
 #. odoo-javascript

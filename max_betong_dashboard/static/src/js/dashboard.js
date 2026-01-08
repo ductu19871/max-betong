@@ -19,7 +19,7 @@ import { LoadingOverlay } from "@max_betong_dashboard/components/loading_overlay
 import { DataTableHeader, EmptyState } from "@max_betong_dashboard/components/data_table/index";
 
 // ===== Constants =====
-const DEFAULT_LIMIT = 5;
+const DEFAULT_LIMIT = 4;
 const FULLSCREEN_LIMIT = 20;
 
 const PROGRESS_COLUMNS = new Set(['assigned', 'loading', 'loaded', 'leave', 'arrived', 'unloading', 'return', 'completed']);

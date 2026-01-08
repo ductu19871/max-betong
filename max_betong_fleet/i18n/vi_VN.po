@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0-20251121\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-06 07:23+0000\n"
-"PO-Revision-Date: 2026-01-06 14:27+0700\n"
+"POT-Creation-Date: 2026-01-07 03:30+0000\n"
+"PO-Revision-Date: 2026-01-07 10:33+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -28,7 +28,7 @@ msgstr "Bạn có chắc muốn chọn thông tin ở trên?"
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__arrived
 #, python-format
 msgid "Arrived"
-msgstr ""
+msgstr "Arrived"
 
 #. module: max_betong_fleet
 #. odoo-javascript
@@ -36,7 +36,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__assigned
 #, python-format
 msgid "Assigned"
-msgstr ""
+msgstr "Assigned"
 
 #. module: max_betong_fleet
 #. odoo-javascript
@@ -45,7 +45,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__wizard_change_state__state__available
 #, python-format
 msgid "Available"
-msgstr ""
+msgstr "Available"
 
 #. module: max_betong_fleet
 #. odoo-javascript
@@ -54,12 +54,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__wizard_change_state__state__broken
 #, python-format
 msgid "Broken"
-msgstr ""
+msgstr "Broken"
 
 #. module: max_betong_fleet
 #: model_terms:ir.ui.view,arch_db:max_betong_fleet.view_wizard_change_state_form
 msgid "Cancel"
-msgstr ""
+msgstr "Hủy"
 
 #. module: max_betong_fleet
 #: model:ir.actions.act_window,name:max_betong_fleet.action_wizard_change_state
@@ -73,7 +73,7 @@ msgstr "Cập nhật trạng thái"
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__completed
 #, python-format
 msgid "Completed"
-msgstr ""
+msgstr "Completed"
 
 #. module: max_betong_fleet
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle_model__vehicle_type__concrete
@@ -108,7 +108,7 @@ msgstr "Tên hiển thị"
 #. module: max_betong_fleet
 #: model:ir.model.fields,field_description:max_betong_fleet.field_wizard_change_state__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: max_betong_fleet
 #: model:ir.model.fields,field_description:max_betong_fleet.field_wizard_change_state__write_uid
@@ -126,7 +126,7 @@ msgstr "Cập nhật lần cuối vào"
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__leave
 #, python-format
 msgid "Leave"
-msgstr ""
+msgstr "Leave"
 
 #. module: max_betong_fleet
 #. odoo-javascript
@@ -134,7 +134,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__loaded
 #, python-format
 msgid "Loaded"
-msgstr ""
+msgstr "Loaded"
 
 #. module: max_betong_fleet
 #. odoo-javascript
@@ -142,7 +142,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__loading
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "Loading"
 
 #. module: max_betong_fleet
 #. odoo-javascript
@@ -162,7 +162,7 @@ msgstr "Mô hình xe"
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__not_available
 #, python-format
 msgid "Not Available"
-msgstr ""
+msgstr "Not Available"
 
 #. module: max_betong_fleet
 #: model:ir.model.fields,field_description:max_betong_fleet.field_wizard_change_state__note
@@ -175,12 +175,12 @@ msgstr "Ghi chú"
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__on_hold
 #, python-format
 msgid "On Hold"
-msgstr ""
+msgstr "On Hold"
 
 #. module: max_betong_fleet
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle_model__vehicle_type__pump
 msgid "Pump"
-msgstr ""
+msgstr "Bơm"
 
 #. module: max_betong_fleet
 #: model:ir.model,name:max_betong_fleet.model_fleet_vehicle
@@ -193,7 +193,7 @@ msgstr "Bảng điều khiển thời gian thực Mixin"
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__return
 #, python-format
 msgid "Return"
-msgstr ""
+msgstr "Return"
 
 #. module: max_betong_fleet
 #: model:ir.model.fields,field_description:max_betong_fleet.field_wizard_change_state__state
@@ -220,7 +220,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:max_betong_fleet.selection__fleet_vehicle__state_concrete__unloading
 #, python-format
 msgid "Unloading"
-msgstr ""
+msgstr "Unloading"
 
 #. module: max_betong_fleet
 #: model_terms:ir.ui.view,arch_db:max_betong_fleet.view_fleet_vehicle_form_inherit_max_betong_fleet
