@@ -671,6 +671,7 @@ body .o_action_manager .o_view_controller .o_content,
     letter-spacing: 0.5px !important;
     cursor: pointer !important;
     transition: background 0.2s ease !important;
+    font-size: 9px !important;
 }
 
 .concrete-dashboard .btn-split-load:hover {
@@ -686,6 +687,7 @@ body .o_action_manager .o_view_controller .o_content,
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
     cursor: not-allowed !important;
+    font-size: 9px !important
 }
 
 .concrete-dashboard .btn-split-load-disabled:hover {
@@ -778,7 +780,7 @@ body .o_action_manager .o_view_controller .o_content,
 .concrete-dashboard .data-table th {
     background: #1C75BC !important;
     color: white !important;
-    padding: 8px 12px !important;
+    padding: 6px 12px !important;
     text-align: left !important;
     font-weight: 600 !important;
     font-size: 9px !important;
@@ -786,6 +788,14 @@ body .o_action_manager .o_view_controller .o_content,
     letter-spacing: 0.05em !important;
     border-right: 1px solid rgba(96, 165, 250, 0.3) !important;
     white-space: nowrap !important;
+}
+
+/* Force consistent padding for all table headers - highest specificity */
+.concrete-dashboard .data-table.ticket-table th,
+.concrete-dashboard .data-table.orders-table th,
+.concrete-dashboard .data-table.table-small th,
+.concrete-dashboard .data-table th {
+    padding: 6px 12px !important;
 }
 
 .concrete-dashboard .data-table th:last-child {
@@ -813,7 +823,7 @@ body .o_action_manager .o_view_controller .o_content,
 }
 
 .concrete-dashboard .data-table td {
-    padding: 6px 12px;
+    padding: 6px 12px !important;
     border-bottom: 1px solid var(--slate-200);
     vertical-align: middle;
     white-space: normal !important;
@@ -821,6 +831,14 @@ body .o_action_manager .o_view_controller .o_content,
     overflow-wrap: break-word !important;
     color: var(--slate-700);
     font-size: 9px;
+}
+
+/* Force consistent padding for all table cells - highest specificity */
+.concrete-dashboard .data-table.ticket-table td,
+.concrete-dashboard .data-table.orders-table td,
+.concrete-dashboard .data-table.table-small td,
+.concrete-dashboard .data-table td {
+    padding: 6px 12px !important;
 }
 
 /* But keep nowrap for specific cells */
@@ -1798,7 +1816,7 @@ body .o_action_manager .o_view_controller .o_content,
     border-radius: 4px;
     transition: all 0.2s ease;
     color: var(--slate-700);
-    font-size: 13px;
+    font-size: 9px;
 }
 
 .state-value:hover {
