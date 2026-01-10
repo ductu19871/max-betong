@@ -85,7 +85,9 @@ class MrpBom(models.Model):
     def button_new_version(self):
         self.ensure_one()
         new_bom = self._copy_bom()
-        self.button_historical()
+        if self._context.get('archive_old_version', True):
+            self.button_historical()
+        self.after_new_version(new_bom)
         return {
             "type": "ir.actions.act_window",
             "view_type": "form, tree",
@@ -96,16 +98,23 @@ class MrpBom(models.Model):
         }
 
     def _copy_bom(self):
+        vals = self._get_new_bom_vals()
+        if default_vals := (self._context.get('default_bom_vals', {})):
+            vals.update(default_vals)
+        new_bom = self.copy(vals)
+        return new_bom
+
+    def after_new_version(self, new_bom):
+        return
+
+    def _get_new_bom_vals(self):
         get_param = self.env["ir.config_parameter"].sudo().get_param
         active_draft = get_param("mrp_bom_version.active_draft")
-        new_bom = self.copy(
-            {
-                "version": self.version + 1,
-                "active": active_draft,
-                "previous_bom_id": self.id,
-            }
-        )
-        return new_bom
+        return {
+            "version": self.version + 1,
+            "active": active_draft,
+            "previous_bom_id": self.id,
+        }
 
     def button_activate(self):
         self.write({"active": True, "state": "active"})
