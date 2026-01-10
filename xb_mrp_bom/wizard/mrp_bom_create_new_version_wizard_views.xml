@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="mrp_bom_create_new_version_wizard_form_view">
+            <field name="model">mrp.bom.create_new_version.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="bom_id" invisible="1"/>
+                            <field name="workcenter_id"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_create_new_version" string="New Version" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

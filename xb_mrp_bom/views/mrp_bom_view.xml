@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="mrp_bom_form_view">
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_tmpl_id']" position="before">
+                    <field name="mix_bom_id" invisible="1"/>
+                    <field name="is_concrete_product" invisible="1"/>
+                    <field name="workcenter_id"
+                        invisible="type == 'mix'"
+                        readonly="state == 'historical'"
+                        options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="mrp_bom_version_form_view">
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp_bom_version.mrp_bom_version_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_new_version']" position="attributes">
+                    <attribute name="invisible">state == 'draft'</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_new_version']" position="after">
+                    <button name="button_reactivate" string="Reactivate" type="object" invisible="state != 'historical'" />
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="mrp_bom_tree_view">
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_tree_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="workcenter_id" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
