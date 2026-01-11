@@ -5,76 +5,76 @@
 		
 
 		<menuitem id="menu_sale_order"
-		name="Sale Order"
+		name="Sale Orders"
 		parent="menu_concrete_coordination_root"
 		sequence="20"/>
 		
 			<menuitem id="menu_sale_order_concrete"
-			name="Concrete Order"
+			name="Concrete Orders"
 			parent="menu_sale_order"
 			action="max_betong_sale.action_concrete_orders"
 			sequence="10"/>
 
 			<menuitem id="menu_sale_order_pumb"
-			name="Pumb Order"
+			name="Pumb Orders"
 			parent="menu_sale_order"
 			action="max_betong_sale.action_pumb_orders"
 			sequence="20"/>
 
 			<menuitem id="menu_sale_blanket_order"
-			name="Blanket Order"
+			name="Blanket Orders"
 			parent="menu_sale_order"
 			action="max_betong_sale.action_sale_blanket_concrete_order"
 			sequence="30"/>
 
 			<menuitem id="menu_customer" 
-			name="Customer"
+			name="Customers"
 			parent="menu_sale_order"
 			action="account.res_partner_action_customer"
 			sequence="40"/>
 
 		<menuitem id="menu_manufacturer_and_delivery"
-		name="Manufacturer and Delivery"
+		name="Manufacturers and Deliveries"
 		parent="menu_concrete_coordination_root"
 		sequence="50"/>
 
 			<menuitem id="menu_concrete_load" 
-				name="Concrete Load" 
+				name="Concrete Loads" 
 				parent="menu_manufacturer_and_delivery" 
 				sequence="20" 
 				action="action_concrete_load"/>
 
 			<menuitem id="menu_concrete_ticket"
-				name="Concrete Ticket"
+				name="Concrete Tickets"
 				parent="menu_manufacturer_and_delivery"
 				action="max_betong_sale.action_concrete_ticket"
 				sequence="30"/>
 
 			
 			<menuitem id="menu_concrete_delivery_order"
-				name="Concrete Delivery Order"
+				name="Concrete Deliveries"
 				parent="menu_manufacturer_and_delivery"
 				action="max_betong_sale.action_concrete_delivery_order"
 				sequence="40"/>
 			
 		<menuitem id="menu_product"
-		name="Product"
+		name="Products"
 		parent="menu_concrete_coordination_root"
 		sequence="60"/>
 			<menuitem id="menu_product_concrete_template"
-				name="Concrete Template Product"
+				name="Concrete Template Products"
 				parent="menu_product"
 				action="max_betong_sale.product_template_concrete_action"
 				sequence="10"/>
 
 			<menuitem id="menu_product_concrete"
-				name="Concrete Product"
+				name="Concrete Products"
 				parent="menu_product"
 				action="max_betong_sale.product_concrete_product_action"
 				sequence="10"/>
 
 			<menuitem id="menu_product_concrete_bill_of_material"
-				name="Concrete Bill of Material"
+				name="Concrete BOMs"
 				parent="menu_product"
 				action="max_betong_sale.product_concrete_bill_of_material_action"
 				sequence="20"/>
