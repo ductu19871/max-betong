@@ -10,3 +10,4 @@ from . import mrp_production
 from . import mrp_workorder
 from . import stock_scrap
 from . import stock_picking
+from . import sale_blanket_order

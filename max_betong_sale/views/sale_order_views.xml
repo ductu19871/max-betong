@@ -200,7 +200,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
-            <field name="context">{'search_default_my_sale_orders': 1}</field>
+            <field name="context">{'search_default_my_sale_orders': 1, 'default_so_type':'concrete'}</field>
             <field name="domain">[('so_type', '=', 'concrete')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -216,8 +216,8 @@
             <field name="res_model">sale.order</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
-            <field name="context">{'search_default_my_sale_orders': 1}</field>
-            <field name="domain">[('so_type', '=', 'pumb')]</field>
+            <field name="context">{'search_default_my_sale_orders': 1, 'default_so_type':'bom'}</field>
+            <field name="domain">[('so_type', '=', 'bom')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a new pumb quotation, the first step of a new sale!
