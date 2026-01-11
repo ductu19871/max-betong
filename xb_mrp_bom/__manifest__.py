@@ -1,7 +1,7 @@
 {
     "name": "MRP BoM custom by Xboss",
     "summary": "MRP BoM custom by Xboss",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.0.1",
     "license": "AGPL-3",
     "author": "Xboss",
     "depends": [
