@@ -181,7 +181,7 @@ class SaleOrder(models.Model):
             else:
                 order.invoice_status = 'no'
 
-    @api.depends('order_line', 'order_line.product_uom_qty', 'order_line.product_id')
+    @api.depends('order_line', 'order_line.product_uom_qty', 'order_line.product_id', 'so_type')
     def _compute_volume(self):
         for order in self:
             if order.so_type == 'concrete':
@@ -195,7 +195,7 @@ class SaleOrder(models.Model):
             else:
                 order.volume = 0.0
 
-    @api.depends('load_ids', 'load_ids.volume')
+    @api.depends('load_ids', 'load_ids.volume', 'so_type')
     def _compute_volume_allocated(self):
         """Calculate total volume from linked Loads"""
         for order in self:
@@ -205,7 +205,7 @@ class SaleOrder(models.Model):
             else:
                 order.volume_allocated = 0.0
 
-    @api.depends('volume', 'volume_allocated')
+    @api.depends('volume', 'volume_allocated', 'so_type')
     def _compute_volume_unallocated(self):
         """Calculate unallocated volume = Volume - Allocated Volume"""
         for order in self:
