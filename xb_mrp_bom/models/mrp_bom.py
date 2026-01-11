@@ -133,8 +133,7 @@ class MrpBom(models.Model):
                     ('product_id', '=', bom.product_id.id),
                     ('product_id.product_tmpl_id', '=', bom.product_tmpl_id.id),
                     ('vehicle_station_id', '=', bom.workcenter_id.id),
-                    ('state_concrete', 'in', ['draft', 'assigned']),
-                    ('bom_id.active', '=', False)
+                    ('state_concrete', 'in', ['draft', 'assigned'])
                 ])
                 if productions and (last_version_bom := bom._get_last_version_bom(active_test=True)):
                     productions.write({
