@@ -114,6 +114,7 @@ class ConcreteLoad(models.Model):
               'product_qty':self.volume,
               'product_id':self.product_id.id,
               'bom_id':bom.id,
+              'company_id':self.company_id.id,
               'mo_type':'concrete',
               'warehouse_id':self.sale_order_id.warehouse_id.id}
         production_id = self.env['mrp.production'].create(vals)
@@ -128,6 +129,7 @@ class ConcreteLoad(models.Model):
             self.sale_order_id.procurement_group_id = group_id.id
         picking_type = self.env['stock.picking.type'].search([
             ('code', '=', 'outgoing'),
+            ('company_id', '=', self.company_id.id),
             ('warehouse_id', '=', self.sale_order_id.warehouse_id.id),
         ], limit=1)
         if not picking_type:
@@ -138,10 +140,11 @@ class ConcreteLoad(models.Model):
             raise UserError(_("Dest location is not define."))
         picking = self.env['stock.picking'].create({
             'picking_type_id': picking_type.id,
+            'company_id': self.company_id.id,
             'location_id': picking_type.default_location_src_id.id,
             'location_dest_id': picking_type.default_location_dest_id.id,
             'ticket_id': mo.id,
-            'partner_id':self.delivery_address_id.id,
+            'partner_id': self.delivery_address_id.id,
             'origin': self.name,
         })
         self.env['stock.move'].create({
@@ -151,8 +154,9 @@ class ConcreteLoad(models.Model):
             'product_uom': self.product_id.uom_id.id,
             'location_id': picking.location_id.id,
             'location_dest_id': picking.location_dest_id.id,
-            'sale_line_id':self.sale_order_id.order_line[0].id,
+            'sale_line_id': self.sale_order_id.order_line[0].id,
             'picking_id': picking.id,
+            'company_id': self.company_id.id,
         })
         picking.action_confirm()    
     

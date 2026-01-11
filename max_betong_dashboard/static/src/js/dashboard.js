@@ -53,7 +53,7 @@ const STATE_CLASSES = {
 // ===== Default Column Configurations =====
 const DEFAULT_COLUMNS = {
     tickets: [
-        { key: 'stt', label: 'No', visible: true, width: 60, order: 0 },
+        { key: 'stt', label: 'No.', visible: true, width: 60, order: 0 },
         { key: 'name', label: 'Ticket Code', visible: true, width: 120, order: 1 },
         { key: 'delivery_address', label: 'Construction Site Address', visible: true, width: 150, order: 2 },
         { key: 'sale_order', label: 'SO', visible: true, width: 100, order: 3 },
@@ -74,7 +74,7 @@ const DEFAULT_COLUMNS = {
         { key: 'completed', label: 'Completed', visible: true, width: 80, order: 18 },
     ],
     orders: [
-        { key: 'stt', label: 'No', visible: true, width: 60, order: 0 },
+        { key: 'stt', label: 'No.', visible: true, width: 60, order: 0 },
         { key: 'name', label: 'SO', visible: true, width: 100, order: 1 },
         { key: 'delivery_address', label: 'Construction Site Address', visible: true, width: 150, order: 2 },
         { key: 'product', label: 'Product', visible: true, width: 150, order: 3 },
@@ -88,7 +88,7 @@ const DEFAULT_COLUMNS = {
         { key: 'action', label: 'Action', visible: true, width: 120, order: 11 },
     ],
     loads: [
-        { key: 'stt', label: 'No', visible: true, width: 60, order: 0 },
+        { key: 'stt', label: 'No.', visible: true, width: 60, order: 0 },
         { key: 'name', label: 'Load Code', visible: true, width: 120, order: 1 },
         { key: 'delivery_address', label: 'Construction Site Address', visible: true, width: 150, order: 2 },
         { key: 'sale_order', label: 'SO', visible: true, width: 100, order: 3 },
@@ -98,7 +98,7 @@ const DEFAULT_COLUMNS = {
         { key: 'volume', label: 'Volume (m³)', visible: true, width: 120, order: 7 },
     ],
     vehicles: [
-        { key: 'stt', label: 'No', visible: true, width: 60, order: 0 },
+        { key: 'stt', label: 'No.', visible: true, width: 60, order: 0 },
         { key: 'license_plate', label: 'Vehicle Code', visible: true, width: 120, order: 1 },
         { key: 'station', label: 'Station', visible: true, width: 100, order: 2 },
         { key: 'state_concrete', label: 'State', visible: true, width: 120, order: 3 },
@@ -1214,7 +1214,7 @@ export class ConcreteDashboard extends Component {
     
     translateColumns(columns) {
         const labelMap = {
-            'No': _t('No'),
+            'No.': _t('No.'),
             'Ticket Code': _t('Ticket Code'),
             'Mã Ticket': _t('Ticket Code'),
             'Construction Site Address': _t('Construction Site Address'),

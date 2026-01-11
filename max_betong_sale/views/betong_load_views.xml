@@ -64,6 +64,7 @@
                             <field name="load_station_id" readonly="state != 'draft'"/>
                             <field name="sale_order_id"/>
                             <field name="product_id"/>
+                            <field name="bom_id"/>
                             <field name="mix_note"/>
                             <field name="delivery_address_id" readonly="1"/>
                             <field name="create_date" readonly="1"/>

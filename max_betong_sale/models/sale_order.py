@@ -220,6 +220,20 @@ class SaleOrder(models.Model):
             self.trial_mix = False
             self.has_pump = False
             self.related_pump_so_id = False
+
+    def action_cancel(self):
+        for order in self:
+            if order.so_type == 'concrete':
+                if order.state == 'dispatching':
+                    if order.ticket_ids:
+                        mo = self.env['mrp.production'].search([('sale_order_id','=',order.id)])
+                        mo_completed = mo.filtered(lambda m: m.state_concrete == 'completed')
+                        if mo_completed:
+                            raise ValidationError(_('Cannot cancel SO when there are MOs in Completed status.'))
+                        mo_dump_and_remix = mo.filtered(lambda m: m.state_concrete in ['dump', 'remix'])
+                        if mo_dump_and_remix:
+                            raise ValidationError(_('Cannot cancel SO when there are MOs in Dump/Remix status.'))
+        return super().action_cancel()
             
     def action_confirm(self):
         betong_orders = self.filtered(lambda o: o.so_type == 'concrete')
@@ -279,13 +293,21 @@ class SaleOrder(models.Model):
     def action_split_load(self):
         for order in self:
             fixed_load_qty = self.company_id.concrete_load_volume
+            if fixed_load_qty <= 0:
+                raise ValidationError(_('Concrete load volume must be greater than 0.'))
+            # Tính toán dựa trên volume_unallocated hiện tại
             remaining_qty = order.volume_unallocated
+            if remaining_qty <= 0:
+                return
+            # Sử dụng floor division để tránh lỗi làm tròn
             full_load_count = int(remaining_qty // fixed_load_qty)
-            remainder_qty = remaining_qty % fixed_load_qty
+            remainder_qty = remaining_qty - (full_load_count * fixed_load_qty)
             load_obj = self.env['concrete.load']
+            # Tạo các load đầy
             for i in range(full_load_count):
                 load_obj.create(order._prepare_load_vals(fixed_load_qty))
-            if remainder_qty > 0:
+            # Chỉ tạo load còn lại nếu số lượng > 0 (và đủ lớn, tránh lỗi làm tròn)
+            if remainder_qty > 0.001:  # Tránh lỗi làm tròn số float
                 load_obj.create(order._prepare_load_vals(remainder_qty))
     
     def _prepare_load_vals(self, quantity):

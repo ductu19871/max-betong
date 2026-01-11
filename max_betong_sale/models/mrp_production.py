@@ -256,6 +256,8 @@ class Production(models.Model):
         if self.state =='done':
             self.action_loaded()
             self.vehicle_id.state_concrete='loaded'
+        if self.state == 'loading':
+            self.sale_order_id.state = 'dispatching'
     
     def action_cancel(self):
         res = super().action_cancel()

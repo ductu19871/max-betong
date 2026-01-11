@@ -446,7 +446,7 @@ msgstr "Ghi chú cấp phối"
 #. odoo-javascript
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
-msgid "No"
+msgid "No."
 msgstr "STT"
 
 #. module: max_betong_dashboard
