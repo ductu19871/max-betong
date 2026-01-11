@@ -102,6 +102,10 @@ class StockPicking(models.Model):
         x_quantity = "{:_.2f}".format(quantity).replace('.', ',').replace('_', '.')
         return x_quantity
     
+    def button_validate(self):
+        res = super().button_validate()
+        self._compute_accumulated_qty()
+        return res
     
     
     

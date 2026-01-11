@@ -3,6 +3,7 @@
     display: inline-block;
     width: auto;
     z-index: 1;
+    margin-left: 10px
 }
 
 .o_field_selection_state_badge.dropdown-open {

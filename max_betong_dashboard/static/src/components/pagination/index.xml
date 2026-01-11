@@ -11,14 +11,14 @@
                 <button class="pagination-btn" 
                         t-att-disabled="props.data.page === 1"
                         t-on-click="goToFirst">
-                    <i class="fa fa-angle-double-left icon-md"></i>
+                    <i class="fa fa-angle-double-left icon-sm"></i>
                 </button>
                 
                 <!-- Previous Page -->
                 <button class="pagination-btn" 
                         t-att-disabled="props.data.page === 1"
                         t-on-click="goToPrevious">
-                    <i class="fa fa-chevron-left icon-md"></i>
+                    <i class="fa fa-chevron-left icon-sm"></i>
                 </button>
                 
                 <!-- Page Numbers -->
@@ -47,14 +47,14 @@
                 <button class="pagination-btn" 
                         t-att-disabled="props.data.page === props.data.totalPages"
                         t-on-click="goToNext">
-                    <i class="fa fa-chevron-right icon-md"></i>
+                    <i class="fa fa-chevron-right icon-sm"></i>
                 </button>
                 
                 <!-- Last Page -->
                 <button class="pagination-btn" 
                         t-att-disabled="props.data.page === props.data.totalPages"
                         t-on-click="goToLast">
-                    <i class="fa fa-angle-double-right icon-md"></i>
+                    <i class="fa fa-angle-double-right icon-sm"></i>
                 </button>
             </div>
         </div>
