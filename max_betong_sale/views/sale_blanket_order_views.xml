@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.actions.act_window" id="sale_blanket_order.act_open_blanket_order_view">
+            <field name="context">{'default_so_type':'normal'}</field>
+            <field name="domain">[('so_type','=','normal')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_sale_blanket_concrete_order">
+            <field name="name">Concrete Blanket Order</field>    
+            <field name="res_model">sale.blanket.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_so_type':'concrete'}</field>
+            <field name="domain">[('so_type','=','concrete')]</field>
+            <field name="search_view_id" ref="sale_blanket_order.view_blanket_order_search" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a concrete blanket order that can be converted into a sale order.
+                </p>
+                <p>
+                    Use this menu to search within your concrete blanket orders. For each concrete blanket order,
+                    you can track the related discussion with the customer, control
+                    the products delivered and control the vendor bills.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

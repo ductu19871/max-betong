@@ -236,6 +236,21 @@ msgid "Concrete Ticket"
 msgstr "Ticket bê tông"
 
 #. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.product_template_concrete_action
+msgid "Concrete Template Products"
+msgstr "Sản phẩm mẫu bê tông"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.product_concrete_product_action
+msgid "Concrete Products"
+msgstr "Sản phẩm bê tông"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.product_concrete_bill_of_material_action
+msgid "Concrete Bill of Material"
+msgstr "Danh mục vật tư bê tông"
+
+#. module: max_betong_sale
 #: model:ir.model.fields,help:max_betong_sale.field_sale_order__concrete_station_id
 msgid ""
 "Concrete production station (Work Center). Each Concrete SO must be "

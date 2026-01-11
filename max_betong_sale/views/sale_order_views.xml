@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="before">
-                    <field name="so_type"/>
+                    <field name="so_type" invisible="1"/>
                     <field name="trial_mix" invisible="so_type != 'concrete'" 
                     readonly="has_pump or state in ('sale','planned','dispatching','done')" force_save="1"/>
                     <field name="has_pump" invisible="so_type != 'concrete'" 
@@ -183,6 +183,50 @@
                 </xpath>
             </field>
         </record>
+
+
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="context">{'default_so_type':'normal', 'search_default_my_quotation': 1}</field>
+            <field name="domain">[('so_type','=','normal')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="sale.action_orders">
+            <field name="context">{'default_so_type':'normal', 'search_default_my_sale_orders': 1}</field>
+            <field name="domain">[('so_type','=','normal'),('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+        </record>
+
+        <record id="action_concrete_orders" model="ir.actions.act_window">
+            <field name="name">Concrete Orders</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+            <field name="context">{'search_default_my_sale_orders': 1}</field>
+            <field name="domain">[('so_type', '=', 'concrete')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new concrete quotation, the first step of a new sale!
+                </p><p>
+                    Once the concrete quotation is confirmed, it becomes a concrete order.<br/> You will be able to create an invoice and collect the payment.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_pumb_orders" model="ir.actions.act_window">
+            <field name="name">Pumb Orders</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+            <field name="context">{'search_default_my_sale_orders': 1}</field>
+            <field name="domain">[('so_type', '=', 'pumb')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new pumb quotation, the first step of a new sale!
+                </p><p>
+                    Once the pumb quotation is confirmed, it becomes a pumb order.<br/> You will be able to create an invoice and collect the payment.
+                </p>
+            </field>
+        </record>
+
     </data>
 </odoo>
 

@@ -22,4 +22,22 @@
            </xpath>
         </field>
     </record>
+
+    <record id="action_concrete_delivery_order" model="ir.actions.act_window">
+		<field name="name">Concrete Deliveries</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">tree,kanban,form,calendar,activity</field>
+            <field name="domain">[('do_type', '=', 'concrete')]</field>
+            <field name="context">{'default_do_type': 'concrete', 'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'outgoing', 'search_default_delivery': 1}</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No delivery found. Let's create one!
+                </p><p>
+                    Deliveries allow you to send products from your stock to a partner.
+                </p>
+            </field>
+	</record>
+
+
 </odoo>

@@ -8,7 +8,7 @@
     """,
     'author': 'Maxsolution',
     'depends': ['max_betong_product','sale_management',
-                'sale_mrp','max_betong_fleet','base_geolocalize'],
+                'sale_mrp','max_betong_fleet','base_geolocalize', 'sale_blanket_order'],
     'data': [
         #data
         #wizard
@@ -23,6 +23,8 @@
         'views/res_company_views.xml',
         'views/mrp_production_views.xml',
         'views/stock_picking_view.xml',
+        'views/product_views.xml',
+        'views/sale_blanket_order_views.xml',
         #menu
         'views/menu_views.xml',
         #security
@@ -36,5 +38,6 @@
     'application': False,
     'auto_install': False,
     'license': 'LGPL-3',
+    'uninstall_hook': 'uninstall_hook',
 }
 
