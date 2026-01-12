@@ -454,15 +454,18 @@ class ConcreteDashboard(models.AbstractModel):
         if load_station_id != vehicle_station_id:
             return {'success': False, 'error': _('Cannot Assign Ticket: Load station and Vehicle station do not match.')}
         
-        load.write({
-            'vehicle_id': vehicle_id,
-            'vehicle_station_id': vehicle.station_id.id if vehicle.station_id else False,
-        })
-        
         try:
+            # Update vehicle info before assigning ticket
+            load.write({
+                'vehicle_id': vehicle_id,
+                'vehicle_station_id': vehicle.station_id.id if vehicle.station_id else False,
+            })
+            # Assign ticket - this may raise exception
             load.action_assign_ticket()
             return {'success': True}
         except Exception as e:
+            # Rollback the transaction on error
+            self.env.cr.rollback()
             return {'success': False, 'error': str(e)}
 
     @api.model
