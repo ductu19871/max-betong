@@ -106,22 +106,31 @@ class ConcreteLoad(models.Model):
     def action_assign_ticket(self):
         if self.load_station_id != self.vehicle_station_id:
             raise UserError(_("Ticket Assignment Not Possible: Load Station and Vehicle Station are not the same."))
-        bom = self.env['mrp.bom'].search([('product_tmpl_id','=',self.product_id.product_tmpl_id.id),
-                                          ('type','!=','mix')],limit =1)
-        if not bom:
-            raise UserError(_("BOM not found."))
-        vals={'load_id':self.id,
-              'product_qty':self.volume,
-              'product_id':self.product_id.id,
-              'bom_id':bom.id,
-              'company_id':self.company_id.id,
-              'mo_type':'concrete',
-              'warehouse_id':self.sale_order_id.warehouse_id.id}
-        production_id = self.env['mrp.production'].create(vals)
+        production_id = self.env['mrp.production'].create(self._prepare_ticket_vals())
         production_id.action_confirm()
         self.write({'state':'completed'})
         self._create_delivery_order(production_id)
-        
+
+    def _prepare_ticket_vals(self):
+        bom = self._get_bom_assign_ticket()
+        if not bom:
+            raise UserError(_("BOM not found."))
+        return {
+            'load_id':self.id,
+            'product_qty':self.volume,
+            'product_id':self.product_id.id,
+            'bom_id':bom.id,
+            'company_id':self.company_id.id,
+            'mo_type':'concrete',
+            'warehouse_id':self.sale_order_id.warehouse_id.id
+        }
+
+    def _get_bom_assign_ticket(self):
+        return self.env['mrp.bom'].search([
+            ('product_tmpl_id','=',self.product_id.product_tmpl_id.id),
+            ('type','!=','mix')
+        ], limit =1)
+
     def _create_delivery_order(self,mo):
         group_id = self.env['procurement.group'].search([('sale_id','=',self.sale_order_id.id)],limit=1)
         if not group_id:
