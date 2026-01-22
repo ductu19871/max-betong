@@ -126,10 +126,16 @@ class ConcreteLoad(models.Model):
         }
 
     def _get_bom_assign_ticket(self):
-        return self.env['mrp.bom'].search([
-            ('product_tmpl_id','=',self.product_id.product_tmpl_id.id),
-            ('type','!=','mix')
-        ], limit =1)
+        return self._get_boms_assign_ticket()[:1]
+
+    def _get_boms_assign_ticket(self):
+        MrpBom = self.env['mrp.bom']
+        company = self.company_id or self.env.company
+        return MrpBom.with_context(active_test=True).search([
+            *MrpBom._check_company_domain(company),
+            ('product_tmpl_id', '=', self.product_id.product_tmpl_id.id),
+            ('type', '!=', 'mix')
+        ])
 
     def _create_delivery_order(self,mo):
         group_id = self.env['procurement.group'].search([('sale_id','=',self.sale_order_id.id)],limit=1)

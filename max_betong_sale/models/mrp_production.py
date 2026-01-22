@@ -1,6 +1,7 @@
 from odoo import _, models,fields, api
 from odoo.tools import float_round
 from datetime import date,timedelta
+from odoo.exceptions import UserError
 
 class Production(models.Model):
     _inherit = 'mrp.production'
@@ -15,10 +16,14 @@ class Production(models.Model):
         required=True,
     )
     load_id = fields.Many2one('concrete.load',string='Concrete Load',ondelete="set null")
+    load_station_id = fields.Many2one('mrp.workcenter', string='Load Station', related='load_id.load_station_id', readonly=True, store=True)
+    bom_mix_id = fields.Many2one('mrp.bom', string='BoM Mix', related='load_id.bom_id', readonly=True)
     vehicle_id = fields.Many2one(
-        related="load_id.vehicle_id",
+        'fleet.vehicle',
+        compute='_compute_vehicle_id',
         string='Vehicle',
-        store =True
+        store =True,
+        readonly=False
     )
     sale_order_id = fields.Many2one(
         related="load_id.sale_order_id",
@@ -33,11 +38,13 @@ class Production(models.Model):
         store=True,
     )
     vehicle_station_id = fields.Many2one(
-        related='load_id.vehicle_station_id',
+        'mrp.workcenter',
+        compute='_compute_vehicle_station_id',
         string='Vehicle Station',
         help="Station associated with the selected vehicle. "
              "Automatically filled based on vehicle configuration.",
-        store =True
+        store =True,
+        readonly=True
     )
     
     state_concrete = fields.Selection(
@@ -104,7 +111,28 @@ class Production(models.Model):
     
     do_ids = fields.One2many('stock.picking','ticket_id',string='Do')
     do_count = fields.Integer(compute='_compute_do_count',store =True)
-    
+
+    @api.constrains('load_station_id', 'vehicle_station_id', 'state_concrete')
+    def _check_station_concrete_load(self):
+        for mo in self.filtered(lambda mo: mo.state_concrete != 'draft' and mo.load_station_id and mo.vehicle_station_id):
+            if mo.load_station_id != mo.vehicle_station_id:
+                raise UserError(_("Load station and vehicle station are not consistent."))
+
+    @api.onchange('load_id')
+    def onchange_load_id(self):
+        if self.load_id and (bom := self.load_id._get_bom_assign_ticket()):
+            self.bom_id = bom
+
+    @api.depends('load_id')
+    def _compute_vehicle_id(self):
+        for mo in self.filtered('load_id'):
+            mo.vehicle_id = mo.load_id.vehicle_id
+
+    @api.depends('load_id', 'vehicle_id')
+    def _compute_vehicle_station_id(self):
+        for mo in self:
+            mo.vehicle_station_id = mo.load_id.vehicle_station_id or mo.vehicle_id.station_id
+
     def action_view_do(self):
         return {
             'type': 'ir.actions.act_window',
@@ -130,7 +158,7 @@ class Production(models.Model):
     def action_leave(self):
         self.write({'leave_datetime':fields.Datetime.now(),
                    'state_concrete':'leave'})
-    
+
     def action_confirm(self):
         res = super().action_confirm()
         for ticket in self:
