@@ -6,11 +6,8 @@ from odoo.exceptions import ValidationError, UserError
 class ConcreteLoad(models.Model):
     _inherit = 'concrete.load'
 
-    def _get_bom_assign_ticket(self):
-        if self.load_station_id:
-            return self.env['mrp.bom'].search([
-                ('product_tmpl_id','=',self.product_id.product_tmpl_id.id),
-                ('type','!=','mix'),
-                ('workcenter_id','=',self.load_station_id.id)
-            ], limit =1)
-        return super()._get_bom_assign_ticket()
+    def _get_boms_assign_ticket(self):
+        boms = super()._get_boms_assign_ticket()
+        if load_station := self.load_station_id:
+            boms = boms.filtered_domain([('workcenter_id', '=', load_station.id)])
+        return boms
