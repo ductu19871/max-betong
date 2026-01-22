@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="max_betong_dashboard_analytic.OnTimeDeliveryChart">
+        <div class="chart-card chart-row-item">
+            <div class="chart-header">
+                <h3 class="chart-title"><t t-esc="t('On-Time Delivery')"/></h3>
+            </div>
+            <div class="chart-body">
+                <t t-if="hasData">
+                    <canvas t-ref="canvas"/>
+                    <div class="chart-center-value">
+                        <t t-esc="chartValue || 0"/>%
+                    </div>
+                </t>
+                <t t-if="!hasData" class="chart-no-data">
+                    <div class="no-data-message">
+                        <i class="fa fa-info-circle"/>
+                        <span><t t-esc="t('No data available')"/></span>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
+

@@ -877,28 +877,47 @@ export class ConcreteDashboard extends Component {
     }
 
     async confirmDeleteLoad() {
-        const loadId = this.state.contextMenu.loadId;
+        // Check if there are selected loads (multiple selection)
+        const loadIds = this.state.selectedLoads.length > 0 
+            ? this.state.selectedLoads 
+            : (this.state.contextMenu.loadId ? [this.state.contextMenu.loadId] : []);
+        
+        if (loadIds.length === 0) {
+            this.notification.add(_t("Please select at least one Load to delete"), { type: "warning" });
+            this.state.contextMenu.show = false;
+            return;
+        }
+        
+        const message = loadIds.length === 1
+            ? _t('Are you sure you want to delete this Load? The volume will be returned to the unallocated volume of the SO.')
+            : _t('Are you sure you want to delete {count} Loads? The volume will be returned to the unallocated volume of the SO.').replace('{count}', loadIds.length);
+        
         this.state.confirmModal = {
             show: true,
-            title: _t('Confirm Delete Load'),
-            message: _t('Are you sure you want to delete this Load? The volume will be returned to the unallocated volume of the SO.'),
-            action: async () => await this.deleteLoad(loadId)
+            title: loadIds.length === 1 ? _t('Confirm Delete Load') : _t('Confirm Delete Loads'),
+            message: message,
+            action: async () => await this.deleteLoads(loadIds)
         };
         this.state.contextMenu.show = false;
     }
 
-    async deleteLoad(loadId) {
+    async deleteLoads(loadIds) {
         try {
-            const result = await this.rpc("/concrete/dashboard/delete_load", { load_id: loadId });
+            const result = await this.rpc("/concrete/dashboard/delete_loads", { load_ids: loadIds });
             if (result.success) {
-                this.notification.add(_t("Load deleted successfully"), { type: "success" });
+                const count = loadIds.length;
+                const message = count === 1 
+                    ? _t("Load deleted successfully")
+                    : _t("{count} loads deleted successfully").replace('{count}', count);
+                this.notification.add(message, { type: "success" });
+                this.state.selectedLoads = [];
                 await Promise.all([this.loadOrders(), this.loadLoads()]);
             } else {
-                this.notification.add(result.error || _t("Failed to delete load"), { type: "danger" });
+                this.notification.add(result.error || _t("Failed to delete loads"), { type: "danger" });
             }
         } catch (error) {
-            console.error("Error deleting load:", error);
-            this.notification.add(_t("Failed to delete load"), { type: "danger" });
+            console.error("Error deleting loads:", error);
+            this.notification.add(_t("Failed to delete loads"), { type: "danger" });
         }
         this.closeConfirmModal();
     }

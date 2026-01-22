@@ -96,6 +96,12 @@ class Production(models.Model):
         readonly=True
     )
     
+    incident_datetime = fields.Datetime(
+        string='Incident Recording Time',
+        readonly=True,
+        help='Time when ticket is on hold or completed (for analytics tracking)'
+    )
+    
     distance_km = fields.Float(
         string='Distance (km)',
         help='Distance from plant to site'
@@ -238,6 +244,12 @@ class Production(models.Model):
                 for record in self:
                     if not getattr(record, datetime_field, False):
                         vals[datetime_field] = fields.Datetime.now()
+            
+            # Set incident_datetime for on_hold or completed states
+            if new_state in ('on_hold', 'completed', 'dump', 'remix'):
+                for record in self:
+                    if not record.incident_datetime:
+                        vals['incident_datetime'] = fields.Datetime.now()
         
         result = super().write(vals)
         if 'state' in vals:

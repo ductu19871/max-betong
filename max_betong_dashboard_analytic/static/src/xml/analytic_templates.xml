@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard_analytic.AnalyticDashboard">
+        <div class="analytic-dashboard">
+            <div t-if="state.loading" class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Filters and KPI Cards in one row -->
+                <div class="filters-kpi-row">
+                    <!-- Filters -->
+                    <div class="filters-section">
+                        <div class="filter-group">
+                            <button class="filter-btn" t-on-click.stop="toggleStationDropdown">
+                                <span t-esc="getStationDisplayName()"/>
+                                <i class="fa fa-chevron-down"/>
+                            </button>
+                            <div t-if="state.stationDropdownOpen" class="filter-dropdown-menu" t-on-click.stop="">
+                                <div class="dropdown-item" t-on-click.stop="() => this.selectStation(null, null)">
+                                    <span t-esc="t('All Stations')"/>
+                                </div>
+                                <t t-foreach="state.stations" t-as="station" t-key="station.id">
+                                    <div class="dropdown-item" t-on-click.stop="() => this.selectStation(station.id, station.name)">
+                                        <span t-esc="station.name"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <button class="filter-btn" t-on-click.stop="toggleTimeFilterDropdown">
+                                <span t-esc="getTimeFilterDisplayName()"/>
+                                <i class="fa fa-chevron-down"/>
+                            </button>
+                            <div t-if="state.timeFilterDropdownOpen" class="filter-dropdown-menu" t-on-click.stop="() => {}">
+                                <div t-if="!state.showCustomDatePicker">
+                                    <div class="dropdown-item" t-on-click="selectTimeFilter('today')">
+                                        <span t-esc="t('Today')"/>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click="selectTimeFilter('week')">
+                                        <span t-esc="t('This Week')"/>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click="selectTimeFilter('month')">
+                                        <span t-esc="t('This Month')"/>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click="selectTimeFilter('quarter')">
+                                        <span t-esc="t('This Quarter')"/>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click="selectTimeFilter('year')">
+                                        <span t-esc="t('This Year')"/>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click="selectTimeFilter('custom')">
+                                        <span t-esc="t('Custom Date Range')"/>
+                                    </div>
+                                </div>
+                                <div t-if="state.showCustomDatePicker" class="custom-date-picker">
+                                    <div class="date-picker-header">
+                                        <span t-esc="t('Select Date Range')"/>
+                                        <button class="btn-close" t-on-click.stop="closeCustomDatePicker">
+                                            <i class="fa fa-times"/>
+                                        </button>
+                                    </div>
+                                    <div class="date-picker-body">
+                                        <div class="date-input-group">
+                                            <label t-esc="t('From')"/>
+                                            <input type="date" 
+                                                   class="form-control date-input" 
+                                                   t-att-value="state.dateFrom"
+                                                   t-on-input="onDateFromChange"/>
+                                        </div>
+                                        <div class="date-input-group">
+                                            <label t-esc="t('To')"/>
+                                            <input type="date" 
+                                                   class="form-control date-input" 
+                                                   t-att-value="state.dateTo"
+                                                   t-on-input="onDateToChange"/>
+                                        </div>
+                                    </div>
+                                    <div class="date-picker-footer">
+                                        <button class="btn btn-secondary btn-sm" 
+                                                t-on-click.stop="cancelCustomDatePicker">
+                                            <span t-esc="t('Cancel')"/>
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" 
+                                                t-on-click.stop="applyCustomDateRange"
+                                                t-att-disabled="!state.dateFrom || !state.dateTo">
+                                            <span t-esc="t('Apply')"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background-color: #E3F2FD; color: #1976D2;">
+                            <i class="fa fa-truck"/>
+                        </div>
+                        <div class="kpi-content">
+                            <p class="kpi-label"><t t-esc="t('Volume Delivered')"/></p>
+                            <h3 class="kpi-value">
+                                <t t-esc="kpis.volume_delivered || 0"/>
+                                <span class="kpi-unit"> m³</span>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background-color: #FFECB3; color: #F57C00;">
+                            <i class="fa fa-cog"/>
+                        </div>
+                        <div class="kpi-content">
+                            <p class="kpi-label"><t t-esc="t('Volume Undelivered')"/></p>
+                            <h3 class="kpi-value">
+                                <t t-esc="kpis.volume_undelivered || 0"/>
+                                <span class="kpi-unit"> m³</span>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background-color: #FFF9C4; color: #FBC02D;">
+                            <i class="fa fa-box"/>
+                        </div>
+                        <div class="kpi-content">
+                            <p class="kpi-label"><t t-esc="t('Undelivered Orders')"/></p>
+                            <h3 class="kpi-value">
+                                <t t-esc="kpis.orders_undelivered?.current || 0"/>
+                                <span class="kpi-fraction">/<t t-esc="kpis.orders_undelivered?.total || 0"/></span>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background-color: #E0F2F1; color: #009688;">
+                            <i class="fa fa-truck"/>
+                        </div>
+                        <div class="kpi-content">
+                            <p class="kpi-label"><t t-esc="t('Active Vehicles')"/></p>
+                            <h3 class="kpi-value">
+                                <t t-esc="kpis.vehicles_active?.current || 0"/>
+                                <span class="kpi-fraction">/<t t-esc="kpis.vehicles_active?.total || 0"/></span>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- Charts Section - 3 charts in one row -->
+                <div class="charts-section-row">
+                    <TripsPerVehicleChart data="data.trips_per_vehicle" period="state.timeFilter" t-key="'trips-per-vehicle'"/>
+                    <ReturnVolumeChart data="data.return_volume" period="state.timeFilter" t-key="'return-volume'"/>
+                    <OnTimeDeliveryChart data="data.on_time_delivery" period="state.timeFilter" t-key="'on-time-delivery'"/>
+                </div>
+
+                <!-- Bottom Charts -->
+                <div class="charts-section-bottom">
+                    <ConcreteLifetimeChart data="data.concrete_lifetime" period="state.timeFilter" t-key="'concrete-lifetime'"/>
+                    <VehicleCycleTimeChart data="data.vehicle_cycle_time" period="state.timeFilter" t-key="'vehicle-cycle-time'"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
+

@@ -13,7 +13,10 @@
 	                </span>
 				</div>
                 <xpath expr="//field[@name='detailed_type'][1]" position="before">
-                    <field name="concrete_lifespan" invisible="not is_concrete_product" widget="float_time"/>
+	                <label for="concrete_lifespan" invisible="not is_concrete_product"/>
+					<div name="concrete_lifespan" invisible="not is_concrete_product">
+						<field name="concrete_lifespan" class="oe_inline"/><strong>minute</strong>
+					</div>
                 </xpath>
             </field>
         </record>
