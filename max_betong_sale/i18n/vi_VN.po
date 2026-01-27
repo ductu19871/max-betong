@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0-20251121\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 03:35+0000\n"
-"PO-Revision-Date: 2026-01-07 11:05+0700\n"
+"POT-Creation-Date: 2026-01-27 07:16+0000\n"
+"PO-Revision-Date: 2026-01-27 14:21+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -20,17 +20,17 @@ msgstr ""
 #. module: max_betong_sale
 #: model:ir.actions.report,print_report_name:max_betong_sale.report_delivery_concrete
 msgid "'Delivery Concrete - %s' % (object.name)"
-msgstr "'Delivery Concrete - %s' % (object.name)"
+msgstr ""
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
 msgid "/&gt;"
-msgstr "/&gt;"
+msgstr ""
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_picking_form_inherit_ticket_info
 msgid "<strong> m3</strong>"
-msgstr "<strong> m3</strong>"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_stock_picking__accumulated_qty
@@ -59,6 +59,7 @@ msgstr ""
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
 msgid "Are you sure you've selected the correct information above?"
 msgstr "Bạn có chắc chắn mình đã chọn đúng thông tin không?"
 
@@ -67,7 +68,7 @@ msgstr "Bạn có chắc chắn mình đã chọn đúng thông tin không?"
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__wizard_change_state__state_ticket__arrived
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Arrived"
-msgstr "Arrived"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__arrived_state_tracking_datetime
@@ -77,13 +78,13 @@ msgstr "Thơi gian theo dõi trạng thái Arrived"
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
 msgid "Assign Ticket"
-msgstr "Assign Ticket"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__assigned
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Assigned"
-msgstr "Assigned"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__assigned_datetime
@@ -119,6 +120,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
 msgid "Cancel"
 msgstr "Hủy"
 
@@ -252,6 +254,7 @@ msgstr "Cài đặt cấu hình"
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
 msgid "Confirm"
 msgstr "Xác nhận"
 
@@ -264,6 +267,11 @@ msgstr "Xác nhận chọn"
 #: model:ir.actions.act_window,name:max_betong_sale.action_wizard_confirm_fields
 msgid "Confirm Vehicle - Station"
 msgstr "Cập nhật Mã xe & Trạm của xe"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_wizard_confirm_fields_station_volumn
+msgid "Confirm Volumn - Load Station"
+msgstr "Xác nhận khối lượng - Trạm của Load"
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
@@ -397,13 +405,13 @@ msgstr "Dump"
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__dump
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Dump"
-msgstr "Dump"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__eta
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "ETA"
-msgstr "ETA"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_stock_picking__factory_out_time
@@ -430,7 +438,12 @@ msgstr "Có bơm"
 #: model:ir.model.fields,field_description:max_betong_sale.field_concrete_ticket__id
 #: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__incident_datetime
+msgid "Incident Recording Time"
+msgstr "Thời gian ghi nhận sự cố"
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
@@ -466,7 +479,7 @@ msgstr "Vĩ độ:"
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__wizard_change_state__state_ticket__leave
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Leave"
-msgstr "Leave"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__leave_datetime
@@ -486,7 +499,7 @@ msgstr "Danh sách ticket liên kết đến SO này"
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
 msgid "Load"
-msgstr "Load"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__name
@@ -496,9 +509,11 @@ msgstr "Mã load"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__load_station_id
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__load_station_id
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
 msgid "Load Station"
-msgstr "Trạm của Load"
+msgstr "Cập nhật Trạm của Load & KL"
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
@@ -512,6 +527,7 @@ msgstr "Số lượng Load"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,help:max_betong_sale.field_concrete_load__volume
+#: model:ir.model.fields,help:max_betong_sale.field_wizard_confirm_fields__volume
 msgid "Load volume must be greater than 0."
 msgstr "Khối lượng Load phải lớn hơn 0"
 
@@ -520,7 +536,7 @@ msgstr "Khối lượng Load phải lớn hơn 0"
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__wizard_change_state__state_ticket__loaded
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Loaded"
-msgstr "Loaded"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__loaded_datetime
@@ -620,7 +636,7 @@ msgstr "Ghi chú"
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.mrp_production_form_view_inherit_max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "On Hold"
-msgstr "On Hold"
+msgstr ""
 
 #. module: max_betong_sale
 #. odoo-python
@@ -697,7 +713,7 @@ msgstr "Liên kết đến SO bơm"
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__remix
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Remix & Swapped"
-msgstr "Remix & Swapped"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__remix_swapped
@@ -710,11 +726,16 @@ msgid "Report Delivery Concrete"
 msgstr "Báo cáo vận chuyển bê tông"
 
 #. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_workcenter__responsible_id
+msgid "Responsible"
+msgstr "Người phụ trách"
+
+#. module: max_betong_sale
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__return
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__wizard_change_state__state_ticket__return
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Return"
-msgstr "Return"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__return_state_tracking_datetime
@@ -724,7 +745,7 @@ msgstr "Thời gian theo dõi trạng thái Return"
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__sale_order_id
 msgid "SO"
-msgstr "SO"
+msgstr ""
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
@@ -804,14 +825,14 @@ msgid "Select Vehicle - Station"
 msgstr "Chọn Trạm của xe"
 
 #. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
+msgid "Select Volumn - Load Station"
+msgstr "Chọn Khối lượng - Trạm của Load"
+
+#. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
 msgid "Send"
 msgstr "Báo giá đã gửi"
-
-#. module: max_betong_sale
-#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
-msgid "Set to Draft"
-msgstr "Đặt về nháp"
 
 #. module: max_betong_sale
 #: model:ir.actions.act_window,name:max_betong_sale.action_concrete_load_config_settings
@@ -896,7 +917,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__ticket_ids
 #: model:ir.model.fields,field_description:max_betong_sale.field_stock_picking__ticket_id
 msgid "Ticket"
-msgstr "Ticket"
+msgstr ""
 
 #. module: max_betong_sale
 #. odoo-python
@@ -923,6 +944,12 @@ msgstr "Ticket"
 #: model:ir.model.fields,help:max_betong_sale.field_sale_order__dispatching_date
 msgid "Time when moved to Dispatching status"
 msgstr "Thời điểm chuyển sang trạng thái Đang điều phối"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_mrp_production__incident_datetime
+msgid "Time when ticket is on hold or completed (for analytics tracking)"
+msgstr ""
+"Thời gian Ticket chuyển on hold hoặc completed (để theo dõi phân tích)"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,help:max_betong_sale.field_sale_order__volume_allocated
@@ -954,7 +981,7 @@ msgstr "Khối lượng chưa chia Load"
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__wizard_change_state__state_ticket__unloading
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Unloading"
-msgstr "Unloading"
+msgstr ""
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__unloading_state_tracking_datetime
@@ -1008,6 +1035,7 @@ msgstr "Xe thực hiện giao bê tông."
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__volume
 #: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__volume
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__volume
 msgid "Volume"
 msgstr "Khối lượng"
 
@@ -1032,6 +1060,11 @@ msgstr "Khối lượng của sản phẩm bê tông trong đơn hàng (m³)"
 #: model:ir.model,name:max_betong_sale.model_wizard_change_state
 msgid "Wizard Change Ticket State"
 msgstr "Cập nhật trạng thái Ticket"
+
+#. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_mrp_workcenter
+msgid "Work Center"
+msgstr "Khu vực sản xuất"
 
 #. module: max_betong_sale
 #: model:ir.model,name:max_betong_sale.model_mrp_workorder

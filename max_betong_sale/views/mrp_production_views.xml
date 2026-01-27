@@ -155,5 +155,16 @@
             parent="mrp.menu_mrp_manufacturing"
             name="Ticket"
             sequence="1"/>
+   
+    <record id="mrp_workcenter_form_inherit_responsible" model="ir.ui.view">
+	    <field name="name">mrp.workcenter.form.inherit.responsible</field>
+	    <field name="model">mrp.workcenter</field>
+	    <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+	    <field name="arch" type="xml">
+	        <xpath expr="//group//group[2]//field[@name='company_id']" position="after">
+	            <field name="responsible_id"/>
+	        </xpath>
+	    </field>
+	 </record>
     
 </odoo>

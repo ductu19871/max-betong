@@ -86,12 +86,10 @@ export class VehicleCycleTimeChart extends Component {
 
         const data = chartData;
         if (!Array.isArray(data.wait_time) || !Array.isArray(data.delivery_time)) {
-            console.warn('[VehicleCycleTime] Data arrays missing');
             return;
         }
 
         if (data.wait_time.length === 0 || data.delivery_time.length === 0) {
-            console.warn('[VehicleCycleTime] Empty data arrays');
             return;
         }
 
@@ -104,86 +102,29 @@ export class VehicleCycleTimeChart extends Component {
             try {
                 this.chart.destroy();
             } catch (e) {
-                console.warn('[VehicleCycleTime] Chart destroy error:', e);
+                // Ignore
             }
             this.chart = null;
         }
 
         this._lastData = currentData;
-
-        const n = Math.min(data.wait_time.length, data.delivery_time.length);
-        const labels = Array.isArray(data.labels) && data.labels.length === n
-            ? data.labels
-            : Array.from({ length: n }, (_, i) => `#${i + 1}`);
-
-        const totals = Array.from({ length: n }, (_, i) => (Number(data.wait_time[i]) || 0) + (Number(data.delivery_time[i]) || 0));
-        const maxVal = Math.max(...totals, 0);
-        const suggestedMax = maxVal > 0 ? Math.ceil(maxVal / 10) * 10 : undefined;
-
-        const numBars = n;
-        const showSegmentLabels = numBars <= 10;
-        
-        const segmentAndTotalLabelPlugin = {
-            id: 'segmentAndTotalLabelPlugin_vehicleCycleTime',
-            afterDatasetsDraw: (chart) => {
-                const { ctx } = chart;
-                ctx.save();
-                ctx.font = '10px sans-serif';
-                ctx.fillStyle = '#111';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-
-                if (showSegmentLabels) {
-                    chart.data.datasets.forEach((dataset, datasetIndex) => {
-                        const meta = chart.getDatasetMeta(datasetIndex);
-                        if (!meta || !meta.data) return;
-                        meta.data.forEach((bar, index) => {
-                            if (!bar) return;
-                            const v = Number(dataset.data[index]) || 0;
-                            if (v <= 0) return;
-                            const h = Math.abs((bar.base ?? 0) - (bar.y ?? 0));
-                            if (h < 14) return;
-
-                            const midY = (bar.base + bar.y) / 2;
-                            ctx.textBaseline = 'middle';
-                            ctx.fillText(String(Math.round(v * 10) / 10), bar.x, midY);
-                            ctx.textBaseline = 'bottom';
-                        });
-                    });
-                }
-
-                const lastMeta = chart.getDatasetMeta(chart.data.datasets.length - 1);
-                if (lastMeta && lastMeta.data) {
-                    lastMeta.data.forEach((bar, index) => {
-                        if (!bar) return;
-                        const v = Number(totals[index]) || 0;
-                        if (v <= 0) return;
-                        const fontSize = numBars > 15 ? 8 : 10;
-                        ctx.font = `${fontSize}px sans-serif`;
-                        ctx.fillText(String(Math.round(v * 10) / 10), bar.x, bar.y - 3);
-                    });
-                }
-
-                ctx.restore();
-            },
-        };
+        const labels = Array.from({ length: Math.min(data.wait_time.length, data.delivery_time.length) }, (_, i) => `V${i + 201}`);
 
         try {
-            console.log('[VehicleCycleTime] Creating chart...');
             this.chart = new Chart(canvas, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
                         {
-                            label: _t('Thời gian chờ'),
+                            label: _t('Wait Time'),
                             data: data.wait_time,
                             backgroundColor: '#5CD694',
                             borderColor: '#5CD694',
                             borderWidth: 0,
                         },
                         {
-                            label: _t('Thời gian giao'),
+                            label: _t('Delivery Time'),
                             data: data.delivery_time,
                             backgroundColor: '#7B80FF',
                             borderColor: '#7B80FF',
@@ -209,7 +150,7 @@ export class VehicleCycleTimeChart extends Component {
                         },
                         tooltip: {
                             callbacks: {
-                                label: (context) => `${context.dataset.label}: ${context.parsed.y} ${_t('phút')}`
+                                label: (context) => `${context.dataset.label}: ${context.parsed.y} ${_t('minutes')}`
                             }
                         }
                     },
@@ -226,8 +167,9 @@ export class VehicleCycleTimeChart extends Component {
                         y: {
                             stacked: true,
                             beginAtZero: true,
-                            suggestedMax: suggestedMax,
+                            max: 100,
                             ticks: {
+                                stepSize: 10,
                                 font: { size: 10 }
                             },
                             grid: {
@@ -236,12 +178,10 @@ export class VehicleCycleTimeChart extends Component {
                             }
                         }
                     }
-                },
-                plugins: [segmentAndTotalLabelPlugin],
+                }
             });
             
-            console.log('[VehicleCycleTime] Chart created successfully');
-            
+            // Add chart-loaded class to show the chart
             const chartBody = canvas.parentElement;
             if (chartBody && chartBody.classList) {
                 chartBody.classList.add('chart-loaded');
@@ -266,3 +206,4 @@ export class VehicleCycleTimeChart extends Component {
         return _t(key);
     }
 }
+

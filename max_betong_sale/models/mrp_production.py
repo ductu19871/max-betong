@@ -128,10 +128,13 @@ class Production(models.Model):
     def action_loading(self):
         self.write({'loading_datetime':fields.Datetime.now(),
                    'state_concrete':'loading'})
+        self.vehicle_id.state_concrete='loading'
+        self.sale_order_id.action_betong_set_dispatching()
     
     def action_loaded(self):
         self.write({'loaded_datetime':fields.Datetime.now(),
                    'state_concrete':'loaded'})
+        self.vehicle_id.state_concrete='loaded'
         
     def action_leave(self):
         self.write({'leave_datetime':fields.Datetime.now(),

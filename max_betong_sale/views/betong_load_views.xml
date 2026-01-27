@@ -32,8 +32,15 @@
                     <button string="Assign Ticket" type="object" name="action_assign_ticket"
                             invisible="state == 'completed'"
                             groups="max_betong_sale.group_betong_load_manager"/>
-                    <button string="Set to Draft" type="object" name="action_set_draft"
-                            invisible="state =='draft'"/>
+                    <!--<button string="Set to Draft" type="object" name="action_set_draft"
+                            invisible="state =='draft'"/>-->
+                    <button
+				        name="%(action_wizard_confirm_fields_station_volumn)d"
+				        string="Load Station"
+				        type="action"
+				        class="oe_highlight"
+				        invisible="state == 'completed'"
+				    />
                     <button
 				        name="%(action_wizard_confirm_fields)d"
 				        string="Load Vehicle"
@@ -60,8 +67,8 @@
                     </div>
                     <group>
                         <group string="Information Load">
-                            <field name="volume" readonly="state != 'draft'"/>
-                            <field name="load_station_id" readonly="state != 'draft'"/>
+                            <field name="volume" readonly="1"/>
+                            <field name="load_station_id" readonly="1"/>
                             <field name="sale_order_id"/>
                             <field name="product_id"/>
                             <field name="mix_note"/>

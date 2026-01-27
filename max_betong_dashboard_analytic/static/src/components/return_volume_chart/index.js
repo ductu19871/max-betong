@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
-import { Component, onWillStart, onMounted, onWillUnmount, onWillUpdateProps, useRef } from "@odoo/owl";
+import { Component, onWillStart, onMounted, onWillUnmount, onPatched, useRef } from "@odoo/owl";
 
 export class ReturnVolumeChart extends Component {
     static template = "max_betong_dashboard_analytic.ReturnVolumeChart";
@@ -42,30 +42,20 @@ export class ReturnVolumeChart extends Component {
             }, 200);
         });
 
+        onPatched(() => {
+            if (this.hasData) {
+                const currentData = JSON.stringify(this.chartData);
+                if (this._lastData !== currentData) {
+                    setTimeout(() => this.renderChart(), 50);
+                }
+            } else if (this.chart) {
+                this.destroyChart();
+            }
+        });
+
         onWillUnmount(() => {
             this.destroyChart();
         });
-    }
-
-    onWillUpdateProps(nextProps) {
-        const nextChartData = nextProps.data || {};
-        const remixValue = Number(nextChartData.remix?.value) || 0;
-        const dumpValue = Number(nextChartData.dump?.value) || 0;
-        const swapValue = Number(nextChartData.swap?.value) || 0;
-        const nextHasData = (remixValue + dumpValue + swapValue) > 0;
-        if (nextHasData) {
-            const currentData = JSON.stringify(nextChartData);
-            if (this._lastData !== currentData) {
-                setTimeout(() => {
-                    if (this.hasData) {
-                        this.renderChart();
-                    }
-                }, 50);
-            }
-        } else if (this.chart) {
-            // Destroy chart if data becomes empty
-            this.destroyChart();
-        }
     }
 
     renderChart() {

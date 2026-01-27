@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
-import { Component, onWillStart, onMounted, onWillUnmount, onWillUpdateProps, useRef } from "@odoo/owl";
+import { Component, onWillStart, onMounted, onWillUnmount, onPatched, useRef } from "@odoo/owl";
 
 export class ConcreteLifetimeChart extends Component {
     static template = "max_betong_dashboard_analytic.ConcreteLifetimeChart";
@@ -30,11 +30,27 @@ export class ConcreteLifetimeChart extends Component {
         });
 
         onMounted(() => {
+            console.log('[ConcreteLifetime] onMounted - hasData:', this.hasData, 'data:', this.chartData);
             setTimeout(() => {
+                console.log('[ConcreteLifetime] onMounted timeout - hasData:', this.hasData);
                 if (this.hasData) {
                     this.renderChart();
                 }
             }, 200);
+        });
+
+        onPatched(() => {
+            console.log('[ConcreteLifetime] onPatched - hasData:', this.hasData, 'data:', this.chartData);
+            if (this.hasData) {
+                const currentData = JSON.stringify(this.chartData);
+                if (this._lastData !== currentData) {
+                    console.log('[ConcreteLifetime] onPatched - data changed, re-rendering');
+                    setTimeout(() => this.renderChart(), 50);
+                }
+            } else if (this.chart) {
+                console.log('[ConcreteLifetime] onPatched - no data, destroying chart');
+                this.destroyChart();
+            }
         });
 
         onWillUnmount(() => {
@@ -42,25 +58,8 @@ export class ConcreteLifetimeChart extends Component {
         });
     }
 
-    onWillUpdateProps(nextProps) {
-        const nextChartData = nextProps.data || {};
-        const nextHasData = nextChartData && nextChartData.data && Array.isArray(nextChartData.data) && nextChartData.data.length > 0;
-        if (nextHasData) {
-            const currentData = JSON.stringify(nextChartData);
-            if (this._lastData !== currentData) {
-                setTimeout(() => {
-                    if (this.hasData) {
-                        this.renderChart();
-                    }
-                }, 50);
-            }
-        } else if (this.chart) {
-            // Destroy chart if data becomes empty
-            this.destroyChart();
-        }
-    }
-
     renderChart() {
+        console.log('[ConcreteLifetime] renderChart called, chartData:', this.chartData);
         const canvas = this.canvasRef.el;
         if (!canvas) {
             console.warn('[ConcreteLifetime] Canvas not found');
@@ -72,6 +71,8 @@ export class ConcreteLifetimeChart extends Component {
             console.warn('[ConcreteLifetime] No data available', chartData);
             return;
         }
+        
+        console.log('[ConcreteLifetime] All checks passed, creating chart...');
         
         if (typeof Chart === 'undefined') {
             console.warn('[ConcreteLifetime] Chart.js not loaded yet');

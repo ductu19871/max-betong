@@ -29,6 +29,40 @@
 	    <field name="res_model">wizard.confirm.fields</field>
 	    <field name="view_mode">form</field>
 	    <field name="target">new</field>
+	    <field name="view_id" ref="view_wizard_confirm_fields_form"/>
+	</record>
+	
+	
+	<record id="view_wizard_confirm_fields_form_station_volumn" model="ir.ui.view">
+        <field name="name">wizard.confirm.fields.form</field>
+        <field name="model">wizard.confirm.fields</field>
+        <field name="arch" type="xml">
+            <form string="Select Volumn - Load Station">
+                <group>
+                    <field name="load_station_id" required='1'/>
+                    <field name="volume" required='1'/>
+                </group>
+
+                <footer>
+                    <button
+                        name="action_confirm_volumn"
+                        string="Confirm"
+                        type="object"
+                        class="btn-primary"
+                        confirm="Are you sure you've selected the correct information above?"
+                    />
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_wizard_confirm_fields_station_volumn" model="ir.actions.act_window">
+	    <field name="name">Confirm Volumn - Load Station</field>
+	    <field name="res_model">wizard.confirm.fields</field>
+	    <field name="view_mode">form</field>
+	    <field name="target">new</field>
+	    <field name="view_id" ref="view_wizard_confirm_fields_form_station_volumn"/>
 	</record>
     
 </odoo>

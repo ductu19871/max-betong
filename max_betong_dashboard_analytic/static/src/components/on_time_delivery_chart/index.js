@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
-import { Component, onWillStart, onMounted, onWillUnmount, onWillUpdateProps, useRef } from "@odoo/owl";
+import { Component, onWillStart, onMounted, onWillUnmount, onPatched, useRef } from "@odoo/owl";
 
 export class OnTimeDeliveryChart extends Component {
     static template = "max_betong_dashboard_analytic.OnTimeDeliveryChart";
@@ -38,24 +38,20 @@ export class OnTimeDeliveryChart extends Component {
             }, 200);
         });
 
+        onPatched(() => {
+            if (this.hasData) {
+                const currentValue = this.props.data;
+                if (this._lastValue !== currentValue) {
+                    setTimeout(() => this.renderChart(), 50);
+                }
+            } else if (this.chart) {
+                this.destroyChart();
+            }
+        });
+
         onWillUnmount(() => {
             this.destroyChart();
         });
-    }
-
-    onWillUpdateProps(nextProps) {
-        const nextValue = Number(nextProps.data) || 0;
-        const nextHasData = nextProps.data !== undefined && nextProps.data !== null;
-        if (nextHasData && nextValue !== this._lastValue) {
-            setTimeout(() => {
-                if (this.hasData) {
-                    this.renderChart();
-                }
-            }, 50);
-        } else if (!nextHasData && this.chart) {
-            // Destroy chart if data becomes empty
-            this.destroyChart();
-        }
     }
 
     renderChart() {

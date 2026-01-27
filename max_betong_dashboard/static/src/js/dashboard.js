@@ -774,7 +774,14 @@ export class ConcreteDashboard extends Component {
     // ===== Selection Handlers =====
     
     selectOrder(orderId) {
-        this.state.selectedOrderId = orderId === this.state.selectedOrderId ? null : orderId;
+        const wasSelected = this.state.selectedOrderId === orderId;
+        this.state.selectedOrderId = wasSelected ? null : orderId;
+        
+        // Clear selected loads when changing order selection
+        if (!wasSelected) {
+            this.state.selectedLoads = [];
+        }
+        
         this.state.loads.page = 1;
         this.loadLoads();
     }
@@ -845,6 +852,12 @@ export class ConcreteDashboard extends Component {
         if (!this.state.permissions.can_delete) {
             return;
         }
+        
+        // Only show context menu if the clicked row is selected
+        if (!this.isLoadSelected(loadId)) {
+            return;
+        }
+        
         event.preventDefault();
         event.stopPropagation();
         this.state.contextMenu = {
@@ -858,7 +871,9 @@ export class ConcreteDashboard extends Component {
     getContextMenuItems() {
         const items = [];
         
-        if (this.state.permissions.can_delete) {
+        // Only show "Delete Load" if the context menu loadId is selected
+        const contextLoadId = this.state.contextMenu.loadId;
+        if (this.state.permissions.can_delete && contextLoadId && this.isLoadSelected(contextLoadId)) {
             items.push({
                 label: _t('Delete Load'),
                 icon: 'fa fa-trash',
@@ -877,10 +892,21 @@ export class ConcreteDashboard extends Component {
     }
 
     async confirmDeleteLoad() {
-        // Check if there are selected loads (multiple selection)
-        const loadIds = this.state.selectedLoads.length > 0 
-            ? this.state.selectedLoads 
-            : (this.state.contextMenu.loadId ? [this.state.contextMenu.loadId] : []);
+        // Get fresh state at the moment of click
+        const currentSelectedLoads = [...this.state.selectedLoads];
+        const contextLoadId = this.state.contextMenu.loadId;
+        
+        // Build list of loads to delete from current state
+        let loadIds = [];
+        
+        // If there are selected loads, use them
+        if (currentSelectedLoads.length > 0) {
+            loadIds = [...currentSelectedLoads];
+        } 
+        // Otherwise, if context menu has a loadId and it's selected, use it
+        else if (contextLoadId && this.isLoadSelected(contextLoadId)) {
+            loadIds = [contextLoadId];
+        }
         
         if (loadIds.length === 0) {
             this.notification.add(_t("Please select at least one Load to delete"), { type: "warning" });
@@ -892,11 +918,14 @@ export class ConcreteDashboard extends Component {
             ? _t('Are you sure you want to delete this Load? The volume will be returned to the unallocated volume of the SO.')
             : _t('Are you sure you want to delete {count} Loads? The volume will be returned to the unallocated volume of the SO.').replace('{count}', loadIds.length);
         
+        // Store loadIds in closure to use fresh state
+        const loadIdsToDelete = [...loadIds];
+        
         this.state.confirmModal = {
             show: true,
-            title: loadIds.length === 1 ? _t('Confirm Delete Load') : _t('Confirm Delete Loads'),
+            title: loadIdsToDelete.length === 1 ? _t('Confirm Delete Load') : _t('Confirm Delete Loads'),
             message: message,
-            action: async () => await this.deleteLoads(loadIds)
+            action: async () => await this.deleteLoads(loadIdsToDelete)
         };
         this.state.contextMenu.show = false;
     }
