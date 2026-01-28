@@ -123,20 +123,3 @@ class MrpBom(models.Model):
             }
         else:
             return super(MrpBom, self.with_context(from_create_new_version=True)).button_new_version()
-
-    def write(self, vals):
-        result = super(MrpBom, self).write(vals)
-        if vals.get('active') == True:
-            for bom in self:
-                productions = self.env['mrp.production'].sudo().search([
-                    '|',
-                    ('bom_id.product_id', '=', bom.product_id.id),
-                    ('bom_id.product_tmpl_id', '=', bom.product_tmpl_id.id),
-                    ('bom_id.workcenter_id', '=', bom.workcenter_id.id),
-                    ('state_concrete', 'in', ['draft', 'assigned'])
-                ])
-                if productions and (last_version_bom := bom._get_last_version_bom(active_test=True)):
-                    productions.write({
-                        'bom_id': last_version_bom.id
-                    })
-        return result
