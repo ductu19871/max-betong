@@ -22,6 +22,13 @@ class MrpBomConcreteProduct(models.Model):
                 if not mix_boms:
                     raise UserError(_("The BoM concrete product %(product)s must have a Mix BoM.", product=bom.product_tmpl_id.display_name))
 
+    @api.depends('version', 'workcenter_id')
+    def _compute_display_name(self):
+        boms_concrete = self.filtered(lambda bom: bom.is_concrete_product and bom.type != 'mix')
+        super(MrpBomConcreteProduct, self - boms_concrete)._compute_display_name()
+        for bom in boms_concrete:
+            bom.display_name = f"{' - '.join(filter(None, [bom.workcenter_id.code, 'Version %s' % bom.version if bom.version else '']))}: {bom.product_tmpl_id.display_name or ''}"
+
     @api.model_create_multi
     def create(self, vals_list):
         if not self._context.get('from_create_new_version'):
@@ -44,4 +51,24 @@ class MrpBomConcreteProduct(models.Model):
         for bom in self.filtered(lambda b: b.is_concrete_product and b.type != 'mix'):
             boms = bom._get_all_version_boms().filtered(lambda b: b != bom)
             boms.button_historical()
+        return result
+
+    def write(self, vals):
+        result = super(MrpBomConcreteProduct, self).write(vals)
+        if vals.get('active') == True:
+            for bom in self:
+                productions = self.env['mrp.production'].sudo().search([
+                    '|',
+                    ('bom_id.product_id', '=', bom.product_id.id),
+                    ('bom_id.product_tmpl_id', '=', bom.product_tmpl_id.id),
+                    ('bom_id.workcenter_id', '=', bom.workcenter_id.id),
+                    ('state_concrete', 'in', ['draft', 'assigned'])
+                ])
+                if productions and (last_version_bom := bom._get_last_version_bom(active_test=True)):
+                    productions_confirmed = productions.filtered(lambda p: p.state == 'confirmed')
+                    productions_confirmed._write({'state':'draft'})
+                    productions_confirmed.invalidate_model(['state'])
+                    productions.bom_id = last_version_bom
+                    productions_confirmed._write({'state':'confirmed'})
+                    productions_confirmed.invalidate_model(['state'])
         return result
