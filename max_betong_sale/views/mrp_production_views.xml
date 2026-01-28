@@ -8,58 +8,54 @@
 		<field name="priority">9999</field>
         <field name="arch" type="xml">
 			<xpath expr="//header" position="inside">
-				<button name="action_on_hold" 
+			    <button name="action_on_hold" 
 			            string="On Hold" 
 			            type="object"
 			            class="oe_stat_button"
 			            invisible="state_concrete not in('loading','loaded','leave','arrived','unloading','return') or mo_type !='concrete'"
 			            confirm="Are you sure you want to switch on hold? Switching on hold will not revert to the previous state."/>
-				<button string="Update State" 
+			   <button string="Update State" 
 		        		class="btn btn-primary"
 		        		type="action" name="%(max_betong_sale.action_wizard_change_state_ticket)d"
 		        		invisible="state_concrete in ('completed','on_hold','dump','remix','cancel') or mo_type !='concrete'"/>
+				<button name="action_concrete_remix"
+		        		string="Remix"
+		        		type="object"
+		        		class="oe_stat_button"
+		        		invisible="state_concrete != 'on_hold' or mo_type !='concrete' or on_hold_ticket_id"/>
+				<button name="action_concrete_swap"
+		        		string="Swap"
+		        		type="object"
+		        		class="oe_stat_button"
+		        		invisible="state_concrete != 'on_hold' or mo_type !='concrete' or on_hold_ticket_id"/>
 			</xpath>
 			<xpath expr="//field[@name='product_id']" position="before">
                 <field name="mo_type" invisible="1"/>
+				<field name="ticket_on_hold_type" invisible="1"/>
+				<field name="on_hold_ticket_type" invisible="1"/>
+				<field name="ticket_on_hold_id" invisible="1"/>
+				<field name="on_hold_ticket_id" invisible="1"/>
             </xpath>
 			<xpath expr="//field[@name='state']" position="attributes">
-				<attribute name="invisible" add="mo_type == 'concrete'" separator=" or "/>
-			</xpath>
-			<xpath expr="//field[@name='state']" position="after">
-				<field name="state_concrete" widget="statusbar" invisible="mo_type != 'concrete'"/>
-			</xpath>
-			<xpath expr="//sheet/group" position="before">
-				<group name="gr_mo_concrete" invisible="mo_type != 'concrete'">
-				</group>
-				<div class="dropdown-divider mb-4 mt-2" invisible="mo_type != 'concrete'"/>
-			</xpath>
-			<xpath expr="//group[@name='gr_mo_concrete']" position="inside">
-				<group name="load_info">
-					<separator string="Load Info"/>
-					<field name="load_id" readonly="state_concrete != 'draft'"/>
-					<field name="load_station_id"/>
-					<field name="sale_order_id"/>
-					<field name="bom_mix_id"/>
-					<field name="mix_note"/>
-					<field name="delivery_address_id"/>
-				</group>
-				<group name="vehicle_info">
-					<separator string="Vehicle Info"/>
-					<field name="vehicle_id" 
-						domain="load_station_id and [('station_id', '=', load_station_id), ('state_concrete', '=', 'available')] or [('state_concrete', '=', 'available')]"
-						readonly="state_concrete != 'draft' or load_id"
-					/>
-					<field name="vehicle_station_id"/>
-				</group>
-			</xpath>
-            <xpath expr="//div[@name='bom_div']" position="after">
-				<field name="load_station_id" string="Ticket Station" invisible="mo_type != 'concrete'"/>
-			</xpath>
-			<xpath expr="//field[@name='components_availability']" position="before">
-				<field name="eta"/>
+           		<attribute name="invisible">mo_type == 'concrete'</attribute>
+           </xpath>
+           <xpath expr="//field[@name='state']" position="after">
+           		<field name="state_concrete" widget="statusbar"
+           			invisible="mo_type != 'concrete'"/>
+           </xpath>
+            <xpath expr="//group[1]//group[1]" position="inside">
+				<field name="mix_note"/>
+                <field name="load_id" invisible='1'/>
+                <field name="sale_order_id"/>
+                <field name="vehicle_id" readonly="1" force_save="1"/>
+                <field name="vehicle_station_id"/>
+                <field name="delivery_address_id"/>
+            </xpath>
+            <xpath expr="//field[@name='components_availability']" position="before">
+            	<field name="eta"/>
             </xpath>
             <xpath expr="//field[@name='production_location_id']" position="after">
-				<field name="assigned_datetime"/>
+            	<field name="assigned_datetime"/>
                 <field name="loading_datetime"/>
                 <field name="loaded_datetime"/>
                 <field name="leave_datetime"/>
@@ -71,11 +67,94 @@
 				        class="oe_stat_button"
 				        invisible="do_count == 0"
 				        icon="fa-truck">
-					<field name="do_count" widget="statinfo" string="Delivery Order"/>
+				    <field name="do_count" widget="statinfo" string="Delivery Order"/>
+				</button>
+				<button name="action_view_on_hold_ticket"
+				        type="object"
+				        class="oe_stat_button"
+				        icon="fa-ticket"
+				        invisible="not on_hold_ticket_id">
+					<span invisible="on_hold_ticket_type != 'remix'">Ticket On Hold Remix</span>
+					<span invisible="on_hold_ticket_type != 'swap'">Ticket On Hold Swap</span>
+				</button>
+				<button name="action_view_ticket_on_hold"
+				        type="object"
+				        class="oe_stat_button"
+				        icon="fa-ticket"
+				        invisible="not ticket_on_hold_id">
+					On Hold Ticket
 				</button>
 			</div>
+
+			 <xpath expr="//notebook" position="inside">
+				<page name="ticket_notes_page" string="Ticket Notes" invisible="mo_type != 'concrete'">
+					<group>
+						<field name="on_hold_reason" string="Remix Reason" readonly="1" widget="text" invisible="not on_hold_reason"/>
+					</group>
+				</page>
+			</xpath>
+			<xpath expr="//div[@name='bom_div']" position="attributes">
+				<attribute name="invisible" add="ticket_on_hold_id" separator=" or "/>
+			</xpath>
+			<xpath expr="//label[@name='bom_label']" position="attributes">
+				<attribute name="invisible" add="ticket_on_hold_id" separator=" or "/>
+			</xpath>
+			<xpath expr="//field[@name='move_raw_ids']/tree" position="inside">
+				<field name="ticket_on_hold_id" column_invisible="1"/>
+			</xpath>
         </field>
     </record>
+
+	<record id="mrp_production_ticket_on_hold_wizard_view" model="ir.ui.view">
+		<field name="name">mrp.production.ticket.on.hold.wizard.view</field>
+		<field name="model">mrp.production</field>
+		<field name="priority">9999</field>
+		<field name="arch" type="xml">
+			<form string="Ticket On Hold">
+				<field name="mo_type" invisible="1"/>
+				<field name="company_id" invisible="1"/>
+				<field name="warehouse_id" invisible="1"/>
+				<field name="ticket_on_hold_type" invisible="1"/>
+				<field name="ticket_on_hold_id" invisible="1"/>
+				<group class="mb-4">
+					<label for="ticket_on_hold_reason" string="Reason"/>
+					<field name="ticket_on_hold_reason" string="Reason" widget="text" required="1" nolabel="1" colspan="2"/>
+				</group>
+				<group>
+					<group>
+						<field name="load_id" domain="vehicle_station_id and [('load_station_id', '=', vehicle_station_id)] or []"/>
+						<label for="product_qty" string="Quantity"/>
+						<div class="o_row">
+							<field name="product_qty" class="oe_inline"/>
+							<field name="product_uom_id" class="oe_inline" readonly="1" force_save="1" groups="uom.group_uom"/>
+						</div>
+						<field name="load_station_id"/>
+						<field name="sale_order_id"/>
+						<field name="product_id" readonly="1" force_save="1"/>
+						<field name="bom_mix_id"/>
+						<field name="mix_note"/>
+						<field name="delivery_address_id"/>
+					</group>
+					<group>
+						<field name="vehicle_id"
+							readonly="ticket_on_hold_type != 'swap'"
+							force_save="1"
+							domain="load_station_id and [('station_id', '=', load_station_id), ('state_concrete', '=', 'available')] or [('state_concrete', '=', 'available')]"
+						/>
+						<field name="vehicle_station_id"/>
+					</group>
+				</group>
+				<footer>
+					<button name="action_open_concrete_ticket_form" type="object" class="btn-primary">
+						<span invisible="ticket_on_hold_type != 'remix'">Remix</span>
+						<span invisible="ticket_on_hold_type != 'swap'">Swap</span>
+						<span invisible="ticket_on_hold_type in ('remix','swap')">Save</span>
+					</button>
+					<button string="Discard" special="cancel" class="btn-secondary"/>
+				</footer>
+			</form>
+		</field>
+	</record>
 
     <record id="view_mrp_production_filter_inherit_betong" model="ir.ui.view">
         <field name="name">view_mrp_production_filter_inherit_betong</field>

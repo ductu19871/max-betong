@@ -1,7 +1,9 @@
-from odoo import _, models,fields, api
+import ast
+
+from odoo import _, models,fields, api, Command
 from odoo.tools import float_round
 from datetime import date,timedelta
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 class Production(models.Model):
     _inherit = 'mrp.production'
@@ -112,26 +114,105 @@ class Production(models.Model):
     do_ids = fields.One2many('stock.picking','ticket_id',string='Do')
     do_count = fields.Integer(compute='_compute_do_count',store =True)
 
-    @api.constrains('load_station_id', 'vehicle_station_id', 'state_concrete')
+    ticket_on_hold_type = fields.Selection(
+        selection=[
+            ('remix', 'Remix'),
+            ('swap', 'Swap'),
+        ],
+        string='Ticket On Hold Type'
+    )
+    ticket_on_hold_id = fields.Many2one(
+        'mrp.production',
+        string='Ticket On Hold',
+        help='Reference to the production ticket that is put on hold',
+        readonly=True,
+        copy=False,
+        store=True
+    )
+    on_hold_ticket_id = fields.Many2one(
+        'mrp.production',
+        string='On Hold Ticket',
+        help='Reference to the ticket that is currently on hold for this operation',
+        readonly=True,
+        copy=False,
+        store=True
+    )
+    on_hold_reason = fields.Text(string='On Hold Reason', copy=False)
+
+    ticket_on_hold_reason = fields.Text(related='ticket_on_hold_id.on_hold_reason', string='Ticket On Hold Reason', readonly=False)
+    on_hold_ticket_type = fields.Selection(related='on_hold_ticket_id.ticket_on_hold_type')
+
+    @api.constrains('ticket_on_hold_type', 'ticket_on_hold_id')
+    def _check_ticket_on_hold_type(self):
+        for mo in self:
+            if mo.ticket_on_hold_type and not mo.ticket_on_hold_id:
+                raise ValidationError(_("Ticket on hold type is set but ticket on hold is not set."))
+            if not mo.ticket_on_hold_type and mo.ticket_on_hold_id:
+                raise ValidationError(_("Ticket on hold type is not set but ticket on hold is set."))
+
+    @api.constrains('load_station_id', 'vehicle_station_id')
     def _check_station_concrete_load(self):
-        for mo in self.filtered(lambda mo: mo.state_concrete != 'draft' and mo.load_station_id and mo.vehicle_station_id):
+        for mo in self.filtered(lambda mo: mo.load_station_id and mo.vehicle_station_id):
             if mo.load_station_id != mo.vehicle_station_id:
                 raise UserError(_("Load station and vehicle station are not consistent."))
 
     @api.onchange('load_id')
-    def onchange_load_id(self):
-        if self.load_id and (bom := self.load_id._get_bom_assign_ticket()):
-            self.bom_id = bom
-
-    @api.depends('load_id')
-    def _compute_vehicle_id(self):
+    def _onchange_load_id(self):
         for mo in self.filtered('load_id'):
-            mo.vehicle_id = mo.load_id.vehicle_id
+            vals = mo.load_id._prepare_ticket_vals()
+            vals.pop('bom_id', None)
+            vals.pop('vehicle_id', None)
+            vals.pop('vehicle_station_id', None)
+            for field, value in vals.items():
+                setattr(mo, field, value)
 
-    @api.depends('load_id', 'vehicle_id')
+    def _onchange_product_id(self):
+        remix_tickets = self.filtered(lambda mo: mo.ticket_on_hold_id)
+        super(Production, self - remix_tickets)._onchange_product_id()
+
+    def _onchange_producing(self):
+        remix_tickets = self.filtered(lambda mo: mo.ticket_on_hold_id)
+        super(Production, self - remix_tickets)._onchange_producing()
+
+    @api.depends('ticket_on_hold_id', 'load_id')
+    def _compute_vehicle_id(self):
+        for mo in self:
+            if remix_ticket := mo.ticket_on_hold_id:
+                mo.vehicle_id = remix_ticket.vehicle_id
+            elif load := mo.load_id:
+                mo.vehicle_id = load.vehicle_id
+
+    @api.depends('ticket_on_hold_id', 'load_id', 'vehicle_id')
     def _compute_vehicle_station_id(self):
         for mo in self:
-            mo.vehicle_station_id = mo.load_id.vehicle_station_id or mo.vehicle_id.station_id
+            if remix_ticket := mo.ticket_on_hold_id:
+                mo.vehicle_station_id = remix_ticket.vehicle_station_id
+            else:
+                mo.vehicle_station_id = mo.load_id.vehicle_station_id or mo.vehicle_id.station_id
+
+    def _compute_move_raw_ids(self):
+        remix_tickets = self.filtered(lambda mo: mo.ticket_on_hold_id)
+        for mo in remix_tickets:
+            if not mo.move_raw_ids.filtered(lambda m: m.ticket_on_hold_id == mo.ticket_on_hold_id):
+                values = mo._get_move_raw_values(
+                    mo.ticket_on_hold_id.product_id,
+                    mo.ticket_on_hold_id.product_qty,
+                    mo.ticket_on_hold_id.product_uom_id,
+                )
+                values['ticket_on_hold_id'] = mo.ticket_on_hold_id.id
+                mo.move_raw_ids = [Command.link(m.id) for m in mo.move_raw_ids] + [Command.create(values)]
+        super(Production, self - remix_tickets)._compute_move_raw_ids()
+
+    def _compute_bom_id(self):
+        remix_tickets = self.filtered(lambda mo: mo.ticket_on_hold_id)
+        super(Production, self - remix_tickets)._compute_bom_id()
+
+    @api.depends('load_id')
+    def _compute_product_qty(self):
+        productions_load = self.filtered('load_id')
+        super(Production, self - productions_load)._compute_product_qty()
+        for mo in productions_load:
+            mo.product_qty = mo.load_id.volume
 
     def action_view_do(self):
         return {
@@ -161,13 +242,62 @@ class Production(models.Model):
 
     def action_confirm(self):
         res = super().action_confirm()
-        for ticket in self:
-            ticket.assigned_datetime = fields.Datetime.now()
+        self.assigned_datetime = fields.Datetime.now()
+        tickets_on_hold = self.ticket_on_hold_id
+        tickets_on_hold.state_concrete = 'remix'
+        tickets_on_hold.vehicle_id.state_concrete = 'not_available'
         return res
-            
+
+    def action_open_concrete_ticket_form(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
+        action['views'] = [(False, 'form')]
+        action['res_id'] = self.id
+        return action
+
     def action_on_hold(self):
         self.write({'state_concrete':'on_hold'})
-    
+        self.vehicle_id.write({'state_concrete':'on_hold'})
+
+    def action_concrete_remix(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
+        action['name'] = 'Concrete Remix'
+        action['context'] = {
+            'default_mo_type': 'concrete',
+            'default_company_id': self.company_id.id or self.env.company.id,
+            'default_ticket_on_hold_id': self.id,
+            'default_ticket_on_hold_type': 'remix',
+            'default_load_id': self.load_id.id,
+            'default_product_id': self.product_id.id
+        }
+        action['views'] = [(self.env.ref('max_betong_sale.mrp_production_ticket_on_hold_wizard_view').id, 'form')]
+        action['target'] = 'new'
+        return action
+
+    def action_concrete_swap(self):
+        self.ensure_one()
+        action = self.action_concrete_remix()
+        action['name'] = 'Concrete Swap'
+        action['context']['default_ticket_on_hold_type'] = 'swap'
+        return action
+
+    def action_view_on_hold_ticket(self):
+        if not self.on_hold_ticket_type:
+            raise ValidationError(_("No on hold ticket found."))
+        action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
+        action['views'] = [(False, 'form')]
+        action['res_id'] = self.on_hold_ticket_id.id
+        return action
+
+    def action_view_ticket_on_hold(self):
+        if not self.ticket_on_hold_type:
+            raise ValidationError(_("No ticket on hold found."))
+        action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
+        action['views'] = [(False, 'form')]
+        action['res_id'] = self.ticket_on_hold_id.id
+        return action
+
     def _get_avg_mixing_time(self):
         tickets = self.search([
             ('state', '=', 'completed'),
@@ -246,8 +376,12 @@ class Production(models.Model):
                 f'mrp.production.ticket.{date_str}'
             )
         vals['name'] = seq
-        return super().create(vals)
-    
+        mo = super().create(vals)
+        for ticket in mo:
+            if ticket.ticket_on_hold_id:
+                ticket.ticket_on_hold_id.on_hold_ticket_id = ticket
+        return mo
+
     def write(self, vals):
         if 'state_concrete' in vals and self.mo_type == 'concrete':
             new_state = vals['state_concrete']
