@@ -7,8 +7,11 @@ class WizardChangeState(models.TransientModel):
     _description = 'Wizard Change Ticket State'
     
     state = fields.Selection(
-        selection=[('available', 'Available'),
-                   ('broken', 'Broken'),],
+        selection=[
+            ('available', 'Available'),
+            ('not_available', 'Not Available'),
+            ('broken', 'Broken')
+        ],
         string='State',
     )
     note = fields.Text(

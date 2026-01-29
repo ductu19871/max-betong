@@ -1016,7 +1016,11 @@ export class ConcreteDashboard extends Component {
     }
 
     canSelectBroken(currentState) {
-        return !['completed', 'not_available', 'broken'].includes(currentState);
+        return ['completed', 'available', 'not_available'].includes(currentState);
+    }
+
+    canSelectNotAvailable(currentState) {
+        return ['completed', 'available', 'broken'].includes(currentState);
     }
 
     getAvailableText() {
@@ -1027,11 +1031,18 @@ export class ConcreteDashboard extends Component {
         return _t('Broken');
     }
 
+    getNotAvailableText() {
+        return _t('Not Available');
+    }
+
     async selectVehicleState(vehicleId, stateConcrete) {
         const vehicle = this.state.vehicles.data.find(v => v.id === vehicleId);
         if (!vehicle) return;
         
         if (stateConcrete === 'available' && !this.canSelectAvailable(vehicle.state_concrete)) {
+            return;
+        }
+        if (stateConcrete === 'not_available' && !this.canSelectNotAvailable(vehicle.state_concrete)) {
             return;
         }
         if (stateConcrete === 'broken' && !this.canSelectBroken(vehicle.state_concrete)) {
@@ -1041,7 +1052,7 @@ export class ConcreteDashboard extends Component {
         this.state.confirmModal = {
             show: true,
             title: _t('Confirm Change State'),
-            message: _t(`Are you sure you want to change the State to ${stateConcrete === 'available' ? _t('Available') : _t('Broken')}?`),
+            message: _t(`Are you sure you want to change the State to ${stateConcrete === 'available' ? _t('Available') : stateConcrete === 'not_available' ? _t('Not Available') : _t('Broken')}?`),
             action: async () => await this.updateVehicleState(vehicleId, stateConcrete)
         };
         this.state.vehicleStateDropdown.show = false;

@@ -187,7 +187,7 @@ class ConcreteDashboard(models.AbstractModel):
         offset = (page - 1) * limit
         search = params.get('search', '')
         
-        domain = [('vehicle_type', '=', 'concrete')]
+        domain = [('vehicle_type', '=', 'concrete'), ('state_concrete', 'in', ['completed', 'available', 'not_available', 'broken'])]
         
         station_id = params.get('station_id')
         if station_id is not None and station_id != '':
@@ -546,7 +546,7 @@ class ConcreteDashboard(models.AbstractModel):
         if not vehicle.exists():
             return {'success': False, 'error': _('Vehicle not found')}
         
-        valid_states = ['available', 'broken']
+        valid_states = ['available', 'not_available', 'broken']
         if state_concrete not in valid_states:
             return {'success': False, 'error': _('Invalid state')}
         
@@ -556,8 +556,11 @@ class ConcreteDashboard(models.AbstractModel):
             if current_state not in ['completed', 'not_available', 'broken']:
                 return {'success': False, 'error': _('Cannot change to Available from current state')}
         elif state_concrete == 'broken':
-            if current_state in ['completed', 'not_available', 'broken']:
+            if current_state not in ['completed', 'available', 'not_available']:
                 return {'success': False, 'error': _('Cannot change to Broken from current state')}
+        elif state_concrete == 'not_available':
+            if current_state not in ['completed', 'available', 'broken']:
+                return {'success': False, 'error': _('Cannot change to Not Available from current state')}
         
         try:
             vehicle.write({'state_concrete': state_concrete})

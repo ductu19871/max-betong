@@ -389,6 +389,11 @@
                                                                      t-on-click.stop="() => this.selectVehicleState(vehicle.id, 'available')">
                                                                     <t t-esc="getAvailableText()"/>
                                                                 </div>
+                                                                <div t-if="canSelectNotAvailable(vehicle.state_concrete)" 
+                                                                     class="dropdown-item"
+                                                                     t-on-click.stop="() => this.selectVehicleState(vehicle.id, 'not_available')">
+                                                                    <t t-esc="getNotAvailableText()"/>
+                                                                </div>
                                                                 <div t-if="canSelectBroken(vehicle.state_concrete)" 
                                                                      class="dropdown-item"
                                                                      t-on-click.stop="() => this.selectVehicleState(vehicle.id, 'broken')">
