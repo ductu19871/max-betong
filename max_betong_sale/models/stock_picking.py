@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # stock_picking.py
 from odoo import models, fields, api
 import datetime

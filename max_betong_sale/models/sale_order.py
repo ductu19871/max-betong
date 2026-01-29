@@ -246,6 +246,7 @@ class SaleOrder(models.Model):
                                     "order_line":[],
                                     "note":note,
                                     "so_type":'bom'})
+        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def action_betong_set_completed(self):
         self.write({'state':'done'})

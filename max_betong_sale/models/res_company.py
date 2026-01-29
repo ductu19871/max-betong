@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import psycopg2
 import json
 from odoo import api, fields, models, _

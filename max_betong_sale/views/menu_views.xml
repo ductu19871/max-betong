@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-		<menuitem name="Concrete Coordination" id="menu_concrete_coordination_root"
+		<menuitem name="Điều phối bê tông" id="menu_concrete_coordination_root"
            web_icon="max_betong_sale,static/description/icon_betong.png" sequence="199"/>
 		
 		<menuitem id="menu_concrete_load" 
-		name="Concrete Load" 
+		name="Tải trọng"
 		parent="menu_concrete_coordination_root" 
 		sequence="20" 
 		action="action_concrete_load"/>
 		
 		<menuitem id="menu_concrete_load_setting" 
-		name="Settings" 
+		name="Cài đặt"
 		parent="menu_concrete_coordination_root" 
 		sequence="100" 
 		action="action_concrete_load_config_settings"/>

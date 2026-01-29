@@ -7,16 +7,22 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
 			<xpath expr="//header" position="inside">
-			    <button name="action_on_hold" 
-			            string="On Hold" 
+			    <button name="action_on_hold"
+			            string="On Hold"
 			            type="object"
 			            class="oe_stat_button"
 			            invisible="state_concrete not in('loading','loaded','leave','arrived','unloading','return') or mo_type !='concrete'"
 			            confirm="Are you sure you want to switch on hold? Switching on hold will not revert to the previous state."/>
-			   <button string="Update State" 
+			    <button name="action_swap"
+			            string="Swap"
+			            type="object"
+			            class="oe_stat_button"
+			            invisible="state_concrete not in('loading','loaded','leave','arrived','unloading','return') or mo_type !='concrete'"
+			            confirm="Are you sure you want to mark this ticket as Swap? This action will not revert to the previous state."/>
+			   <button string="Update State"
 		        		class="btn btn-primary"
 		        		type="action" name="%(max_betong_sale.action_wizard_change_state_ticket)d"
-		        		invisible="state_concrete in ('completed','on_hold','dump','remix','cancel') or mo_type !='concrete'"/>
+		        		invisible="state_concrete in ('completed','on_hold','dump','remix','swap','cancel') or mo_type !='concrete'"/>
 			</xpath>
 			<xpath expr="//field[@name='product_id']" position="before">
                 <field name="mo_type"/>
@@ -105,9 +111,12 @@
 				<filter string="Dump" name="state_dump"
 				        domain="[('state','=','dump')]"/>
 				
-				<filter string="Remix &amp; Swapped" name="state_remix"
+				<filter string="Remix" name="state_remix"
 				        domain="[('state','=','remix')]"/>
-				
+
+				<filter string="Swap" name="state_swap"
+				        domain="[('state','=','swap')]"/>
+
 				<filter string="Cancelled" name="state_cancel"
 				        domain="[('state','=','cancel')]"/>
             </xpath>

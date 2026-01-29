@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from odoo import _, models,fields, api
 from odoo.tools import float_round
 from datetime import date,timedelta
@@ -53,7 +54,8 @@ class Production(models.Model):
             ('completed', 'Completed'),
             ('on_hold', 'On Hold'),
             ('dump', 'Dump'),
-            ('remix', 'Remix & Swapped'),
+            ('remix', 'Remix'),
+            ('swap', 'Swap'),
             ('cancel', 'Canceled'),
         ],
         string='Concrete State',
@@ -148,10 +150,14 @@ class Production(models.Model):
             
     def action_on_hold(self):
         self.write({'state_concrete':'on_hold'})
-    
+
+    def action_swap(self):
+        self.write({'state_concrete': 'swap'})
+
     def _get_avg_mixing_time(self):
         tickets = self.search([
-            ('state', '=', 'completed'),
+            ('mo_type', '=', 'concrete'),
+            ('state_concrete', '=', 'completed'),
             ('loading_datetime', '!=', False),
             ('loaded_datetime', '!=', False),
         ])
@@ -167,7 +173,8 @@ class Production(models.Model):
     
     def _get_avg_waiting_time(self, avg_mixing_time):
         tickets = self.search([
-            ('state', '=', 'completed'),
+            ('mo_type', '=', 'concrete'),
+            ('state_concrete', '=', 'completed'),
             ('assigned_datetime', '!=', False),
             ('leave_datetime', '!=', False),
         ])
@@ -249,7 +256,7 @@ class Production(models.Model):
                         vals[datetime_field] = fields.Datetime.now()
             
             # Set incident_datetime for on_hold or completed states
-            if new_state in ('on_hold', 'completed', 'dump', 'remix'):
+            if new_state in ('on_hold', 'completed', 'dump', 'remix', 'swap'):
                 for record in self:
                     if not record.incident_datetime:
                         vals['incident_datetime'] = fields.Datetime.now()
