@@ -56,3 +56,13 @@ msgstr ""
 "Dùng để kiểm soát chất lượng và điều phối giao hàng.\n"
 "Nếu thời gian vận chuyển hoặc chờ đổ vượt quá giá trị này, bê tông sẽ không "
 "đảm bảo."
+
+#. module: max_betong_product
+#: model:ir.model.constraint,message:max_betong_product.constraint_product_template_unique_concrete_product_name
+msgid "Concrete product name must be unique. Another product with the same name already exists."
+msgstr "Tên sản phẩm bê tông phải là duy nhất. Đã tồn tại sản phẩm khác có cùng tên."
+
+#. module: max_betong_product
+#: model:product.template,validation_error:max_betong_product.product_template__check_unique_concrete_product_name
+msgid "Concrete product name must be unique. Another product with the same name already exists."
+msgstr "Tên sản phẩm bê tông phải là duy nhất. Đã tồn tại sản phẩm khác có cùng tên."
