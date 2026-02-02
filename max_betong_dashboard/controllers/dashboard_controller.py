@@ -18,43 +18,43 @@ class ConcreteDashboardController(http.Controller):
         return dashboard.get_dashboard_data(params or {})
 
     @http.route('/concrete/dashboard/orders', type='json', auth='user')
-    def get_orders(self, params=None):
+    def get_orders(self, params=None, context={}):
         """
         API endpoint to get orders data with pagination
         """
-        dashboard = request.env['concrete.dashboard']
+        dashboard = request.env['concrete.dashboard'].with_context(allowed_company_ids = context.get('allowed_company_ids', []))
         return dashboard._get_orders_data(params or {})
 
     @http.route('/concrete/dashboard/loads', type='json', auth='user')
-    def get_loads(self, params=None, selected_order_id=None):
+    def get_loads(self, params=None, selected_order_id=None, context={}):
         """
         API endpoint to get loads data with pagination
         """
-        dashboard = request.env['concrete.dashboard']
+        dashboard = request.env['concrete.dashboard'].with_context(allowed_company_ids = context.get('allowed_company_ids', []))
         return dashboard._get_loads_data(params or {}, selected_order_id)
 
     @http.route('/concrete/dashboard/vehicles', type='json', auth='user')
-    def get_vehicles(self, params=None):
+    def get_vehicles(self, params=None, context={}):
         """
         API endpoint to get vehicles data with pagination
         """
-        dashboard = request.env['concrete.dashboard']
+        dashboard = request.env['concrete.dashboard'].with_context(allowed_company_ids = context.get('allowed_company_ids', []))
         return dashboard._get_vehicles_data(params or {})
 
     @http.route('/concrete/dashboard/tickets', type='json', auth='user')
-    def get_tickets(self, params=None):
+    def get_tickets(self, params=None, context={}):
         """
         API endpoint to get tickets data with pagination
         """
-        dashboard = request.env['concrete.dashboard']
+        dashboard = request.env['concrete.dashboard'].with_context(allowed_company_ids = context.get('allowed_company_ids', []))
         return dashboard._get_tickets_data(params or {})
 
     @http.route('/concrete/dashboard/stations', type='json', auth='user')
-    def get_stations(self):
+    def get_stations(self, context={}):
         """
         API endpoint to get all stations
         """
-        dashboard = request.env['concrete.dashboard']
+        dashboard = request.env['concrete.dashboard'].with_context(allowed_company_ids = context.get('allowed_company_ids', []))
         return dashboard._get_stations_data()
 
     @http.route('/concrete/dashboard/assign_ticket', type='json', auth='user')

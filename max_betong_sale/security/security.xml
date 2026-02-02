@@ -24,4 +24,17 @@
         <field name="category_id" ref="max_betong_sale.module_category_betong_load"/>
     </record>
 
+    <!-- Multi-company rules -->
+    <record id="concrete_ticket_company_rule" model="ir.rule">
+        <field name="name">Concrete Ticket: multi-company</field>
+        <field name="model_id" ref="model_concrete_ticket"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="concrete_load_company_rule" model="ir.rule">
+        <field name="name">Concrete Load: multi-company</field>
+        <field name="model_id" ref="model_concrete_load"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
 </odoo>
