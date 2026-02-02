@@ -32,8 +32,12 @@
                <xpath expr="//field[@name='validity_date']" position="attributes">
                     <attribute name="readonly">state not in ['draft', 'sent']</attribute>
                </xpath>
-               <xpath expr="//field[@name='date_order']" position="attributes">
+               <xpath expr="//label[@for='date_order'][1]/.." position="attributes">
+                    <attribute name="invisible" add="state in ['planned', 'dispatching', 'done']" separator=" or "/>
+               </xpath>
+               <xpath expr="//field[@name='date_order'][1]" position="attributes">
                     <attribute name="readonly">state not in ['draft', 'sent']</attribute>
+                    <attribute name="invisible" add="state in ['planned', 'dispatching', 'done']" separator=" or "/>
                </xpath>
                <xpath expr="//field[@name='pricelist_id']" position="attributes">
                     <attribute name="readonly">state not in ['draft', 'sent']</attribute>
