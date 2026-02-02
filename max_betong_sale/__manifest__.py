@@ -25,6 +25,7 @@
         'views/stock_picking_view.xml',
         'views/product_views.xml',
         'views/sale_blanket_order_views.xml',
+        'wizard/change_production_qty_views.xml',
         #menu
         'views/menu_views.xml',
         #security

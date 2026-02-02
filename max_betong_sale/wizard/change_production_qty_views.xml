@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <record id="view_change_production_qty_wizard_betong" model="ir.ui.view">
+        <field name="name">view_change_production_qty_wizard_betong</field>
+        <field name="model">change.production.qty</field>
+        <field name="inherit_id" ref="mrp.view_change_production_qty_wizard"/>
+		<field name="priority">9999</field>
+        <field name="arch" type="xml">
+			<xpath expr="//field[@name='mo_id']" position="after">
+				<field name="mo_type" invisible="1"/>
+			</xpath>
+			<xpath expr="//field[@name='product_qty']" position="attributes">
+				<attribute name="readonly">mo_type == 'concrete'</attribute>
+			</xpath>
+        </field>
+    </record>
+</odoo>
