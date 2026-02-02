@@ -1,0 +1,392 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* max_betong_dashboard_analytic
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20251121\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-01 18:48+0000\n"
+"PO-Revision-Date: 2026-02-01 19:03+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: vi_VN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.8\n"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Active Vehicles"
+msgstr "Xe đang hoạt động"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "All"
+msgstr "Tất cả"
+
+#. module: max_betong_dashboard_analytic
+#: model:ir.model,name:max_betong_dashboard_analytic.model_analytic_dashboard
+msgid "Analytics Dashboard"
+msgstr "Phân tích"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Apply"
+msgstr "Xác nhận"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index.xml:0
+#, python-format
+msgid "Average Cycle:"
+msgstr "Trung bình chu kỳ:"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/concrete_lifetime_chart/index.xml:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/trips_per_vehicle_chart/index.xml:0
+#, python-format
+msgid "Average:"
+msgstr "Trung bình:"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/concrete_lifetime_chart/index.xml:0
+#, python-format
+msgid "Concrete Lifetime"
+msgstr "TG Sống Bê Tông"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Concrete Returns"
+msgstr "Khối lượng trả về"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Custom Range"
+msgstr "Thêm tùy chỉnh"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Debug Data (Return Volume)"
+msgstr "Dữ liệu gỡ lỗi (Khối lượng trả về)"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Debug JSON"
+msgstr "Gỡ lỗi Json"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index.js:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index_old.js:0
+#, python-format
+msgid "Delivery Time"
+msgstr "Thời gian giao hàng"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Display %:"
+msgstr "Hiển thị %:"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.js:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Dump"
+msgstr ""
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Dump:"
+msgstr ""
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "From Date"
+msgstr "Từ ngày"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Incident Total:"
+msgstr "Tổng KL trả về"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/on_time_delivery_chart/index.js:0
+#, python-format
+msgid "Late"
+msgstr "Trễ hẹn"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/concrete_lifetime_chart/index.js:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index.js:0
+#, python-format
+msgid "Minutes"
+msgstr "Phút"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/concrete_lifetime_chart/index.xml:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/on_time_delivery_chart/index.xml:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/trips_per_vehicle_chart/index.xml:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index.xml:0
+#, python-format
+msgid "No Data"
+msgstr "Không có dữ liệu"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/on_time_delivery_chart/index.js:0
+#, python-format
+msgid "On Time"
+msgstr "Đúng hẹn"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/on_time_delivery_chart/index.xml:0
+#, python-format
+msgid "On Time Delivery"
+msgstr "Giao hàng đúng hẹn"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Orders Pending"
+msgstr "Đơn hàng chưa giao"
+
+#. module: max_betong_dashboard_analytic
+#: model:ir.actions.client,name:max_betong_dashboard_analytic.action_concrete_analytic_dashboard
+#: model:ir.ui.menu,name:max_betong_dashboard_analytic.menu_concrete_analytic_dashboard
+msgid "Analytics"
+msgstr "Phân tích"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.js:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Remix"
+msgstr ""
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Remix:"
+msgstr ""
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Select Date Range"
+msgstr "Chọn khoảng thời gian"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.js:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Swap"
+msgstr ""
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "Swap:"
+msgstr ""
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "This Month"
+msgstr "Tháng này"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "This Quarter"
+msgstr "Quý này"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "This Week"
+msgstr "Tuần này"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "This Year"
+msgstr "Năm này"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Timezone:"
+msgstr "Múi giờ:"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "To Date"
+msgstr "Đến ngày"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Today"
+msgstr "Hôm nay"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/trips_per_vehicle_chart/index.js:0
+#, python-format
+msgid "Trips"
+msgstr "Chuyến"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/trips_per_vehicle_chart/index.xml:0
+#, python-format
+msgid "Trips Per Vehicle"
+msgstr "Số chuyến mỗi xe"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/concrete_lifetime_chart/index.js:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/trips_per_vehicle_chart/index.js:0
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index.js:0
+#, python-format
+msgid "Vehicle"
+msgstr "Xe"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index.xml:0
+#, python-format
+msgid "Vehicle Cycle Time"
+msgstr "Chu Kỳ Thời Gian Của Xe"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "View records"
+msgstr "Xem bản ghi"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Volume Delivered"
+msgstr "Khối lượng đã giao"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "Volume Pending"
+msgstr "Khối lượng chưa giao"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index_old.js:0
+#, python-format
+msgid "Wait Time"
+msgstr "Thời gian chờ"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index.js:0
+#, python-format
+msgid "Waiting at Station"
+msgstr "Thời gian chờ tại trạm"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/concrete_lifetime_chart/index.xml:0
+#, python-format
+msgid "min/Vehicle"
+msgstr "Phút/Xe"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/vehicle_cycle_time_chart/index.xml:0
+#, python-format
+msgid "min/vehicle"
+msgstr "Phút/Xe"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#: code:addons/max_betong_dashboard_analytic/static/src/xml/analytic_templates.xml:0
+#, python-format
+msgid "m³"
+msgstr ""
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/trips_per_vehicle_chart/index.xml:0
+#, python-format
+msgid "trips/Vehicle"
+msgstr "Chuyến/Xe"
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "💡 Completed is calculated in backend, not returned to frontend"
+msgstr "💡 Trạng thái \"Completed\" được tính toán ở máy chủ, không được trả về cho giao diện người dùng."
+
+#. module: max_betong_dashboard_analytic
+#. odoo-javascript
+#: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
+#, python-format
+msgid "💡 Formula: (Remix+Dump+Swap) / (Completed+Remix+Dump+Swap) × 100"
+msgstr "💡 Công thức: (Remix+Dump+Swap) / (Completed+Remix+Dump+Swap) × 100"

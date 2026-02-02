@@ -3,13 +3,12 @@
     <t t-name="max_betong_dashboard_analytic.VehicleCycleTimeChart">
         <div class="chart-card chart-medium">
             <div class="chart-header">
-                <h3 class="chart-title"><t t-esc="t('Vehicle Cycle Time')"/></h3>
+                <div class="chart-title-wrapper">
+                    <h3 class="chart-title">Vehicle Cycle Time</h3>
+                </div>
                 <div class="chart-actions">
                     <p class="chart-average">
-                        <t t-esc="t('Average Cycle')"/>: 
-                        <span class="chart-average-value">
-                            <t t-esc="chartData.average || 0"/> <t t-esc="t('minutes/vehicle')"/>
-                        </span>
+                        Average Cycle: <span class="chart-average-value"><t t-esc="formatAverage(chartData.average)"/> min/vehicle</span>
                     </p>
                 </div>
             </div>
@@ -17,14 +16,15 @@
                 <t t-if="hasData">
                     <canvas t-ref="canvas"/>
                 </t>
-                <t t-if="!hasData" class="chart-no-data">
-                    <div class="no-data-message">
-                        <i class="fa fa-info-circle"/>
-                        <span><t t-esc="t('No data available')"/></span>
+                <t t-if="!hasData">
+                    <div class="chart-no-data">
+                        <div class="no-data-message">
+                            <i class="fa fa-info-circle"/>
+                            <span>No Data</span>
+                        </div>
                     </div>
                 </t>
             </div>
         </div>
     </t>
 </templates>
-

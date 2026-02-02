@@ -2,7 +2,7 @@
 <odoo>
     <!-- Client Action for Analytics Dashboard -->
     <record id="action_concrete_analytic_dashboard" model="ir.actions.client">
-        <field name="name">Analytics Dashboard</field>
+        <field name="name">Analytics</field>
         <field name="tag">analytic_dashboard</field>
     </record>
     

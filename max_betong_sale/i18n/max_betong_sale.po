@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0-20251121\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 09:53+0000\n"
-"PO-Revision-Date: 2026-02-02 11:37+0700\n"
+"PO-Revision-Date: 2026-01-30 17:03+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -726,7 +726,7 @@ msgstr "Remix"
 #. module: max_betong_sale
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__remix_swapped
 msgid "Remix&Swapped"
-msgstr "Remix"
+msgstr "Remix & Swapped"
 
 #. module: max_betong_sale
 #: model:ir.actions.report,name:max_betong_sale.report_delivery_concrete

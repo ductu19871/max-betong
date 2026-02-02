@@ -3,13 +3,19 @@
     <t t-name="max_betong_dashboard_analytic.ConcreteLifetimeChart">
         <div class="chart-card chart-medium">
             <div class="chart-header">
-                <h3 class="chart-title"><t t-esc="t('Concrete Lifetime')"/></h3>
+                <div class="chart-title-wrapper">
+                    <h3 class="chart-title">Concrete Lifetime</h3>
+                    <button t-if="debugEnabled &amp;&amp; props.debugData"
+                            class="btn-debug-chart"
+                            t-on-click="props.onDebugClick"
+                            t-att-title="'View ' + (props.debugData.count || 0) + ' records'">
+                        <i class="fa fa-list"></i>
+                        <t t-esc="props.debugData.count || 0"/>
+                    </button>
+                </div>
                 <div class="chart-actions">
                     <p class="chart-average">
-                        <t t-esc="t('Average')"/>: 
-                        <span class="chart-average-value">
-                            <t t-esc="chartData.average || 0"/> <t t-esc="t('minutes/Vehicle')"/>
-                        </span>
+                        Average: <span class="chart-average-value"><t t-esc="formatAverage(chartData.average)"/> min/Vehicle</span>
                     </p>
                 </div>
             </div>
@@ -17,14 +23,15 @@
                 <t t-if="hasData">
                     <canvas t-ref="canvas"/>
                 </t>
-                <t t-if="!hasData" class="chart-no-data">
-                    <div class="no-data-message">
-                        <i class="fa fa-info-circle"/>
-                        <span><t t-esc="t('No data available')"/></span>
+                <t t-if="!hasData">
+                    <div class="chart-no-data">
+                        <div class="no-data-message">
+                            <i class="fa fa-info-circle"/>
+                            <span>No Data</span>
+                        </div>
                     </div>
                 </t>
             </div>
         </div>
     </t>
 </templates>
-

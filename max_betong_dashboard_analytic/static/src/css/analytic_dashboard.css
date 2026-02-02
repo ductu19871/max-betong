@@ -1,10 +1,43 @@
-.analytic-dashboard {
-    padding: 20px;
-    background-color: #F4F7F6;
-    min-height: 100vh;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* ==============================================
+   Điều Phối Bê Tông - Analytic Dashboard
+   Based on Figma Design
+   ============================================== */
+
+/* Import Inter Font - Figma Standard - Removed to prevent bundle errors */
+/* Font should be loaded via XML layout if needed */
+
+/* CSS Variables - same as main dashboard */
+:root {
+    --primary: #1C75BC;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
 }
 
+/* Reset and Base Styles */
+.analytic-dashboard,
+.analytic-dashboard *,
+.analytic-dashboard *::before,
+.analytic-dashboard *::after {
+    box-sizing: border-box;
+}
+
+.analytic-dashboard {
+    --chart-gap: 40px;
+    --small-chart-width: clamp(350px, 24vw, 450px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 24px;
+    gap: 16px;
+    width: 100%;
+    min-height: 100vh;
+    background: #f1f5f9;
+    font-family: inherit;
+    color: #475569;
+}
+
+/* Loading Overlay */
 .analytic-dashboard .loading-overlay {
     position: fixed;
     top: 0;
@@ -15,75 +48,115 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    /* Keep above dashboard, but below Odoo dialogs (modal ~1050) */
+    z-index: 1030;
 }
 
 .analytic-dashboard .spinner {
     width: 40px;
     height: 40px;
     border: 4px solid #f3f3f3;
-    border-top: 4px solid #1976D2;
+    border-top: 4px solid #1C75BC;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
+/* Dashboard Content */
 .analytic-dashboard .dashboard-content {
-    max-width: 1920px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px 40px;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
 }
 
-/* Filters and KPI Cards Row */
+/* =============================================
+   Filters and KPI Cards Row
+   ============================================= */
 .analytic-dashboard .filters-kpi-row {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-    align-items: start;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    gap: 40px;
+    width: 100%;
+    height: auto;
+    min-height: 103px;
 }
 
 /* Filters Section */
 .analytic-dashboard .filters-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    min-width: 180px;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 8px;
+    width: 240px;
+    min-width: 240px;
+}
+
+/* Timezone Indicator - HIDDEN per user request */
+.analytic-dashboard .timezone-indicator {
+    display: none !important;
+}
+
+.analytic-dashboard .timezone-indicator i {
+    color: #1C75BC;
+    opacity: 0.7;
 }
 
 .analytic-dashboard .filter-group {
     position: relative;
-    min-width: 180px;
+    width: 100%;
 }
 
 .analytic-dashboard .filter-btn {
-    width: 100%;
+    box-sizing: border-box;
     display: flex;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
+    padding: 0px 12px;
     gap: 8px;
-    padding: 10px 16px;
-    background: white;
-    border: 1px solid #1976D2;
-    color: #1976D2;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
+    width: 240px;
+    height: 32px;
+    background: #FFFFFF;
+    border: 1px solid #1C75BC;
+    border-radius: 8px;
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0.0125em;
+    color: #1C75BC;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .analytic-dashboard .filter-btn:hover {
-    background: #E3F2FD;
+    background: #E8F1F8;
 }
 
 .analytic-dashboard .filter-btn i {
-    font-size: 18px;
+    font-size: 12px;
+    color: #1C75BC;
 }
 
+/* Filter Dropdown Menu */
 .analytic-dashboard .filter-dropdown-menu {
     position: absolute;
     top: 100%;
@@ -91,11 +164,13 @@
     right: 0;
     background: white;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    z-index: 10000;
+    border-radius: 8px;
+    box-shadow: -1px -1px 3px #FFFFFF, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4);
+    /* Must stay below Odoo dialogs/datepickers to avoid click-blocking */
+    z-index: 100;
     max-height: 300px;
     overflow-y: auto;
+    overflow-x: visible;
     margin-top: 4px;
     min-width: 100%;
 }
@@ -103,7 +178,9 @@
 .analytic-dashboard .filter-dropdown-menu .dropdown-item {
     padding: 10px 16px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 13px;
+    font-family: inherit;
+    color: #475569;
     transition: background 0.2s;
     border-bottom: 1px solid #f0f0f0;
 }
@@ -113,8 +190,8 @@
 }
 
 .analytic-dashboard .filter-dropdown-menu .dropdown-item:hover {
-    background: #E3F2FD;
-    color: #1976D2;
+    background: #E8F1F8;
+    color: #1C75BC;
 }
 
 /* Custom Date Picker */
@@ -127,6 +204,10 @@
     padding: 12px;
     min-width: 320px;
     width: 100%;
+    border-top: 1px solid #ddd;
+    background-color: #fafafa;
+    overflow: visible;
+    position: relative;
 }
 
 .analytic-dashboard .date-picker-header {
@@ -162,6 +243,7 @@
     flex-direction: column;
     gap: 12px;
     margin-bottom: 12px;
+    overflow: visible;
 }
 
 .analytic-dashboard .date-input-group {
@@ -182,12 +264,25 @@
     border-radius: 4px;
     font-size: 13px;
     width: 100%;
+    cursor: pointer;
+    pointer-events: auto;
+    background-color: #ffffff;
+    position: relative;
+    z-index: 1;
 }
 
 .analytic-dashboard .date-input-group .date-input:focus {
     outline: none;
-    border-color: #1976D2;
-    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+    border-color: #1C75BC;
+    box-shadow: 0 0 0 2px rgba(28, 117, 188, 0.1);
+}
+
+.analytic-dashboard .date-input-group .date-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 1;
+    position: relative;
+    z-index: 2;
 }
 
 .analytic-dashboard .date-picker-footer {
@@ -216,13 +311,13 @@
 }
 
 .analytic-dashboard .date-picker-footer .btn-primary {
-    background-color: #1976D2;
+    background-color: #1C75BC;
     color: white;
-    border-color: #1976D2;
+    border-color: #1C75BC;
 }
 
 .analytic-dashboard .date-picker-footer .btn-primary:hover:not(:disabled) {
-    background-color: #1565C0;
+    background-color: #165E96;
 }
 
 .analytic-dashboard .date-picker-footer .btn-primary:disabled {
@@ -230,328 +325,1061 @@
     cursor: not-allowed;
 }
 
-/* KPI Cards */
+/* =============================================
+   KPI Cards - Figma Style
+   ============================================= */
 .analytic-dashboard .kpi-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 24px;
     flex: 1;
+    min-width: 0;
 }
 
 .analytic-dashboard .kpi-card {
-    background: white;
-    border-radius: 25px;
-    padding: 20px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
     display: flex;
+    flex-direction: row;
     align-items: center;
+    padding: 16px 24px;
     gap: 16px;
-    height: 100px;
+    flex: 1;
+    min-width: 200px;
+    height: 90px;
+    background: #FFFFFF;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
 }
 
 .analytic-dashboard .kpi-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    position: relative;
+    background: transparent !important;
 }
 
 .analytic-dashboard .kpi-icon i {
     font-size: 28px;
 }
 
+.analytic-dashboard .kpi-icon img {
+    width: 60px;
+    height: 60px;
+    display: block;
+}
+
 .analytic-dashboard .kpi-content {
-    flex: 1;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 4px;
+    flex: 1;
 }
 
 .analytic-dashboard .kpi-label {
-    font-size: 13px;
-    color: #666;
+    font-family: inherit;
+    font-style: normal;
     font-weight: 500;
-    margin: 0 0 4px 0;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.005em;
+    color: #64748b;
+    margin: 0;
 }
 
 .analytic-dashboard .kpi-value {
-    font-size: 24px;
-    font-weight: bold;
-    color: #212121;
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 34px;
+    color: #334155;
     margin: 0;
-    line-height: 1.2;
 }
 
 .analytic-dashboard .kpi-unit {
     font-size: 18px;
-    font-weight: normal;
-    color: #333;
+    font-weight: 500;
+    color: #64748b;
 }
 
 .analytic-dashboard .kpi-fraction {
-    font-size: 20px;
-    color: #999;
-    font-weight: normal;
+    font-size: 22px;
+    color: #334155;
+    font-weight: 400;
 }
 
-/* Charts Section - 3 charts in one row */
+/* =============================================
+   Charts Section - Top Row (3 charts)
+   ============================================= */
 .analytic-dashboard .charts-section-row {
-    display: grid !important;
-    grid-template-columns: 2fr 1fr 1fr !important;
-    grid-auto-flow: row !important;
-    gap: 12px !important;
-    margin-bottom: 16px;
-    min-height: 150px !important;
-    height: auto !important;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: var(--chart-gap);
     width: 100%;
+    min-height: 380px;
 }
 
+/* Trips Per Vehicle Chart - Larger */
+.analytic-dashboard .charts-section-row> :first-child {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+}
+
+/* Return Volume and On Time Delivery Charts - Smaller */
+.analytic-dashboard .charts-section-row> :nth-child(2),
+.analytic-dashboard .charts-section-row> :nth-child(3) {
+    flex: 0 1 var(--small-chart-width);
+    width: var(--small-chart-width);
+    min-width: 0;
+}
+
+/* =============================================
+   Charts Section - Bottom Row (2 charts)
+   ============================================= */
 .analytic-dashboard .charts-section-bottom {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    min-height: 280px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: var(--chart-gap);
+    width: 100%;
+    min-height: 380px;
+}
+
+/* Bottom row widths match top row columns */
+.analytic-dashboard .charts-section-bottom> :first-child {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.analytic-dashboard .charts-section-bottom> :nth-child(2) {
+    flex: 0 1 calc(var(--small-chart-width) + var(--small-chart-width) + var(--chart-gap));
+    width: calc(var(--small-chart-width) + var(--small-chart-width) + var(--chart-gap));
+    min-width: 0;
+}
+
+/* =============================================
+   Chart Card - Base Styles
+   ============================================= */
+.analytic-dashboard .chart-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+    background: #FFFFFF;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    min-height: 380px;
+    height: 380px;
+    width: 100%;
 }
 
 .analytic-dashboard .chart-row-item {
-    min-height: 150px !important;
-    height: auto !important;
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 0;
-}
-
-.analytic-dashboard .chart-card {
-    background: white;
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.03);
-    display: flex;
-    flex-direction: column;
-}
-
-.analytic-dashboard .charts-section-row .chart-card {
-    padding: 10px !important;
-}
-
-.analytic-dashboard .charts-section-row .chart-card {
-    width: 100%;
-    max-width: 100%;
-}
-
-.analytic-dashboard .chart-large {
-    min-height: 280px;
+    min-height: 380px;
+    height: 380px;
 }
 
 .analytic-dashboard .chart-medium {
-    min-height: 280px;
+    min-height: 387px;
+    height: 387px;
 }
 
-.analytic-dashboard .chart-small {
-    min-height: 150px;
-}
-
+/* =============================================
+   Chart Header - Row Layout
+   Title on left (higher), Average on right (lower), same row
+   Gray line nằm dưới cùng across full width
+   ============================================= */
 .analytic-dashboard .chart-header {
     display: flex;
+    flex-direction: row;
+    align-items: flex-end;
     justify-content: space-between;
+    padding: 0px 8px;
+    padding-bottom: 8px;
+    width: 100%;
+    margin-bottom: 12px;
+    position: relative;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Disable colored underline on chart-header (moved to title-wrapper) */
+.analytic-dashboard .chart-header::after {
+    content: none !important;
+}
+
+.analytic-dashboard .chart-title-wrapper {
+    display: flex;
     align-items: flex-start;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #f0f0f0;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    padding-bottom: 0px;
 }
 
 .analytic-dashboard .chart-title {
-    font-size: 12px;
-    font-weight: bold;
-    color: #333;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #334155;
     margin: 0;
-    position: relative;
-    padding-bottom: 4px;
+    margin-bottom: 4px;
+    padding: 0;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: nowrap;
+    display: inline-block;
+    align-self: flex-start;
 }
 
-.analytic-dashboard .chart-title::after {
+/* Colored underline - matches title width exactly */
+.analytic-dashboard .chart-title-wrapper::after {
     content: '';
     position: absolute;
     left: 0;
-    bottom: 0;
-    width: 40px;
+    bottom: -8px;
+    width: 100%;
     height: 3px;
-    background-color: #E53935;
+    background: #1C75BC;
+    z-index: 3;
+}
+
+/* Special colors for different charts - now on title-wrapper */
+.analytic-dashboard .chart-card.return-volume .chart-title-wrapper::after {
+    background: #EF4E2B;
+}
+
+.analytic-dashboard .chart-card.on-time-delivery .chart-title-wrapper::after {
+    background: #5DC08B;
 }
 
 .analytic-dashboard .chart-actions {
     display: flex;
-    align-items: center;
-    gap: 16px;
-    flex: 1;
+    flex-direction: row;
+    align-items: flex-end;
     justify-content: flex-end;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    padding-left: 12px;
+}
+
+/* Disable the old partial gray line (kept for backward compatibility) */
+.analytic-dashboard .chart-actions::after {
+    content: none !important;
 }
 
 .analytic-dashboard .chart-average {
-    font-size: 10px;
-    color: #999;
-    font-weight: 500;
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: #64748b;
     margin: 0;
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    padding-left: 0;
 }
 
 .analytic-dashboard .chart-average-value {
-    color: #333;
-    font-weight: bold;
-}
-
-.analytic-dashboard .period-selector {
-    display: flex;
-    background: #f5f5f5;
-    border-radius: 4px;
-    padding: 2px;
-    gap: 2px;
-}
-
-.analytic-dashboard .period-btn {
-    padding: 3px 10px;
-    font-size: 9px;
+    color: #475569;
     font-weight: 500;
-    color: #666;
-    background: transparent;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-.analytic-dashboard .period-btn:hover {
-    color: #333;
-}
-
-.analytic-dashboard .period-btn.active {
-    background: white;
-    color: #1976D2;
-    font-weight: bold;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
+/* =============================================
+   Chart Body
+   ============================================= */
 .analytic-dashboard .chart-body {
     flex: 1;
     position: relative;
-    min-height: 120px;
-    opacity: 0;
-    transition: opacity 0.5s ease-in;
-}
-
-.analytic-dashboard .charts-section-row .chart-body {
-    min-height: 80px !important;
-    height: auto !important;
-}
-
-.analytic-dashboard .chart-body.chart-loaded {
-    opacity: 1;
+    width: 100%;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .analytic-dashboard .chart-body canvas {
+    max-width: 100%;
     max-height: 100%;
 }
 
-.analytic-dashboard .chart-legend {
+/* =============================================
+   Pie/Doughnut Charts Layout
+   ============================================= */
+.analytic-dashboard .pie-chart-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.analytic-dashboard .pie-chart-main {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 16px;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 10px;
+    flex: 1;
 }
 
-.analytic-dashboard .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    color: #666;
-    font-weight: 500;
+.analytic-dashboard .pie-chart-canvas-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1;
 }
 
-.analytic-dashboard .legend-color {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
+/* Center Value for Doughnut Charts */
 .analytic-dashboard .chart-center-value {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -10%);
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 600;
     font-size: 24px;
-    font-weight: bold;
-    color: #4CAF50;
+    line-height: 29px;
+    color: #334155;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.15s ease;
+}
+
+/* Hide center text when hovering chart wrapper (tooltip will show) */
+.analytic-dashboard .pie-chart-canvas-wrapper:hover .chart-center-value {
+    opacity: 0 !important;
+}
+
+.analytic-dashboard .chart-center-value.green {
+    color: #5DC08B;
+}
+
+/* Chart.js Tooltip - Ensure it overlays all content */
+.analytic-dashboard .chartjs-tooltip,
+.analytic-dashboard .chartjs-tooltip-body {
+    z-index: 9999 !important;
     pointer-events: none;
 }
 
-/* Responsive - Only stack vertically on mobile */
-@media (max-width: 768px) {
-    .analytic-dashboard .charts-section-row {
-        grid-template-columns: 1fr !important;
-        min-height: auto;
-    }
-    
-    .analytic-dashboard .chart-row-item {
-        min-height: 300px;
-    }
+/* Ensure tooltip container has high z-index */
+.analytic-dashboard .pie-chart-canvas-wrapper {
+    position: relative;
+    z-index: 1;
 }
 
-/* Ensure 3 columns on tablet and desktop - Trips Per Vehicle larger */
-@media (min-width: 769px) {
-    .analytic-dashboard .charts-section-row {
-        grid-template-columns: 2fr 1fr 1fr !important;
-    }
+.analytic-dashboard .pie-chart-canvas-wrapper canvas {
+    position: relative;
+    z-index: 2;
 }
 
-@media (max-width: 1200px) {
-    .analytic-dashboard .charts-section-bottom {
-        grid-template-columns: 1fr;
-    }
+/* =============================================
+   Chart Legend - Figma Style
+   ============================================= */
+.analytic-dashboard .chart-legend {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+    min-width: 126px;
 }
 
-@media (max-width: 768px) {
-    .analytic-dashboard {
-        padding: 12px;
-    }
-    
-    .analytic-dashboard .kpi-cards {
-        grid-template-columns: 1fr;
-    }
+.analytic-dashboard .legend-item {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 12px;
+    gap: 8px;
+    height: auto;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
 }
 
-/* No Data Message */
-.chart-no-data {
+.analytic-dashboard .legend-color {
+    box-sizing: border-box;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    flex-shrink: 0;
+}
+
+.analytic-dashboard .legend-text {
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: #475569;
+}
+
+/* Legend colors for Return Volume chart */
+.analytic-dashboard .legend-color.remix {
+    background: #1C75BC;
+}
+
+.analytic-dashboard .legend-color.dump {
+    background: #F87B38;
+}
+
+.analytic-dashboard .legend-color.swap {
+    background: #5DC08B;
+}
+
+/* =============================================
+   Stacked Bar Chart Legend (Bottom)
+   ============================================= */
+.analytic-dashboard .stacked-legend {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    padding: 0px;
+    gap: 0px 8px;
+    width: 100%;
+    height: auto;
+    margin-top: 8px;
+}
+
+.analytic-dashboard .stacked-legend .legend-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 4px;
+    gap: 4px;
+    height: 16px;
+    border: none;
+    filter: none;
+    border-radius: 0;
+}
+
+.analytic-dashboard .stacked-legend .legend-color {
+    box-sizing: border-box;
+    width: 8px;
+    height: 8px;
+    border-radius: 0;
+    border: 1px solid #FFFFFF;
+}
+
+.analytic-dashboard .stacked-legend .legend-color.wait-time {
+    background: #7086FD;
+}
+
+.analytic-dashboard .stacked-legend .legend-color.delivery-time {
+    background: #6FD195;
+}
+
+/* =============================================
+   No Data State
+   ============================================= */
+.analytic-dashboard .chart-no-data {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
-    min-height: 120px;
+    min-height: 200px;
 }
 
-.no-data-message {
+.analytic-dashboard .no-data-message {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    color: #999;
+    color: #94a3b8;
     font-size: 14px;
+    font-family: inherit;
 }
 
-.no-data-message i {
+.analytic-dashboard .no-data-message i {
     font-size: 32px;
-    color: #ccc;
+    color: #cbd5e1;
 }
 
-.no-data-message span {
+.analytic-dashboard .no-data-message span {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+/* =============================================
+   Responsive Styles
+   ============================================= */
+@media (max-width: 1600px) {
+    .analytic-dashboard {
+        --chart-gap: 24px;
+        --small-chart-width: clamp(300px, 24vw, 450px);
+    }
+
+    .analytic-dashboard .charts-section-row {
+        gap: var(--chart-gap);
+    }
+}
+
+@media (max-width: 1400px) {
+    .analytic-dashboard .dashboard-content {
+        padding: 0px 20px;
+    }
+
+    .analytic-dashboard .filters-kpi-row {
+        gap: 20px;
+    }
+
+    .analytic-dashboard .kpi-cards {
+        gap: 16px;
+    }
+
+    .analytic-dashboard .charts-section-row {
+        flex-wrap: wrap;
+    }
+
+    .analytic-dashboard .charts-section-row> :first-child {
+        flex: 1 1 100%;
+    }
+
+    .analytic-dashboard .charts-section-row> :nth-child(2),
+    .analytic-dashboard .charts-section-row> :nth-child(3) {
+        flex: 1 1 45%;
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .analytic-dashboard .charts-section-bottom {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    .analytic-dashboard .filters-kpi-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .analytic-dashboard .filters-section {
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .analytic-dashboard .kpi-cards {
+        flex-wrap: wrap;
+    }
+
+    .analytic-dashboard .kpi-card {
+        flex: 1 1 calc(50% - 12px);
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .analytic-dashboard .dashboard-content {
+        padding: 0px 12px;
+    }
+
+    .analytic-dashboard .filters-section {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .analytic-dashboard .filter-group {
+        width: 100%;
+    }
+
+    .analytic-dashboard .filter-btn {
+        width: 100%;
+    }
+
+    .analytic-dashboard .kpi-card {
+        flex: 1 1 100%;
+        height: auto;
+        min-height: 80px;
+        padding: 12px 16px;
+    }
+
+    .analytic-dashboard .kpi-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .analytic-dashboard .kpi-value {
+        font-size: 22px;
+    }
+
+    .analytic-dashboard .kpi-label {
+        font-size: 14px;
+    }
+
+    .analytic-dashboard .charts-section-row,
+    .analytic-dashboard .charts-section-bottom {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .analytic-dashboard .charts-section-row>*,
+    .analytic-dashboard .charts-section-bottom>* {
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+    }
+
+    .analytic-dashboard .chart-card {
+        min-height: 300px;
+        height: auto;
+    }
+}
+
+/* =============================================
+   Chart.js Overrides
+   ============================================= */
+.analytic-dashboard canvas {
+    display: block;
+}
+
+/* Ensure charts are visible when loaded */
+.analytic-dashboard .chart-body.chart-loaded canvas {
+    visibility: visible;
+}
+
+/* =============================================
+   Additional Chart Specific Styles
+   ============================================= */
+
+/* Return Volume Chart - Pie Chart Layout */
+.analytic-dashboard .return-volume .pie-chart-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+}
+
+.analytic-dashboard .return-volume .pie-chart-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.analytic-dashboard .return-volume .pie-chart-canvas-wrapper {
+    position: relative;
+    width: 220px;
+    height: 220px;
+}
+
+.analytic-dashboard .return-volume .pie-chart-canvas-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.analytic-dashboard .return-volume .chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-left: 20px;
+}
+
+/* On Time Delivery Chart - Centered Pie */
+.analytic-dashboard .on-time-delivery .pie-chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.analytic-dashboard .on-time-delivery .pie-chart-canvas-wrapper {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.analytic-dashboard .on-time-delivery .pie-chart-canvas-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Bar chart value labels positioning */
+.analytic-dashboard .chart-body canvas {
+    position: relative;
+    z-index: 1;
+}
+
+/* Ensure charts expand properly */
+.analytic-dashboard .charts-section-row .chart-card,
+.analytic-dashboard .charts-section-bottom .chart-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.analytic-dashboard .charts-section-row .chart-body,
+.analytic-dashboard .charts-section-bottom .chart-body {
+    flex: 1;
+    min-height: 0;
+}
+
+/* Vehicle Cycle Time Chart - Stacked Bar specific */
+.analytic-dashboard .chart-medium .stacked-legend {
+    margin-top: auto;
+    padding-top: 8px;
+}
+
+/* Fix chart body height */
+.analytic-dashboard .chart-row-item .chart-body {
+    height: calc(100% - 60px);
+}
+
+.analytic-dashboard .chart-medium .chart-body {
+    height: calc(100% - 80px);
+}
+
+/* Dropdown z-index fix */
+.analytic-dashboard .filter-dropdown-menu {
+    z-index: 100;
+}
+
+/* KPI Icon specific styles for each card */
+.analytic-dashboard .kpi-card:nth-child(1) .kpi-icon i {
+    color: #1C75BC;
+}
+
+.analytic-dashboard .kpi-card:nth-child(2) .kpi-icon i {
+    color: #F99560;
+}
+
+.analytic-dashboard .kpi-card:nth-child(3) .kpi-icon i {
+    color: #FEC53D;
+}
+
+.analytic-dashboard .kpi-card:nth-child(4) .kpi-icon i {
+    color: #33B3B1;
+}
+
+/* Fix filters button text */
+.analytic-dashboard .filter-btn span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+}
+
+/* Chart title underline colors */
+.analytic-dashboard .chart-card:not(.return-volume):not(.on-time-delivery) .chart-title::after {
+    background: #1C75BC;
+}
+
+/* =============================================
+   FIGMA DESIGN ENHANCEMENTS - 90% Matching
+   Added: Neomorphism, Inter Font, Enhanced Styling
+   ============================================= */
+
+/* Apply Inter Font Globally to Dashboard - Excluding Icons */
+.analytic-dashboard {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Enhanced Background Color - Figma F5F6F8 */
+.analytic-dashboard {
+    background: #F5F6F8 !important;
+}
+
+/* =============================================
+   NEOMORPHISM EFFECT FOR CARDS - FIGMA STYLE
+   ============================================= */
+
+/* KPI Cards - Enhanced Neomorphism Shadow */
+.analytic-dashboard .kpi-card {
+    background: #FFFFFF !important;
+    border: 1px solid #F6F6F6 !important;
+    box-shadow: -1px -1px 3px #FFFFFF, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4) !important;
+    border-radius: 24px !important;
+    transition: all 0.2s ease !important;
+}
+
+.analytic-dashboard .kpi-card:hover {
+    box-shadow: -2px -2px 5px #FFFFFF, 2.5px 2.5px 5px rgba(174, 174, 192, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Chart Cards - Matching Neomorphism */
+.analytic-dashboard .chart-card {
+    background: #FFFFFF !important;
+    border: 1px solid #F6F6F6 !important;
+    box-shadow: -1px -1px 3px #FFFFFF, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4) !important;
+    border-radius: 24px !important;
+    transition: all 0.2s ease !important;
+}
+
+.analytic-dashboard .chart-card:hover {
+    box-shadow: -2px -2px 5px #FFFFFF, 2.5px 2.5px 5px rgba(174, 174, 192, 0.5) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* =============================================
+   ENHANCED TYPOGRAPHY - FIGMA SPECS
+   ============================================= */
+
+/* Chart Titles - Bold with Underline */
+.analytic-dashboard .chart-title {
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    line-height: 17px !important;
+    color: rgba(0, 0, 0, 0.9) !important;
+    letter-spacing: 0.0015em !important;
+}
+
+/* KPI Values - H5/Bold */
+.analytic-dashboard .kpi-value {
+    font-weight: 700 !important;
+    font-size: 26px !important;
+    line-height: 32px !important;
+    color: #202224 !important;
+}
+
+/* KPI Labels - Body 1/Regular */
+.analytic-dashboard .kpi-label {
+    font-weight: 400 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    letter-spacing: 0.005em !important;
+    color: #202224 !important;
+    opacity: 0.7 !important;
+}
+
+/* =============================================
+   ENHANCED SPACING - FIGMA GAPS
+   ============================================= */
+
+/* Top Padding for Dashboard Content */
+.analytic-dashboard .dashboard-content {
+    padding: 16px 40px !important;
+}
+
+/* KPI Cards Container - Grid with Proper Gap */
+.analytic-dashboard .kpi-cards {
+    gap: 40px !important;
+}
+
+/* Charts Section Row - 40px Gap */
+.analytic-dashboard .charts-section-row {
+    gap: 40px !important;
+}
+
+/* Charts Section Bottom - 40px Gap */
+.analytic-dashboard .charts-section-bottom {
+    gap: 40px !important;
+}
+
+/* =============================================
+   KPI ICON ENHANCEMENTS - FIGMA COLORS
+   ============================================= */
+
+/* KPI Icon Styling - Enforce Opacity to visible */
+.analytic-dashboard .kpi-icon {
+    opacity: 1 !important;
+}
+
+/* =============================================
+   FILTER BUTTONS - FIGMA STYLE
+   ============================================= */
+
+.analytic-dashboard .filter-btn {
+    background: #FFFFFF !important;
+    border: 1px solid #1B75BC !important;
+    border-radius: 8px !important;
+    color: #1B75BC !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    line-height: 20px !important;
+    letter-spacing: 0.0125em !important;
+    padding: 0px 12px !important;
+    height: 32px !important;
+}
+
+.analytic-dashboard .filter-btn:hover {
+    background: #E8F1F8 !important;
+}
+
+/* =============================================
+   CHART TITLE UNDERLINES - ENHANCED
+   ============================================= */
+
+/* Blue Underline - Figma Width */
+.analytic-dashboard .chart-title-wrapper::after {
+    width: 133px !important;
+    height: 3px !important;
+    margin-top: 5px !important;
+}
+
+/* =============================================
+   LEGEND ITEMS - NEOMORPHISM PILLS
+   ============================================= */
+
+.analytic-dashboard .legend-item {
+    background: #FFFFFF !important;
+    border: 1px solid #F6F6F6 !important;
+    box-shadow: -1px -1px 3px #FFFFFF, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4) !important;
+    border-radius: 16px !important;
+    padding: 4px 8px !important;
+    margin: 4px 0 !important;
+    font-size: 12px !important;
+    line-height: 15px !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* =============================================
+   CHART-SPECIFIC ENHANCEMENTS
+   ============================================= */
+
+/* Bar Chart Colors - Purple/Blue #7086FD */
+/* This is handled in JavaScript but we ensure consistency */
+
+/* Doughnut Center Text - Figma Specs */
+.analytic-dashboard .chart-center-value {
+    font-weight: 600 !important;
+    font-size: 24px !important;
+    line-height: 29px !important;
+}
+
+.analytic-dashboard .chart-center-value.green {
+    color: #5DC08B !important;
+}
+
+/* =============================================
+   SUBTLE ENHANCEMENTS
+   ============================================= */
+
+/* Chart Average Text */
+.analytic-dashboard .chart-average {
+    font-size: 12px !important;
+    line-height: 15px !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+    font-weight: 400 !important;
+}
+
+/* Chart Subtitle */
+.analytic-dashboard .chart-subtitle,
+.analytic-dashboard .chart-info {
+    font-size: 12px !important;
+    line-height: 15px !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+    font-weight: 400 !important;
+}
+
+/* Enhanced Filter Dropdown */
+.analytic-dashboard .filter-dropdown-menu {
+    box-shadow: -1px -1px 3px #FFFFFF, 1.5px 1.5px 3px rgba(174, 174, 192, 0.4) !important;
+    border-radius: 8px !important;
+}
+
+/* =============================================
+   FINAL POLISH - SMOOTH INTERACTIONS
+   ============================================= */
+
+/* Smooth transitions for all interactive elements */
+.analytic-dashboard .kpi-card,
+.analytic-dashboard .chart-card,
+.analytic-dashboard .filter-btn,
+.analytic-dashboard .legend-item {
+    transition: all 0.2s ease !important;
+}
+
+/* Focus states for accessibility */
+.analytic-dashboard .filter-btn:focus {
+    outline: 2px solid #1C75BC !important;
+    outline-offset: 2px !important;
+}
+
+/* Ensure proper stacking context */
+.analytic-dashboard {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Debug Buttons */
+.analytic-dashboard .btn-debug,
+.analytic-dashboard .btn-debug-chart {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #1C75BC;
+    color: white;
+    border: none;
+    border-radius: 4px;
     font-size: 12px;
-    color: #999;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    position: absolute;
 }
 
+.analytic-dashboard .btn-debug {
+    top: 8px;
+    right: 8px;
+}
+
+.analytic-dashboard .btn-debug-chart {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-left: 8px;
+}
+
+.analytic-dashboard .btn-debug:hover,
+.analytic-dashboard .btn-debug-chart:hover {
+    background: #155a8a;
+}
+
+.analytic-dashboard .btn-debug i,
+.analytic-dashboard .btn-debug-chart i {
+    font-size: 11px;
+}
+
+/* KPI card positioning for debug button */
+.analytic-dashboard .kpi-card {
+    position: relative;
+}
+
+/* Chart title wrapper flex for debug button */
+.analytic-dashboard .chart-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* END OF FIGMA ENHANCEMENTS */

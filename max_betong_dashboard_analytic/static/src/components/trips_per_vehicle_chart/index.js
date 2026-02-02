@@ -1,5 +1,33 @@
 /** @odoo-module **/
 
+const DEBUG_DASHBOARD = false;
+const dlog = (...args) => {
+    if (DEBUG_DASHBOARD) {
+        console.log(...args);
+    }
+};
+const dwarn = (...args) => {
+    if (DEBUG_DASHBOARD) {
+        console.warn(...args);
+    }
+};
+
+const isChartDebugEnabled = () => {
+    try {
+        if (window?.localStorage?.getItem('max_betong_chart_debug') === '1') {
+            return true;
+        }
+        const hash = (window.location && window.location.hash) ? window.location.hash.replace(/^#/, '') : '';
+        if (!hash) {
+            return false;
+        }
+        const params = new URLSearchParams(hash);
+        return params.get('chart_debug') === '1';
+    } catch (e) {
+        return false;
+    }
+};
+
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { Component, onWillStart, onMounted, onWillUnmount, onPatched, useRef } from "@odoo/owl";
@@ -20,114 +48,155 @@ export class TripsPerVehicleChart extends Component {
         return data && data.data && Array.isArray(data.data) && data.data.length > 0;
     }
 
+    get debugEnabled() {
+        return isChartDebugEnabled();
+    }
+
+    get debugText() {
+        try {
+            return JSON.stringify(this.props.data ?? null, null, 2);
+        } catch (e) {
+            return String(this.props.data);
+        }
+    }
+
     setup() {
         this.canvasRef = useRef("canvas");
         this.chart = null;
         this._lastData = null;
+        this._renderTimeout = null;
 
         onWillStart(async () => {
             await loadBundle("web.chartjs_lib");
         });
 
         onMounted(() => {
-            setTimeout(() => {
-                if (this.hasData) {
-                    this.renderChart();
-                }
-            }, 200);
+            if (this.hasData) {
+                this.queueRender();
+            }
         });
 
         onPatched(() => {
             if (this.hasData) {
                 const currentData = JSON.stringify(this.chartData);
                 if (this._lastData !== currentData) {
-                    setTimeout(() => this.renderChart(), 50);
+                    this.queueRender();
                 }
-            } else if (this.chart) {
-                this.destroyChart();
+            } else {
+                // If no data, we don't necessarily need to destroy immediately.
+                // We can just clear the canvas or leave it as is until data comes back.
+                // But for now, let's just queue a render which will handle empty state.
+                this.queueRender();
             }
         });
 
         onWillUnmount(() => {
+            this.clearRenderTimeout();
             this.destroyChart();
         });
     }
 
-    renderChart() {
-        console.log('[TripsPerVehicle] renderChart called', {
-            hasData: !!this.props.data,
-            hasTripsData: !!this.props.data?.trips_per_vehicle,
-            data: this.props.data?.trips_per_vehicle
-        });
-
-        if (!this.props.data || !this.props.data.data) {
-            console.warn('[TripsPerVehicle] No data available', this.props.data);
-            return;
+    clearRenderTimeout() {
+        if (this._renderTimeout) {
+            clearTimeout(this._renderTimeout);
+            this._renderTimeout = null;
         }
+    }
 
+    queueRender() {
+        this.clearRenderTimeout();
+        this._renderTimeout = setTimeout(() => {
+            this.renderChart();
+        }, 100); // 100ms debounce
+    }
+
+    renderChart() {
         const canvas = this.canvasRef.el;
         if (!canvas) {
-            console.warn('[TripsPerVehicle] Canvas not found');
             return;
         }
 
         if (typeof Chart === 'undefined') {
-            console.warn('[TripsPerVehicle] Chart.js not loaded yet');
-            setTimeout(() => this.renderChart(), 100);
+            this.queueRender();
             return;
         }
 
-        // Ensure canvas has size
-        const rect = canvas.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) {
-            console.warn('[TripsPerVehicle] Canvas has no size, waiting...', rect);
-            setTimeout(() => this.renderChart(), 200);
+        // Check if canvas is attached to DOM
+        if (!canvas.isConnected) {
             return;
         }
 
-        const currentData = JSON.stringify(this.props.data.trips_per_vehicle);
+        const data = this.props.data;
+        // If NO data, then we can destroy chart if it exists
+        if (!this.hasData) {
+            this.destroyChart();
+            return;
+        }
+
+        // If we have data, proceed to render
+        const currentData = JSON.stringify(data.trips_per_vehicle);
+        // Optimization: if exact same data string and chart exists, skip
         if (this._lastData === currentData && this.chart) {
             return;
         }
 
-        if (this.chart) {
-            this.chart.destroy();
-            this.chart = null;
-        }
+        // DESTROY existing chart before creating new one
+        this.destroyChart();
 
-        const data = this.props.data;
         this._lastData = currentData;
         const maxValue = Math.max(...data.data, 10);
 
+
+        const valueLabelPlugin = {
+            id: 'valueLabelPlugin_trips',
+            afterDatasetsDraw: (chart) => {
+                const { ctx } = chart;
+                const meta = chart.getDatasetMeta(0);
+                if (!meta || !meta.data) return;
+                ctx.save();
+                // Use system font stack for consistency with Odoo backend
+                ctx.font = '500 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+                ctx.fillStyle = '#334155';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                meta.data.forEach((bar, index) => {
+                    const v = Number(chart.data.datasets[0].data[index]) || 0;
+                    if (v <= 0) return;
+                    ctx.fillText(String(v), bar.x, bar.y - 3);
+                });
+                ctx.restore();
+            }
+        };
+
         try {
-            console.log('[TripsPerVehicle] Creating chart with data:', data);
+            dlog('[TripsPerVehicle] Creating chart with data:', data);
             const rect = canvas.getBoundingClientRect();
-            console.log('[TripsPerVehicle] Canvas rect:', rect);
-            
+            dlog('[TripsPerVehicle] Canvas rect:', rect);
+
             // Force canvas to have size
             const parent = canvas.parentElement;
             if (parent) {
                 const parentRect = parent.getBoundingClientRect();
                 const width = parentRect.width || 400;
                 const height = parentRect.height || 150;
-                
+
                 // Set canvas display size (CSS)
                 canvas.style.width = width + 'px';
                 canvas.style.height = height + 'px';
-                
+
                 // Set canvas internal size (for Chart.js)
                 const dpr = window.devicePixelRatio || 1;
                 canvas.width = width * dpr;
                 canvas.height = height * dpr;
-                
+
                 const ctx = canvas.getContext('2d');
                 if (ctx) {
                     ctx.scale(dpr, dpr);
                 }
-                
-                console.log('[TripsPerVehicle] Canvas size set:', canvas.width, canvas.height, canvas.style.width, canvas.style.height);
+
+                dlog('[TripsPerVehicle] Canvas size set:', canvas.width, canvas.height, canvas.style.width, canvas.style.height);
             }
-            
+
             this.chart = new Chart(canvas, {
                 type: 'bar',
                 data: {
@@ -148,9 +217,9 @@ export class TripsPerVehicleChart extends Component {
                     },
                     layout: {
                         padding: {
-                            top: 10,
-                            bottom: 10,
-                            left: 10,
+                            top: 20,
+                            bottom: 18,
+                            left: 24,
                             right: 10
                         }
                     },
@@ -167,16 +236,29 @@ export class TripsPerVehicleChart extends Component {
                         y: {
                             beginAtZero: true,
                             max: maxValue + 2,
+                            title: {
+                                display: true,
+                                text: _t('Trips'),
+                                font: { size: 11, weight: '500' },
+                                color: '#64748b'
+                            },
                             ticks: {
                                 stepSize: 1,
                                 font: { size: 10 }
                             },
                             grid: {
                                 display: true,
-                                color: 'rgba(0,0,0,0.05)'
+                                color: 'rgba(0,0,0,0.05)',
+                                borderDash: [4, 4],
                             }
                         },
                         x: {
+                            title: {
+                                display: true,
+                                text: _t('Vehicle'),
+                                font: { size: 11, weight: '500' },
+                                color: '#64748b'
+                            },
                             ticks: {
                                 font: { size: 8 },
                                 maxRotation: 45,
@@ -185,10 +267,11 @@ export class TripsPerVehicleChart extends Component {
                             grid: { display: false }
                         }
                     }
-                }
+                },
+                plugins: [valueLabelPlugin],
             });
-            console.log('[TripsPerVehicle] Chart created successfully');
-            
+            dlog('[TripsPerVehicle] Chart created successfully');
+
             // Add chart-loaded class to show the chart
             const chartBody = canvas.parentElement;
             if (chartBody && chartBody.classList) {
@@ -208,6 +291,13 @@ export class TripsPerVehicleChart extends Component {
             }
             this.chart = null;
         }
+    }
+
+    formatAverage(avg) {
+        if (avg === null || avg === undefined) return '0';
+        const value = Number(avg);
+        if (isNaN(value)) return '0';
+        return value.toFixed(0).padStart(2, '0');
     }
 
     t(key) {

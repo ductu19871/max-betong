@@ -24,6 +24,8 @@ const FULLSCREEN_LIMIT = 20;
 
 const PROGRESS_COLUMNS = new Set(['assigned', 'loading', 'loaded', 'leave', 'arrived', 'unloading', 'return', 'completed']);
 
+const TIME_CALC_COLUMNS = new Set(['concrete_lifetime', 'wait_time', 'delivery_time']);
+
 const SORTABLE_COLUMNS = {
     tickets: { name: true, delivery_address: true, sale_order: true, product: true, mix_note: true, station: true, volume: true, vehicle: true, eta: true, state: true },
     loads: { name: true, delivery_address: true, sale_order: true, product: true, mix_note: true, station: true, volume: true },
@@ -72,6 +74,9 @@ const DEFAULT_COLUMNS = {
         { key: 'unloading', label: 'Unloading', visible: true, width: 80, order: 16 },
         { key: 'return', label: 'Return', visible: true, width: 80, order: 17 },
         { key: 'completed', label: 'Completed', visible: true, width: 80, order: 18 },
+        { key: 'concrete_lifetime', label: 'TG Sống BT', visible: true, width: 100, order: 19 },
+        { key: 'wait_time', label: 'TG Chờ Trạm', visible: true, width: 100, order: 20 },
+        { key: 'delivery_time', label: 'TG Giao Hàng', visible: true, width: 100, order: 21 },
     ],
     orders: [
         { key: 'stt', label: 'No', visible: true, width: 60, order: 0 },
@@ -1213,6 +1218,43 @@ export class ConcreteDashboard extends Component {
         });
     }
 
+    calcTimeDiffMinutes(startStr, endStr) {
+        if (!startStr || !endStr) return 0;
+        const start = new Date(startStr);
+        const end = new Date(endStr);
+        const diffMs = end - start;
+        if (diffMs < 0) return 0;
+        const minutes = Math.round(diffMs / 60000);
+        return minutes;
+    }
+
+    getTicketTimeCalc(ticket, colKey) {
+        if (colKey === 'concrete_lifetime') {
+            // TG Sống BT: Không yêu cầu state = 'completed'
+            return this.calcTimeDiffMinutes(ticket.arrived_datetime, ticket.unloading_datetime);
+        }
+        if (colKey === 'wait_time') {
+            // TG Chờ Trạm: Chỉ tính cho tickets đã completed
+            if (ticket.state !== 'completed') return 0;
+            return this.calcTimeDiffMinutes(ticket.assigned_datetime, ticket.leave_datetime);
+        }
+        if (colKey === 'delivery_time') {
+            // TG Giao Hàng: Chỉ tính cho tickets đã completed
+            if (ticket.state !== 'completed') return 0;
+            return this.calcTimeDiffMinutes(ticket.leave_datetime, ticket.completed_datetime);
+        }
+        return 0;
+    }
+
+    formatMinutes(val) {
+        if (!val || val <= 0) return '';
+        return `${val} phút`;
+    }
+
+    isTimeCalcColumn(key) {
+        return TIME_CALC_COLUMNS.has(key);
+    }
+
     // ===== Translation Helpers =====
     
     t(key) {
@@ -1289,6 +1331,9 @@ export class ConcreteDashboard extends Component {
             'Unloading': _t('Unloading'),
             'Return': _t('Return'),
             'Completed': _t('Completed'),
+            'TG Sống BT': _t('TG Sống BT'),
+            'TG Chờ Trạm': _t('TG Chờ Trạm'),
+            'TG Giao Hàng': _t('TG Giao Hàng'),
             'Allocated Volume (m³)': _t('Allocated Volume (m³)'),
             'KL đã chia Load (m³)': _t('Allocated Volume (m³)'),
             'Unallocated Volume (m³)': _t('Unallocated Volume (m³)'),

@@ -1,5 +1,33 @@
 /** @odoo-module **/
 
+const DEBUG_DASHBOARD = false;
+const dlog = (...args) => {
+    if (DEBUG_DASHBOARD) {
+        console.log(...args);
+    }
+};
+const dwarn = (...args) => {
+    if (DEBUG_DASHBOARD) {
+        console.warn(...args);
+    }
+};
+
+const isChartDebugEnabled = () => {
+    try {
+        if (window?.localStorage?.getItem('max_betong_chart_debug') === '1') {
+            return true;
+        }
+        const hash = (window.location && window.location.hash) ? window.location.hash.replace(/^#/, '') : '';
+        if (!hash) {
+            return false;
+        }
+        const params = new URLSearchParams(hash);
+        return params.get('chart_debug') === '1';
+    } catch (e) {
+        return false;
+    }
+};
+
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { Component, onWillStart, onMounted, onWillUnmount, onPatched, useRef } from "@odoo/owl";
@@ -20,78 +48,119 @@ export class VehicleCycleTimeChart extends Component {
         return data && data.labels && Array.isArray(data.labels) && data.labels.length > 0;
     }
 
+    get debugEnabled() {
+        return isChartDebugEnabled();
+    }
+
+    get debugText() {
+        try {
+            return JSON.stringify(this.props.data ?? null, null, 2);
+        } catch (e) {
+            return String(this.props.data);
+        }
+    }
+
     setup() {
         this.canvasRef = useRef("canvas");
         this.chart = null;
         this._lastData = null;
+        this._renderTimeout = null;
 
         onWillStart(async () => {
             await loadBundle("web.chartjs_lib");
         });
 
         onMounted(() => {
-            console.log('[VehicleCycleTime] onMounted - hasData:', this.hasData, 'data:', this.chartData);
-            setTimeout(() => {
-                console.log('[VehicleCycleTime] onMounted timeout - hasData:', this.hasData);
-                if (this.hasData) {
-                    this.renderChart();
-                }
-            }, 200);
+            if (this.hasData) {
+                this.queueRender();
+            }
         });
 
         onPatched(() => {
-            console.log('[VehicleCycleTime] onPatched - hasData:', this.hasData);
             if (this.hasData) {
                 const currentData = JSON.stringify(this.chartData);
                 if (this._lastData !== currentData) {
-                    console.log('[VehicleCycleTime] onPatched - data changed, re-rendering');
-                    setTimeout(() => this.renderChart(), 50);
+                    this.queueRender();
                 }
-            } else if (this.chart) {
-                console.log('[VehicleCycleTime] onPatched - no data, destroying chart');
-                this.destroyChart();
+            } else {
+                this.queueRender();
             }
         });
 
         onWillUnmount(() => {
+            this.clearRenderTimeout();
             this.destroyChart();
         });
     }
 
+    clearRenderTimeout() {
+        if (this._renderTimeout) {
+            clearTimeout(this._renderTimeout);
+            this._renderTimeout = null;
+        }
+    }
+
+    queueRender() {
+        this.clearRenderTimeout();
+        this._renderTimeout = setTimeout(() => {
+            this.renderChart();
+        }, 100);
+    }
+
     renderChart() {
-        console.log('[VehicleCycleTime] renderChart called, chartData:', this.chartData);
         const canvas = this.canvasRef.el;
         if (!canvas) {
-            console.warn('[VehicleCycleTime] Canvas not found');
             return;
         }
-        
+
+        // Ensure canvas has a usable size
+        const parent = canvas.parentElement;
+        if (parent) {
+            const rect = parent.getBoundingClientRect();
+            const width = rect.width || 0;
+            const height = rect.height || 0;
+            if (width === 0 || height === 0) {
+                this.queueRender();
+                return;
+            }
+
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = Math.floor(width * dpr);
+            canvas.height = Math.floor(height * dpr);
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+        }
+
         const chartData = this.chartData;
         if (!chartData || !Array.isArray(chartData.wait_time) || !Array.isArray(chartData.delivery_time)) {
-            console.warn('[VehicleCycleTime] Invalid data format', chartData);
+            dwarn('[VehicleCycleTime] Invalid data format', chartData);
             return;
         }
-        
-        console.log('[VehicleCycleTime] Data validation passed:', {
+
+        dlog('[VehicleCycleTime] Data validation passed:', {
             wait_time: chartData.wait_time,
             delivery_time: chartData.delivery_time,
             labels: chartData.labels
         });
-        
+
         if (typeof Chart === 'undefined') {
-            console.warn('[VehicleCycleTime] Chart.js not loaded yet');
-            setTimeout(() => this.renderChart(), 100);
+            dwarn('[VehicleCycleTime] Chart.js not loaded yet');
+            this.scheduleRender(100);
             return;
         }
 
         const data = chartData;
         if (!Array.isArray(data.wait_time) || !Array.isArray(data.delivery_time)) {
-            console.warn('[VehicleCycleTime] Data arrays missing');
+            dwarn('[VehicleCycleTime] Data arrays missing');
             return;
         }
 
         if (data.wait_time.length === 0 || data.delivery_time.length === 0) {
-            console.warn('[VehicleCycleTime] Empty data arrays');
+            dwarn('[VehicleCycleTime] Empty data arrays');
             return;
         }
 
@@ -104,9 +173,21 @@ export class VehicleCycleTimeChart extends Component {
             try {
                 this.chart.destroy();
             } catch (e) {
-                console.warn('[VehicleCycleTime] Chart destroy error:', e);
+                dwarn('[VehicleCycleTime] Chart destroy error:', e);
             }
             this.chart = null;
+        }
+
+        // Defensive: if a Chart instance is still bound to this canvas, destroy it.
+        try {
+            if (typeof Chart !== 'undefined' && typeof Chart.getChart === 'function') {
+                const existing = Chart.getChart(canvas);
+                if (existing) {
+                    existing.destroy();
+                }
+            }
+        } catch (e) {
+            // Ignore
         }
 
         this._lastData = currentData;
@@ -122,14 +203,15 @@ export class VehicleCycleTimeChart extends Component {
 
         const numBars = n;
         const showSegmentLabels = numBars <= 10;
-        
+
         const segmentAndTotalLabelPlugin = {
             id: 'segmentAndTotalLabelPlugin_vehicleCycleTime',
             afterDatasetsDraw: (chart) => {
                 const { ctx } = chart;
                 ctx.save();
-                ctx.font = '10px sans-serif';
-                ctx.fillStyle = '#111';
+                // Use system font stack for consistency with Odoo backend
+                ctx.font = '500 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+                ctx.fillStyle = '#334155';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'bottom';
 
@@ -169,24 +251,24 @@ export class VehicleCycleTimeChart extends Component {
         };
 
         try {
-            console.log('[VehicleCycleTime] Creating chart...');
+            dlog('[VehicleCycleTime] Creating chart...');
             this.chart = new Chart(canvas, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
                         {
-                            label: _t('Thời gian chờ'),
+                            label: _t('Waiting at Station'),
                             data: data.wait_time,
-                            backgroundColor: '#5CD694',
-                            borderColor: '#5CD694',
+                            backgroundColor: '#7086FD',
+                            borderColor: '#7086FD',
                             borderWidth: 0,
                         },
                         {
-                            label: _t('Thời gian giao'),
+                            label: _t('Delivery Time'),
                             data: data.delivery_time,
-                            backgroundColor: '#7B80FF',
-                            borderColor: '#7B80FF',
+                            backgroundColor: '#6FD195',
+                            borderColor: '#6FD195',
                             borderWidth: 0,
                         }
                     ]
@@ -194,6 +276,14 @@ export class VehicleCycleTimeChart extends Component {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 18,
+                            bottom: 18,
+                            left: 24,
+                            right: 10,
+                        },
+                    },
                     animation: {
                         duration: 0
                     },
@@ -209,13 +299,19 @@ export class VehicleCycleTimeChart extends Component {
                         },
                         tooltip: {
                             callbacks: {
-                                label: (context) => `${context.dataset.label}: ${context.parsed.y} ${_t('phút')}`
+                                label: (context) => `${context.dataset.label}: ${context.parsed.y} ${_t('min')}`
                             }
                         }
                     },
                     scales: {
                         x: {
                             stacked: true,
+                            title: {
+                                display: true,
+                                text: _t('Vehicle'),
+                                font: { size: 11, weight: '500' },
+                                color: '#64748b'
+                            },
                             ticks: {
                                 font: { size: 8 },
                                 maxRotation: 45,
@@ -227,21 +323,28 @@ export class VehicleCycleTimeChart extends Component {
                             stacked: true,
                             beginAtZero: true,
                             suggestedMax: suggestedMax,
+                            title: {
+                                display: true,
+                                text: _t('Minutes'),
+                                font: { size: 11, weight: '500' },
+                                color: '#64748b'
+                            },
                             ticks: {
                                 font: { size: 10 }
                             },
                             grid: {
                                 display: true,
-                                color: 'rgba(0,0,0,0.05)'
+                                color: 'rgba(0,0,0,0.05)',
+                                borderDash: [4, 4],
                             }
                         }
                     }
                 },
                 plugins: [segmentAndTotalLabelPlugin],
             });
-            
-            console.log('[VehicleCycleTime] Chart created successfully');
-            
+
+            dlog('[VehicleCycleTime] Chart created successfully');
+
             const chartBody = canvas.parentElement;
             if (chartBody && chartBody.classList) {
                 chartBody.classList.add('chart-loaded');
@@ -252,6 +355,10 @@ export class VehicleCycleTimeChart extends Component {
     }
 
     destroyChart() {
+        if (this._renderTimer) {
+            clearTimeout(this._renderTimer);
+            this._renderTimer = null;
+        }
         if (this.chart) {
             try {
                 this.chart.destroy();
@@ -260,6 +367,27 @@ export class VehicleCycleTimeChart extends Component {
             }
             this.chart = null;
         }
+
+        const canvas = this.canvasRef?.el;
+        if (canvas) {
+            try {
+                if (typeof Chart !== 'undefined' && typeof Chart.getChart === 'function') {
+                    const existing = Chart.getChart(canvas);
+                    if (existing) {
+                        existing.destroy();
+                    }
+                }
+            } catch (e) {
+                // Ignore
+            }
+        }
+    }
+
+    formatAverage(avg) {
+        if (avg === null || avg === undefined) return '0';
+        const value = Number(avg);
+        if (isNaN(value)) return '0';
+        return Math.round(value);
     }
 
     t(key) {

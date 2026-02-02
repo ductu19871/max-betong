@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Concrete Analytics Dashboard',
-    'version': '17.0.1.0.0',
+    'version': '17.0.1.1.0',
     'category': 'Sales/Sales',
     'summary': 'Analytics Dashboard for Concrete Operations',
     'description': """
@@ -29,9 +29,6 @@
     ],
     'assets': {
         'web.assets_backend': [
-            ('include', 'web._assets_helpers'),
-            ('include', 'web._assets_primary_variables'),
-            
             # CSS
             'max_betong_dashboard_analytic/static/src/css/analytic_dashboard.css',
             
