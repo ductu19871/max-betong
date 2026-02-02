@@ -106,6 +106,7 @@
              <xpath expr="//field[@name='order_line']//tree//field[@name='product_template_id']" position="after">
              	<field name="product_template_id"
                         string="Product"
+                        class="product_beton"
                         column_invisible="parent.so_type != 'concrete'"
                         readonly="not product_updatable"
                         required="not display_type"
@@ -129,6 +130,25 @@
 				 <field name="bom_id" invisible="so_type != 'concrete'"/>
 				 <field name="mix_note" invisible="so_type != 'concrete'"/>
 			 </group>
+            </field>
+        </record>
+
+        <record id="blanket_order_view_order_form_betong" model="ir.ui.view">
+            <field name="name">blanket.sale.order.form.betong</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_blanket_order.view_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='blanket_order_line']" position="attributes">
+                        <attribute name="domain">[('order_id', '=', parent.blanket_order_id)]</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_id']" position="before">
+                        <field name="blanket_order_id" readonly="1" invisible="not blanket_order_id" />
+                    </xpath>
+                    <xpath expr="//field[@class='product_beton']" position="attributes">
+                        <attribute name="readonly">not product_updatable or blanket_order_line</attribute>
+                    </xpath>
+                </data>
             </field>
         </record>
         
