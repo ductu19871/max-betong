@@ -63,7 +63,8 @@ class SaleOrderLine(models.Model):
                 raise UserError(_('The product is not the same as the blanket order line product.'))
             if line.product_uom != line.blanket_order_line.product_uom:
                 raise UserError(_('The product UoM is not the same as the blanket order line product UoM.'))
-            if line.product_uom_qty != line.blanket_order_line.original_uom_qty:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_compare(line.product_uom_qty, line.blanket_order_line.original_uom_qty, precision_digits=precision) != 0:
                 raise UserError(_('The product quantity is not the same as the blanket order line original quantity.'))
 
     def product_uom_change(self):
