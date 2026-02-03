@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -263,6 +263,19 @@ class SaleOrder(models.Model):
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def action_betong_set_completed(self):
+        order_waiting = []
+        for so in self:
+            if so.volume_unallocated != 0:
+                order_waiting.append(_('- The %s order has a mismatch in the load split volume.') % so.display_name)
+                continue
+            if not so.load_ids.production_ids:
+                order_waiting.append(_('- The %s order has no assigned concrete tickets from any loads yet.') % so.display_name)
+                continue
+            if any(mo.state_concrete not in ['completed', 'remix', 'cancel'] for mo in so.load_ids.production_ids):
+                order_waiting.append(_('- The %s order has concrete tickets in not completed status.') % so.display_name)
+
+        if order_waiting:
+            raise UserError(_('You still have pending tasks to complete. Please finish them before completing the order.\n%s') % '\n'.join(order_waiting))
         self.write({'state':'done'})
     
     def action_betong_set_dispatching(self):
