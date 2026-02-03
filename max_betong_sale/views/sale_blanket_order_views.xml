@@ -25,5 +25,42 @@
                 </p>
             </field>
         </record>
+
+        <record id="view_blanket_order_form_beton" model="ir.ui.view">
+            <field name="name">sale.blanket.order.form.betong</field>
+            <field name="model">sale.blanket.order</field>
+            <field name="inherit_id" ref="sale_blanket_order.view_blanket_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="so_type" invisible="1" />
+                    </xpath>
+                    <xpath expr="//field[@name='partner_id']" position="attributes">
+                        <attribute name="readonly">state != 'draft'</attribute>
+                    </xpath>
+                    
+                    <xpath expr="//field[@name='line_ids']//tree//field[@name='product_id']" position="attributes">
+                        <attribute name="column_invisible">parent.so_type == 'concrete'</attribute>
+                    </xpath>
+
+                    <xpath expr="//field[@name='line_ids']//tree//field[@name='product_id']" position="after">  
+                        <field
+                            name="product_id"
+                            required="not display_type"
+                            column_invisible="parent.so_type != 'concrete'"
+                            domain="[('sale_ok', '=', True),('is_concrete_product','=',True)]"
+                            invisible="display_type"
+                            context="{
+                                'fld': 'product_id',
+                                'partner_id': parent.partner_id,
+                                'quantity': original_uom_qty,
+                                'company_id': parent.company_id
+                            }"
+                        />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
     </data>
 </odoo>

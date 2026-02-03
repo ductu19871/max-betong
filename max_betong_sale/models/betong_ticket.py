@@ -18,6 +18,14 @@ class BetongTicket(models.Model):
         required=True,
         ondelete='cascade'
     )
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company,
+        related='sale_order_id.company_id',
+        store=True
+    )
     state = fields.Selection(
         [
             ('draft', 'Draft'),
@@ -31,8 +39,15 @@ class BetongTicket(models.Model):
     )
 
     @api.model_create_multi
-    def create(self, vals):
-        tickets = super(BetongTicket, self).create(vals)
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'company_id' not in vals and 'sale_order_id' in vals:
+                sale_order = self.env['sale.order'].browse(vals['sale_order_id'])
+                if sale_order.exists():
+                    vals['company_id'] = sale_order.company_id.id
+            if 'company_id' not in vals:
+                vals['company_id'] = self.env.company.id
+        tickets = super(BetongTicket, self).create(vals_list)
         for ticket in tickets:
             if ticket.state == 'loading' and ticket.sale_order_id:
                 ticket.sale_order_id._check_ticket_loading_and_update_state()

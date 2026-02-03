@@ -583,7 +583,12 @@ export class ConcreteDashboard extends Component {
                     sort_order: this.state.ordersSort.order,
                     // Don't filter orders by vehicle station
                     // station_id: this.state.selectedStation,
-                }
+                    kwargs:{
+                        context: this.env.services.user.context
+                    }
+                    
+                },
+                context:  this.env.services.user.context
             });
             this.updateTableState('orders', result);
         } catch (error) {
@@ -603,6 +608,7 @@ export class ConcreteDashboard extends Component {
                     station_id: this.state.selectedStation,
                 },
                 selected_order_id: this.state.selectedOrderId,
+                context: this.env.services.user.context
             });
             this.updateTableState('loads', result);
         } catch (error) {
@@ -620,7 +626,7 @@ export class ConcreteDashboard extends Component {
             if (this.state.selectedVehicleStation != null) {
                 params.station_id = this.state.selectedVehicleStation;
             }
-            const result = await this.rpc("/concrete/dashboard/vehicles", { params });
+            const result = await this.rpc("/concrete/dashboard/vehicles", { params, context: this.env.services.user.context });
             this.updateTableState('vehicles', result);
         } catch (error) {
             console.error("Error loading vehicles:", error);
@@ -637,7 +643,8 @@ export class ConcreteDashboard extends Component {
                     sort_field: this.state.ticketsSort.field,
                     sort_order: this.state.ticketsSort.order,
                     station_id: this.state.selectedStation,
-                }
+                },
+                context: this.env.services.user.context
             });
             this.updateTableState('tickets', result);
         } catch (error) {

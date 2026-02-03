@@ -27,10 +27,32 @@
 	           			invisible="so_type != 'concrete'"/>
 	           </xpath>
 	           <xpath expr="//field[@name='validity_date']" position="before">
-	           		<field name="concrete_station_id" invisible="so_type != 'concrete'" required="so_type == 'concrete'"/>
+	           		<field name="concrete_station_id" readonly="state not in ['draft', 'sent', 'sale'] and so_type == 'concrete'" invisible="so_type != 'concrete'" required="so_type == 'concrete'"/>
 	           </xpath>
+               <xpath expr="//field[@name='validity_date']" position="attributes">
+                    <attribute name="readonly">state not in ['draft', 'sent']</attribute>
+               </xpath>
+               <xpath expr="//label[@for='date_order'][1]/.." position="attributes">
+                    <attribute name="invisible" add="state in ['planned', 'dispatching', 'done']" separator=" or "/>
+               </xpath>
+               <xpath expr="//field[@name='date_order'][1]" position="attributes">
+                    <attribute name="readonly">state not in ['draft', 'sent']</attribute>
+                    <attribute name="invisible" add="state in ['planned', 'dispatching', 'done']" separator=" or "/>
+               </xpath>
+               <xpath expr="//field[@name='pricelist_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft', 'sent']</attribute>
+               </xpath>
+               <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                    <attribute name="readonly">state not in ['draft', 'sent']</attribute>
+               </xpath>
+               <xpath expr="//field[@name='analytic_distribution']" position="attributes">
+                    <attribute name="readonly">state not in ['draft', 'sent']</attribute>
+               </xpath>
 	           <xpath expr="//button[@name='action_cancel']" position="attributes">
 	           		<attribute name="invisible">so_type == 'concrete'</attribute>
+	           </xpath>
+               <xpath expr="//field[@name='commitment_date']" position="attributes">
+	           		<attribute name="invisible">so_type == 'concrete' and state not in ['draft', 'sent', 'sale', 'planned']</attribute>
 	           </xpath>
 	           <xpath expr="//button[@name='action_cancel']" position="after">
 	           		<button name="action_cancel" type="object" string="Cancel" 
@@ -106,6 +128,7 @@
              <xpath expr="//field[@name='order_line']//tree//field[@name='product_template_id']" position="after">
              	<field name="product_template_id"
                         string="Product"
+                        class="product_beton"
                         column_invisible="parent.so_type != 'concrete'"
                         readonly="not product_updatable"
                         required="not display_type"
@@ -129,6 +152,32 @@
 				 <field name="bom_id" invisible="so_type != 'concrete'"/>
 				 <field name="mix_note" invisible="so_type != 'concrete'"/>
 			 </group>
+            </field>
+        </record>
+
+        <record id="blanket_order_view_order_form_betong" model="ir.ui.view">
+            <field name="name">blanket.sale.order.form.betong</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_blanket_order.view_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='blanket_order_line']" position="attributes">
+                        <attribute name="domain">[('order_id', '=', parent.blanket_order_id)]</attribute>
+                        <attribute name="readonly">parent.so_type == 'concrete' and parent.state not in ['draft', 'sent', 'sale']</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_id']" position="before">
+                        <field name="blanket_order_id" readonly="1" invisible="not blanket_order_id" />
+                    </xpath>
+                    <xpath expr="//field[@class='product_beton']" position="attributes">
+                        <attribute name="readonly">not product_updatable or blanket_order_line</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_id']" position="attributes">
+                        <attribute name="readonly">state in ['cancel', 'sale'] or (blanket_order_id and so_type == 'concrete')</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_invoice_id']" position="attributes">
+                        <attribute name="readonly">state == 'cancel' or locked or (blanket_order_id and so_type == 'concrete')</attribute>
+                    </xpath>
+                </data>
             </field>
         </record>
         

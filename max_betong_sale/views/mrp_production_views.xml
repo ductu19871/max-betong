@@ -61,6 +61,9 @@
                 <field name="leave_datetime"/>
                 <field name="distance_km"/>
             </xpath>
+			<xpath expr="//field[@name='qty_producing']" position="attributes">
+				<attribute name="readonly">mo_type == 'concrete' or state == 'cancel'</attribute>
+			</xpath>
             <div name="button_box" position="inside">
 				<button name="action_view_do"
 				        type="object"
