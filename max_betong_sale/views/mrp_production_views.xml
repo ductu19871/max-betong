@@ -24,6 +24,16 @@
 		        		class="btn btn-primary"
 		        		type="action" name="%(max_betong_sale.action_wizard_change_state_ticket)d"
 		        		invisible="state_concrete in ('completed','on_hold','dump','remix','swap','cancel') or mo_type !='concrete'"/>
+				<button name="action_concrete_remix"
+		        		string="Remix"
+		        		type="object"
+		        		class="oe_stat_button"
+		        		invisible="state_concrete != 'on_hold' or mo_type !='concrete' or on_hold_ticket_id"/>
+				<button name="action_concrete_swap"
+		        		string="Swap"
+		        		type="object"
+		        		class="oe_stat_button"
+		        		invisible="state_concrete != 'on_hold' or mo_type !='concrete' or on_hold_ticket_id"/>
 			</xpath>
 			<xpath expr="//field[@name='product_id']" position="before">
                 <field name="mo_type" invisible="1"/>
@@ -230,6 +240,23 @@
             </xpath>
         </field>
     </record>
+
+	<record id="action_concrete_ticket" model="ir.actions.act_window">
+		<field name="name">Concrete Tickets</field>
+		<field name="res_model">mrp.production</field>
+		<field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+		<field name="view_id" eval="False"/>
+		<field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+		<field name="context">{'default_mo_type': 'concrete', 'search_default_todo': True, 'default_company_id': allowed_company_ids[0]}</field>
+		<field name="domain">[('mo_type', '=', 'concrete')]</field>
+		<field name="help" type="html">
+			<p class="o_view_nocontent_smiling_face">
+			No concrete ticket found. Let's create one.
+			</p><p>
+			Use Concrete Tickets to build finished products while consuming components: i.e. 1 Table = 4 Table Legs + 1 Table Top
+			</p>
+		</field>
+	</record>
     
     <record id="mrp_production_tree_view_inherit_max_betong_sale" model="ir.ui.view">
         <field name="name">mrp.production.tree.view.inherit.max.betong.sale</field>
@@ -248,6 +275,7 @@
     
    	<record id="mrp.mrp_production_action" model="ir.actions.act_window">
         <field name="name">Ticket</field>
+		<!-- <field name="domain">[('mo_type', '=', 'normal')]</field> -->
     </record>
     
     <menuitem action="mrp.mrp_production_action"
