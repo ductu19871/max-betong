@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="max_betong_dashboard_analytic.AnalyticDashboard">
+        <div class="analytic-dashboard">
+            <div t-if="state.loading" class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Filters and KPI Cards in one row -->
+                <div class="filters-kpi-row">
+                    <!-- Filters -->
+                    <div class="filters-section">
+                        <!-- Timezone indicator (subtle, for user awareness) -->
+                        <div class="timezone-indicator" t-if="userTimezone" style="font-size: 11px; color: #666; padding: 4px 8px; margin-right: 8px;">
+                            <i class="fa fa-clock-o" style="margin-right: 4px;"/>
+                            <span t-esc="userTimezone"/>
+                        </div>
+                        <div class="filter-group">
+                            <button type="button" class="filter-btn" t-on-click.stop.prevent="toggleStationDropdown">
+                                <span t-esc="getStationDisplayName()"/>
+                                <i class="fa fa-chevron-down"/>
+                            </button>
+                            <div t-if="state.stationDropdownOpen" class="filter-dropdown-menu" t-on-click.stop.prevent="">
+                                <div class="dropdown-item" t-on-click.stop.prevent="() => this.selectStation(null, null)">
+                                    <span>All</span>
+                                </div>
+                                <t t-foreach="state.stations" t-as="station" t-key="station.id">
+                                    <div class="dropdown-item" t-on-click.stop.prevent="() => this.selectStation(station.id, station.name)">
+                                        <span t-esc="station.name"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <button type="button" class="filter-btn" t-on-click.stop.prevent="togglePeriodDropdown">
+                                <span t-esc="getPeriodFilterDisplayName()"/>
+                                <i class="fa fa-chevron-down"/>
+                            </button>
+                            <div t-if="state.periodDropdownOpen" class="filter-dropdown-menu" t-on-click.stop.prevent="">
+                                <!-- Always show options list unless Custom is selected -->
+                                <div t-if="!state.showCustomDatePicker" class="period-options">
+                                    <div class="dropdown-item" t-on-click.stop.prevent="() => this.selectPeriodFilter('today')">
+                                        <span>Today</span>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click.stop.prevent="() => this.selectPeriodFilter('week')">
+                                        <span>This Week</span>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click.stop.prevent="() => this.selectPeriodFilter('month')">
+                                        <span>This Month</span>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click.stop.prevent="() => this.selectPeriodFilter('quarter')">
+                                        <span>This Quarter</span>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click.stop.prevent="() => this.selectPeriodFilter('year')">
+                                        <span>This Year</span>
+                                    </div>
+                                    <div class="dropdown-item" t-on-click.stop.prevent="() => this.selectPeriodFilter('custom')">
+                                        <span>Custom Range</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Custom Date Picker Form - SHOWS INSTEAD of options when Custom is selected -->
+                                <div t-if="state.showCustomDatePicker" class="custom-date-picker" t-on-click.stop="">
+                                    <div class="date-picker-header">
+                                        <span>Select Date Range</span>
+                                        <button type="button" class="btn-close" t-on-click.stop.prevent="closeCustomDatePicker">
+                                            <i class="fa fa-times"/>
+                                        </button>
+                                    </div>
+                                    <div t-if="userTimezone" style="padding: 4px 12px; font-size: 11px; color: #666; background: #f8f9fa; border-bottom: 1px solid #e0e0e0;">
+                                        <i class="fa fa-info-circle" style="margin-right: 4px;"/>
+                                        <span>Timezone: <t t-esc="userTimezone"/></span>
+                                    </div>
+                                    <div class="date-picker-body">
+                                        <div class="date-input-group">
+                                            <label>From Date</label>
+                                            <input type="datetime-local" 
+                                                   class="form-control date-input" 
+                                                   t-att-value="state.dateFrom"
+                                                   t-on-change="onDateFromChange"
+                                                  t-on-input="onDateFromChange"
+                                                   t-on-click.stop=""/>
+                                        </div>
+                                        <div class="date-input-group">
+                                            <label>To Date</label>
+                                            <input type="datetime-local" 
+                                                   class="form-control date-input" 
+                                                   t-att-value="state.dateTo"
+                                                   t-on-change="onDateToChange"
+                                                  t-on-input="onDateToChange"
+                                                   t-on-click.stop=""/>
+                                        </div>
+                                    </div>
+                                    <div class="date-picker-footer">
+                                        <button type="button" class="btn btn-secondary btn-sm" 
+                                                t-on-click.stop.prevent="cancelCustomDatePicker">
+                                            <span>Cancel</span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" 
+                                                t-on-click.stop.prevent="applyCustomDateRange"
+                                                t-att-disabled="!state.dateFrom || !state.dateTo">
+                                            <span>Apply</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="kpi-cards">
+                        <!-- Khối lượng đã giao -->
+                        <div class="kpi-card">
+                            <div class="kpi-icon">
+                                <img src="/max_betong_dashboard_analytic/static/src/img/kpi/volume_delivered.svg" alt="Volume Delivered"/>
+                            </div>
+                            <div class="kpi-content">
+                                <p class="kpi-label">Volume Delivered</p>
+                                <h3 class="kpi-value">
+                                    <t t-esc="kpis.volume_delivered || 0"/>
+                                    <span class="kpi-unit"> m³</span>
+                                </h3>
+                            </div>
+                            <button t-if="debugEnabled &amp;&amp; data.debug?.kpis"
+                                    class="btn-debug"
+                                    t-on-click="() => this.openDebugView('kpis')"
+                                    title="View records">
+                                <i class="fa fa-list"></i>
+                                <t t-esc="data.debug.kpis.count"/>
+                            </button>
+                        </div>
+
+                        <!-- Khối lượng chưa giao -->
+                        <div class="kpi-card">
+                            <div class="kpi-icon">
+                                <img src="/max_betong_dashboard_analytic/static/src/img/kpi/volume_undelivered.svg" alt="Volume Pending"/>
+                            </div>
+                            <div class="kpi-content">
+                                <p class="kpi-label">Volume Pending</p>
+                                <h3 class="kpi-value">
+                                    <t t-esc="kpis.volume_undelivered || 0"/>
+                                    <span class="kpi-unit"> m³</span>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <!-- Đơn hàng chưa giao -->
+                        <div class="kpi-card">
+                            <div class="kpi-icon">
+                                <img src="/max_betong_dashboard_analytic/static/src/img/kpi/orders_undelivered.svg" alt="Orders Pending"/>
+                            </div>
+                            <div class="kpi-content">
+                                <p class="kpi-label">Orders Pending</p>
+                                <h3 class="kpi-value">
+                                    <t t-esc="kpis.orders_undelivered?.current || 0"/>
+                                    <span class="kpi-fraction">/<t t-esc="kpis.orders_undelivered?.total || 0"/></span>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <!-- Xe đang hoạt động -->
+                        <div class="kpi-card">
+                            <div class="kpi-icon">
+                                <img src="/max_betong_dashboard_analytic/static/src/img/kpi/vehicles_active.svg" alt="Active Vehicles"/>
+                            </div>
+                            <div class="kpi-content">
+                                <p class="kpi-label">Active Vehicles</p>
+                                <h3 class="kpi-value">
+                                    <t t-esc="kpis.vehicles_active?.current || 0"/>
+                                    <span class="kpi-fraction">/<t t-esc="kpis.vehicles_active?.total || 0"/></span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section - Top Row: 3 charts -->
+                <div class="charts-section-row">
+                    <TripsPerVehicleChart 
+                        data="data.trips_per_vehicle" 
+                        period="state.periodFilter" 
+                        t-key="'trips-per-vehicle-' + (state.periodFilter || 'def') + '-' + (state.selectedStationId || 'all') + '-' + state.chartUpdateToken"/>
+                    <ReturnVolumeChart 
+                        data="data.return_volume" 
+                        period="state.periodFilter" 
+                        t-key="'return-volume-' + (state.periodFilter || 'def') + '-' + (state.selectedStationId || 'all') + '-' + state.chartUpdateToken"/>
+                    <OnTimeDeliveryChart 
+                        data="data.on_time_delivery" 
+                        period="state.periodFilter" 
+                        t-key="'on-time-delivery-' + (state.periodFilter || 'def') + '-' + (state.selectedStationId || 'all') + '-' + state.chartUpdateToken"/>
+                </div>
+
+                <!-- Charts Section - Bottom Row: 2 charts -->
+                <div class="charts-section-bottom">
+                    <ConcreteLifetimeChart
+                        data="data.concrete_lifetime"
+                        period="state.periodFilter"
+                        debugData="data.debug?.concrete_lifetime"
+                        onDebugClick.bind="() => this.openDebugView('concrete_lifetime')"
+                        t-key="'concrete-lifetime-' + (state.periodFilter || 'def') + '-' + (state.selectedStationId || 'all') + '-' + state.chartUpdateToken"/>
+                    <VehicleCycleTimeChart 
+                        data="data.vehicle_cycle_time" 
+                        period="state.periodFilter" 
+                        t-key="'vehicle-cycle-time-' + (state.periodFilter || 'def') + '-' + (state.selectedStationId || 'all') + '-' + state.chartUpdateToken"/>
+                </div>
+
+                <t t-if="debugEnabled">
+                    <div style="margin-top: 14px; padding: 12px; border-radius: 8px; background: #fff;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">Debug JSON</div>
+                        <pre style="white-space: pre-wrap; font-size: 11px; margin: 0; max-height: 420px; overflow: auto;"><t t-esc="debugText"/></pre>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -76,10 +76,18 @@ class ConcreteDashboardController(http.Controller):
     @http.route('/concrete/dashboard/delete_load', type='json', auth='user')
     def delete_load(self, load_id):
         """
-        API endpoint to delete a load
+        API endpoint to delete a load (backward compatibility)
         """
         dashboard = request.env['concrete.dashboard']
         return dashboard.delete_load(load_id)
+    
+    @http.route('/concrete/dashboard/delete_loads', type='json', auth='user')
+    def delete_loads(self, load_ids):
+        """
+        API endpoint to delete multiple loads
+        """
+        dashboard = request.env['concrete.dashboard']
+        return dashboard.delete_loads(load_ids)
 
     @http.route('/concrete/dashboard/update_order_station', type='json', auth='user')
     def update_order_station(self, order_id, station_id):

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="max_betong_dashboard_analytic.ReturnVolumeChart">
+        <div class="chart-card chart-row-item return-volume">
+            <div class="chart-header">
+                <div class="chart-title-wrapper">
+                    <h3 class="chart-title">Concrete Returns</h3>
+                </div>
+                <div class="chart-actions">
+                </div>
+            </div>
+            <div class="chart-body">
+                <t t-if="hasData">
+                    <div class="pie-chart-container">
+                        <div class="pie-chart-main">
+                            <div class="pie-chart-canvas-wrapper">
+                                <canvas t-ref="canvas"/>
+                                <div class="chart-center-value">
+                                    <t t-esc="chartPercentage"/>%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color remix"/>
+                                <span class="legend-text">Remix</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color dump"/>
+                                <span class="legend-text">Dump</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color swap"/>
+                                <span class="legend-text">Swap</span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="!hasData">
+                    <div class="chart-no-data">
+                        <div class="no-data-message">
+                            <i class="fa fa-info-circle"/>
+                            <span>No Data</span>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            
+            <!-- Debug Information (khi enable debug mode) -->
+            <t t-if="debugEnabled">
+                <div style="margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; border: 1px solid #dee2e6;">
+                    <div style="font-weight: 600; font-size: 11px; margin-bottom: 4px; color: #495057;">
+                        <i class="fa fa-bug" style="margin-right: 4px;"/>
+                        Debug Data (Return Volume)
+                    </div>
+                    <div style="font-size: 10px; font-family: monospace; color: #6c757d; line-height: 1.4;">
+                        <div><strong>Remix:</strong> <t t-esc="chartData.remix?.value || 0"/> m³</div>
+                        <div><strong>Dump:</strong> <t t-esc="chartData.dump?.value || 0"/> m³</div>
+                        <div><strong>Swap:</strong> <t t-esc="chartData.swap?.value || 0"/> m³</div>
+                        <div style="margin-top: 4px; padding-top: 4px; border-top: 1px solid #dee2e6;">
+                            <strong>Incident Total:</strong> <t t-esc="incidentVolume"/> m³
+                        </div>
+                        <div>
+                            <strong>Display %:</strong> <t t-esc="chartPercentage"/>%
+                        </div>
+                        <div style="margin-top: 4px; font-size: 9px; color: #999;">
+                            💡 Formula: (Remix+Dump+Swap) / (Completed+Remix+Dump+Swap) × 100<br/>
+                            💡 Completed is calculated in backend, not returned to frontend
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

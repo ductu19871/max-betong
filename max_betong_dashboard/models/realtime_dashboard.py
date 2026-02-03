@@ -484,7 +484,8 @@ class MrpProductionRealtimeDashboard(RealtimeDashboardMixin, models.Model):
             'completed': _('Completed'),
             'on_hold': _('On Hold'),
             'dump': _('Dump'),
-            'remix': _('Remix & Swapped'),
+            'remix': _('Remix'),
+            'swap': _('Swap'),
             'cancel': _('Cancelled'),
         }
         

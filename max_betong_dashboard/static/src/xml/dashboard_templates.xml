@@ -51,8 +51,8 @@
                             <thead>
                                 <tr>
                                     <t t-foreach="getVisibleColumns('tickets')" t-as="col" t-key="col.key">
-                                        <th class="column-header" 
-                                            t-att-class="{'sortable': isSortableColumn('tickets', col.key), 'text-center': col.key === 'volume' || col.key === 'state' || isProgressColumn(col.key), 'progress-col': isProgressColumn(col.key)}"
+                                        <th class="column-header"
+                                            t-att-class="{'sortable': isSortableColumn('tickets', col.key), 'text-center': col.key === 'volume' || col.key === 'state' || isProgressColumn(col.key) || isTimeCalcColumn(col.key), 'progress-col': isProgressColumn(col.key)}"
                                             t-att-data-column-key="col.key"
                                             t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px; position: relative;'"
                                             t-att-draggable="true"
@@ -84,7 +84,7 @@
                                                 'font-medium': col.key === 'name' || col.key === 'vehicle',
                                                 'text-center font-medium': col.key === 'volume',
                                                 'text-muted text-xs': col.key === 'eta',
-                                                'text-center': col.key === 'state' || isProgressColumn(col.key),
+                                                'text-center': col.key === 'state' || isProgressColumn(col.key) || isTimeCalcColumn(col.key),
                                                 'truncate-cell': col.key === 'product' || col.key === 'mix_note'
                                             }"
                                             t-att-style="'width: ' + col.width + 'px; min-width: ' + col.width + 'px;'">
@@ -133,6 +133,9 @@
                                                 </t>
                                                 <t t-elif="isProgressColumn(col.key)">
                                                     <ProgressDots ticket="ticket" displayState="col.key"/>
+                                                </t>
+                                                <t t-elif="isTimeCalcColumn(col.key)">
+                                                    <t t-esc="formatMinutes(getTicketTimeCalc(ticket, col.key))"/>
                                                 </t>
                                             </td>
                                         </t>

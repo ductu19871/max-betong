@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0-20251121\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 04:36+0000\n"
-"PO-Revision-Date: 2025-12-16 11:41+0700\n"
+"POT-Creation-Date: 2025-12-22 04:44+0000\n"
+"PO-Revision-Date: 2025-12-22 11:45+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -16,6 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.8\n"
+
+#. module: max_betong_product
+#: model_terms:ir.ui.view,arch_db:max_betong_product.product_template_form_view_inherit_max_beton_product
+msgid "<strong>minute</strong>"
+msgstr "<strong>phút</strong>"
 
 #. module: max_betong_product
 #: model:ir.model.fields,field_description:max_betong_product.field_product_product__concrete_lifespan
@@ -33,11 +38,10 @@ msgstr "Là sản phẩm Bê tông"
 #: model:ir.model.fields,help:max_betong_product.field_product_product__is_concrete_product
 #: model:ir.model.fields,help:max_betong_product.field_product_template__is_concrete_product
 msgid ""
-"Mark if this product is Concrete, managed separately according to Concrete "
-"product business."
+"Mark if this product is Concrete, managed separately according to Concrete product "
+"business."
 msgstr ""
-"Đánh dấu nếu sản phẩm này là Bê tông, quản lý riêng theo nghiệp vụ sản phẩm "
-"Bê tông."
+"Đánh dấu nếu sản phẩm này là Bê tông, quản lý riêng theo nghiệp vụ sản phẩm Bê tông."
 
 #. module: max_betong_product
 #: model:ir.model,name:max_betong_product.model_product_template
@@ -48,21 +52,10 @@ msgstr "Sản phẩm"
 #: model:ir.model.fields,help:max_betong_product.field_product_product__concrete_lifespan
 #: model:ir.model.fields,help:max_betong_product.field_product_template__concrete_lifespan
 msgid ""
-"Time concrete can be used after mixing (in minutes). Used for quality "
-"control and delivery coordination. If transport or waiting time exceeds "
-"this value, concrete quality is not guaranteed."
+"Time concrete can be used after mixing (in minutes). Used for quality control and "
+"delivery coordination. If transport or waiting time exceeds this value, concrete "
+"quality is not guaranteed."
 msgstr ""
 "Thời gian bê tông có thể sử dụng sau khi trộn (tính bằng phút)\n"
 "Dùng để kiểm soát chất lượng và điều phối giao hàng.\n"
-"Nếu thời gian vận chuyển hoặc chờ đổ vượt quá giá trị này, bê tông sẽ không "
-"đảm bảo."
-
-#. module: max_betong_product
-#: model:ir.model.constraint,message:max_betong_product.constraint_product_template_unique_concrete_product_name
-msgid "Concrete product name must be unique. Another product with the same name already exists."
-msgstr "Tên sản phẩm bê tông phải là duy nhất. Đã tồn tại sản phẩm khác có cùng tên."
-
-#. module: max_betong_product
-#: model:product.template,validation_error:max_betong_product.product_template__check_unique_concrete_product_name
-msgid "Concrete product name must be unique. Another product with the same name already exists."
-msgstr "Tên sản phẩm bê tông phải là duy nhất. Đã tồn tại sản phẩm khác có cùng tên."
+"Nếu thời gian vận chuyển hoặc chờ đổ vượt quá giá trị này, bê tông sẽ không đảm bảo."

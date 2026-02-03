@@ -80,7 +80,7 @@
 				sequence="20"/>
 
 		<menuitem id="menu_concrete_load_setting" 
-		name="Settings" 
+		name="Cài đặt"
 		parent="menu_concrete_coordination_root" 
 		sequence="100" 
 		action="action_concrete_load_config_settings"/>

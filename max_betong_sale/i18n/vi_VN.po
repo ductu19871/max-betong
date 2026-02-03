@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0-20251121\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-07 03:35+0000\n"
-"PO-Revision-Date: 2026-01-07 11:05+0700\n"
+"POT-Creation-Date: 2026-01-30 09:53+0000\n"
+"PO-Revision-Date: 2026-02-02 11:37+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -20,12 +20,12 @@ msgstr ""
 #. module: max_betong_sale
 #: model:ir.actions.report,print_report_name:max_betong_sale.report_delivery_concrete
 msgid "'Delivery Concrete - %s' % (object.name)"
-msgstr "'Delivery Concrete - %s' % (object.name)"
+msgstr ""
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
 msgid "/&gt;"
-msgstr "/&gt;"
+msgstr ""
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_picking_form_inherit_ticket_info
@@ -50,6 +50,15 @@ msgstr "Khối lượng đã chia Load"
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.mrp_production_form_view_inherit_max_betong_sale
 msgid ""
+"Are you sure you want to mark this ticket as Swap? This action will not "
+"revert to the previous state."
+msgstr ""
+"Bạn có chắc chắn muốn chuyển sang Swap? Chuyển sang Swap sẽ không thể khôi "
+"phục lại các trạng thái trước đó."
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.mrp_production_form_view_inherit_max_betong_sale
+msgid ""
 "Are you sure you want to switch on hold? Switching on hold will not revert "
 "to the previous state."
 msgstr ""
@@ -59,6 +68,7 @@ msgstr ""
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
 msgid "Are you sure you've selected the correct information above?"
 msgstr "Bạn có chắc chắn mình đã chọn đúng thông tin không?"
 
@@ -119,6 +129,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
 msgid "Cancel"
 msgstr "Hủy"
 
@@ -192,15 +203,9 @@ msgid "Concrete"
 msgstr "Bê tông"
 
 #. module: max_betong_sale
-#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_coordination_root
-msgid "Concrete Coordination"
-msgstr "Điều phối bê tông"
-
-#. module: max_betong_sale
 #: model:ir.actions.act_window,name:max_betong_sale.action_concrete_load
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__load_id
 #: model:ir.module.category,name:max_betong_sale.module_category_betong_load
-#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_load
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.res_config_settings_view_form_inherit_max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_tree
 msgid "Concrete Load"
@@ -267,6 +272,7 @@ msgstr "Cài đặt cấu hình"
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
 msgid "Confirm"
 msgstr "Xác nhận"
 
@@ -279,6 +285,11 @@ msgstr "Xác nhận chọn"
 #: model:ir.actions.act_window,name:max_betong_sale.action_wizard_confirm_fields
 msgid "Confirm Vehicle - Station"
 msgstr "Cập nhật Mã xe & Trạm của xe"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_wizard_confirm_fields_station_volumn
+msgid "Confirm Volumn - Load Station"
+msgstr "Xác nhận khối lượng - Trạm của Load"
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
@@ -309,6 +320,11 @@ msgstr "Tạo bởi"
 #: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__create_date
 msgid "Created on"
 msgstr "Ngày tạo"
+
+#. module: max_betong_sale
+#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_load_setting
+msgid "Cài đặt"
+msgstr ""
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
@@ -448,6 +464,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__incident_datetime
+msgid "Incident Recording Time"
+msgstr "Thời gian ghi nhận sự cố"
+
+#. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
 msgid "Information Load"
 msgstr "Thông tin Load"
@@ -511,6 +532,8 @@ msgstr "Mã load"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__load_station_id
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__load_station_id
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
 msgid "Load Station"
 msgstr "Trạm của Load"
@@ -527,6 +550,7 @@ msgstr "Số lượng Load"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,help:max_betong_sale.field_concrete_load__volume
+#: model:ir.model.fields,help:max_betong_sale.field_wizard_confirm_fields__volume
 msgid "Load volume must be greater than 0."
 msgstr "Khối lượng Load phải lớn hơn 0"
 
@@ -711,18 +735,23 @@ msgstr "Liên kết đến SO bơm"
 #. module: max_betong_sale
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__remix
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
-msgid "Remix & Swapped"
-msgstr "Remix & Swapped"
+msgid "Remix"
+msgstr "Remix"
 
 #. module: max_betong_sale
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__remix_swapped
 msgid "Remix&Swapped"
-msgstr "Remix & Swapped"
+msgstr "Remix"
 
 #. module: max_betong_sale
 #: model:ir.actions.report,name:max_betong_sale.report_delivery_concrete
 msgid "Report Delivery Concrete"
 msgstr "Báo cáo vận chuyển bê tông"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_workcenter__responsible_id
+msgid "Responsible"
+msgstr "Người phụ trách"
 
 #. module: max_betong_sale
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__return
@@ -819,18 +848,17 @@ msgid "Select Vehicle - Station"
 msgstr "Chọn Trạm của xe"
 
 #. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
+msgid "Select Volumn - Load Station"
+msgstr "Chọn Khối lượng - Trạm của Load"
+
+#. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
 msgid "Send"
 msgstr "Báo giá đã gửi"
 
 #. module: max_betong_sale
-#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
-msgid "Set to Draft"
-msgstr "Đặt về nháp"
-
-#. module: max_betong_sale
 #: model:ir.actions.act_window,name:max_betong_sale.action_concrete_load_config_settings
-#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_load_setting
 msgid "Settings"
 msgstr "Cài đặt"
 
@@ -877,6 +905,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__state
 msgid "Status"
 msgstr "Trạng thái"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__swap
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.mrp_production_form_view_inherit_max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
+msgid "Swap"
+msgstr "Swap"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,help:max_betong_sale.field_stock_picking__accumulated_qty
@@ -940,6 +975,12 @@ msgid "Time when moved to Dispatching status"
 msgstr "Thời điểm chuyển sang trạng thái Đang điều phối"
 
 #. module: max_betong_sale
+#: model:ir.model.fields,help:max_betong_sale.field_mrp_production__incident_datetime
+msgid "Time when ticket is on hold or completed (for analytics tracking)"
+msgstr ""
+"Thời gian Ticket chuyển on hold hoặc completed (để theo dõi phân tích)"
+
+#. module: max_betong_sale
 #: model:ir.model.fields,help:max_betong_sale.field_sale_order__volume_allocated
 msgid "Total volume from linked Loads (m³)"
 msgstr "Tổng khối lượng đã chia load (m³)"
@@ -958,6 +999,11 @@ msgstr "Trộn thử"
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
 msgid "Type to find a product..."
 msgstr "Nhập để tìm kiếm sản phẩm..."
+
+#. module: max_betong_sale
+#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_load
+msgid "Tải trọng"
+msgstr "Load"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__volume_unallocated
@@ -1023,6 +1069,7 @@ msgstr "Xe thực hiện giao bê tông."
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__volume
 #: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__volume
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__volume
 msgid "Volume"
 msgstr "Khối lượng"
 
@@ -1049,6 +1096,11 @@ msgid "Wizard Change Ticket State"
 msgstr "Cập nhật trạng thái Ticket"
 
 #. module: max_betong_sale
+#: model:ir.model,name:max_betong_sale.model_mrp_workcenter
+msgid "Work Center"
+msgstr "Khu vực sản xuất"
+
+#. module: max_betong_sale
 #: model:ir.model,name:max_betong_sale.model_mrp_workorder
 msgid "Work Order"
 msgstr "Công đoạn"
@@ -1059,3 +1111,8 @@ msgstr "Công đoạn"
 #, python-format
 msgid "volume unallocated must be greater than 0."
 msgstr "Khối lượng chưa chia load phải lớn hơn 0."
+
+#. module: max_betong_sale
+#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_coordination_root
+msgid "Điều phối bê tông"
+msgstr ""

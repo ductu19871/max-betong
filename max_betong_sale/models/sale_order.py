@@ -112,8 +112,9 @@ class SaleOrder(models.Model):
         for so in self:
             bom_id = False
             mix_note = ''
-            if so.order_line:
-                product_tmpl_id = so.order_line[0].product_template_id
+            order_line = so.order_line.filtered(lambda so: not so.display_type)
+            if order_line:
+                product_tmpl_id = order_line[0].product_template_id
                 if product_tmpl_id:
                     bom_mix_id = self.env['mrp.bom'].with_context(active_test=False).search([('product_tmpl_id','=',product_tmpl_id.id),
                                                              ('type','=','mix')],limit=1)
@@ -252,12 +253,14 @@ class SaleOrder(models.Model):
         for order in self:
             if order.has_pump:
                 note = ''
-                if order.order_line:
-                    note = f"{order.order_line[0].product_id.name} : {order.order_line[0].product_uom_qty} {order.order_line[0].product_uom.name}"
+                order_line = order.order_line.filtered(lambda so: not so.display_type)
+                if order_line:
+                    note = f"{order_line[0].product_id.name} : {order_line[0].product_uom_qty} {order_line[0].product_uom.name}"
                 order.copy(default={"sale_concrete_id": order.id,
                                     "order_line":[],
                                     "note":note,
                                     "so_type":'bom'})
+        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def action_betong_set_completed(self):
         self.write({'state':'done'})
@@ -357,7 +360,7 @@ class SaleOrder(models.Model):
     @api.constrains('order_line')
     def _check_line_concrete(self):
         for rec in self:
-            if rec.so_type =='concrete' and len(rec.order_line) > 1:
+            if rec.so_type =='concrete' and len(rec.order_line.filtered(lambda so: not so.display_type)) > 1:
                 raise ValidationError(_('Do not create two products in this type of concrete.'))
     
     @api.constrains('volume_unallocated')

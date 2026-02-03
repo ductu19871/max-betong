@@ -15,6 +15,16 @@ class WizardConfirmFields(models.TransientModel):
         string='Vehicle Station',
     )
     
+    load_station_id = fields.Many2one(
+        'mrp.workcenter',
+        string='Load Station',
+    )
+    
+    volume = fields.Float(
+        string='Volume',
+        help="Load volume must be greater than 0.",
+    )
+    
     @api.onchange('vehicle_id')
     def onchange_vehicle(self):
         self.vehicle_station_id = self.vehicle_id.station_id.id and self.vehicle_id.station_id or False
@@ -24,4 +34,11 @@ class WizardConfirmFields(models.TransientModel):
         record = self.env['concrete.load'].browse(active_id)
         record.write({'vehicle_id':self.vehicle_id.id,
                       'vehicle_station_id':self.vehicle_station_id.id})
+        return
+    
+    def action_confirm_volumn(self):
+        active_id = self.env.context.get('active_id')
+        record = self.env['concrete.load'].browse(active_id)
+        record.write({'load_station_id':self.load_station_id.id,
+                      'volume':self.volume})
         return

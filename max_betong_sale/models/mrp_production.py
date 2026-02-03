@@ -1,5 +1,3 @@
-import ast
-
 from odoo import _, models,fields, api, Command
 from odoo.tools import float_round
 from datetime import date,timedelta
@@ -62,7 +60,8 @@ class Production(models.Model):
             ('completed', 'Completed'),
             ('on_hold', 'On Hold'),
             ('dump', 'Dump'),
-            ('remix', 'Remix & Swapped'),
+            ('remix', 'Remix'),
+            ('swap', 'Swap'),
             ('cancel', 'Canceled'),
         ],
         string='Concrete State',
@@ -103,6 +102,12 @@ class Production(models.Model):
     completed_state_tracking_datetime = fields.Datetime(
         string='Completed State Tracking Time',
         readonly=True
+    )
+    
+    incident_datetime = fields.Datetime(
+        string='Incident Recording Time',
+        readonly=True,
+        help='Time when ticket is on hold or completed (for analytics tracking)'
     )
     
     distance_km = fields.Float(
@@ -231,10 +236,13 @@ class Production(models.Model):
     def action_loading(self):
         self.write({'loading_datetime':fields.Datetime.now(),
                    'state_concrete':'loading'})
+        self.vehicle_id.state_concrete='loading'
+        self.sale_order_id.action_betong_set_dispatching()
     
     def action_loaded(self):
         self.write({'loaded_datetime':fields.Datetime.now(),
                    'state_concrete':'loaded'})
+        self.vehicle_id.state_concrete='loaded'
         
     def action_leave(self):
         self.write({'leave_datetime':fields.Datetime.now(),
@@ -257,50 +265,14 @@ class Production(models.Model):
 
     def action_on_hold(self):
         self.write({'state_concrete':'on_hold'})
-        self.vehicle_id.write({'state_concrete':'on_hold'})
 
-    def action_concrete_remix(self):
-        self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
-        action['name'] = 'Concrete Remix'
-        action['context'] = {
-            'default_mo_type': 'concrete',
-            'default_company_id': self.company_id.id or self.env.company.id,
-            'default_ticket_on_hold_id': self.id,
-            'default_ticket_on_hold_type': 'remix',
-            'default_load_id': self.load_id.id,
-            'default_product_id': self.product_id.id
-        }
-        action['views'] = [(self.env.ref('max_betong_sale.mrp_production_ticket_on_hold_wizard_view').id, 'form')]
-        action['target'] = 'new'
-        return action
-
-    def action_concrete_swap(self):
-        self.ensure_one()
-        action = self.action_concrete_remix()
-        action['name'] = 'Concrete Swap'
-        action['context']['default_ticket_on_hold_type'] = 'swap'
-        return action
-
-    def action_view_on_hold_ticket(self):
-        if not self.on_hold_ticket_type:
-            raise ValidationError(_("No on hold ticket found."))
-        action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
-        action['views'] = [(False, 'form')]
-        action['res_id'] = self.on_hold_ticket_id.id
-        return action
-
-    def action_view_ticket_on_hold(self):
-        if not self.ticket_on_hold_type:
-            raise ValidationError(_("No ticket on hold found."))
-        action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
-        action['views'] = [(False, 'form')]
-        action['res_id'] = self.ticket_on_hold_id.id
-        return action
+    def action_swap(self):
+        self.write({'state_concrete': 'swap'})
 
     def _get_avg_mixing_time(self):
         tickets = self.search([
-            ('state', '=', 'completed'),
+            ('mo_type', '=', 'concrete'),
+            ('state_concrete', '=', 'completed'),
             ('loading_datetime', '!=', False),
             ('loaded_datetime', '!=', False),
         ])
@@ -316,7 +288,8 @@ class Production(models.Model):
     
     def _get_avg_waiting_time(self, avg_mixing_time):
         tickets = self.search([
-            ('state', '=', 'completed'),
+            ('mo_type', '=', 'concrete'),
+            ('state_concrete', '=', 'completed'),
             ('assigned_datetime', '!=', False),
             ('leave_datetime', '!=', False),
         ])
@@ -400,6 +373,12 @@ class Production(models.Model):
                 for record in self:
                     if not getattr(record, datetime_field, False):
                         vals[datetime_field] = fields.Datetime.now()
+            
+            # Set incident_datetime for on_hold or completed states
+            if new_state in ('on_hold', 'completed', 'dump', 'remix', 'swap'):
+                for record in self:
+                    if not record.incident_datetime:
+                        vals['incident_datetime'] = fields.Datetime.now()
         
         result = super().write(vals)
         if 'state' in vals:

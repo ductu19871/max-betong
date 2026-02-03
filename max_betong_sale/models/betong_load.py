@@ -12,12 +12,14 @@ class ConcreteLoad(models.Model):
     name = fields.Char(string='Load Code', readonly=True)
     volume = fields.Float(
         string='Volume',
-        help="Load volume must be greater than 0."
+        help="Load volume must be greater than 0.",
+        readonly=True
     )
     load_station_id = fields.Many2one(
         'mrp.workcenter',
         string='Load Station',
         required=True,
+        readonly=True,
         help="The station handling this Load, inherited from the Sale Order.\n"
              "Automatically assigned when creating Load from SO.\n"
              "Users may change it manually from available stations."

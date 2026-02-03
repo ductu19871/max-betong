@@ -315,7 +315,8 @@ class ConcreteDashboard(models.AbstractModel):
             'completed': _('Completed'),
             'on_hold': _('On Hold'),
             'dump': _('Dump'),
-            'remix': _('Remix & Swapped'),
+            'remix': _('Remix'),
+            'swap': _('Swap'),
             'cancel': _('Cancelled'),
         }
         
@@ -485,15 +486,24 @@ class ConcreteDashboard(models.AbstractModel):
 
     @api.model
     def delete_load(self, load_id):
+        """Delete a single load (kept for backward compatibility)"""
+        return self.delete_loads([load_id])
+    
+    @api.model
+    def delete_loads(self, load_ids):
+        """Delete multiple loads"""
         if not self._check_permission('delete'):
             return {'success': False, 'error': _('You do not have permission to delete load')}
         
-        load = self.env['concrete.load'].browse(load_id)
-        if not load.exists():
-            return {'success': False, 'error': _('Load not found')}
+        if not load_ids:
+            return {'success': False, 'error': _('No loads selected')}
+        
+        loads = self.env['concrete.load'].browse(load_ids)
+        if not loads.exists():
+            return {'success': False, 'error': _('Loads not found')}
         
         try:
-            load.unlink()
+            loads.unlink()
             return {'success': True}
         except Exception as e:
             return {'success': False, 'error': str(e)}

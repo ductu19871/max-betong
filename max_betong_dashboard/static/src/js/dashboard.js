@@ -24,6 +24,8 @@ const FULLSCREEN_LIMIT = 20;
 
 const PROGRESS_COLUMNS = new Set(['assigned', 'loading', 'loaded', 'leave', 'arrived', 'unloading', 'return', 'completed']);
 
+const TIME_CALC_COLUMNS = new Set(['concrete_lifetime', 'wait_time', 'delivery_time']);
+
 const SORTABLE_COLUMNS = {
     tickets: { name: true, delivery_address: true, sale_order: true, product: true, mix_note: true, station: true, volume: true, vehicle: true, eta: true, state: true },
     loads: { name: true, delivery_address: true, sale_order: true, product: true, mix_note: true, station: true, volume: true },
@@ -72,6 +74,9 @@ const DEFAULT_COLUMNS = {
         { key: 'unloading', label: 'Unloading', visible: true, width: 80, order: 16 },
         { key: 'return', label: 'Return', visible: true, width: 80, order: 17 },
         { key: 'completed', label: 'Completed', visible: true, width: 80, order: 18 },
+        { key: 'concrete_lifetime', label: 'TG Sống BT', visible: true, width: 100, order: 19 },
+        { key: 'wait_time', label: 'TG Chờ Trạm', visible: true, width: 100, order: 20 },
+        { key: 'delivery_time', label: 'TG Giao Hàng', visible: true, width: 100, order: 21 },
     ],
     orders: [
         { key: 'stt', label: 'No.', visible: true, width: 60, order: 0 },
@@ -781,7 +786,14 @@ export class ConcreteDashboard extends Component {
     // ===== Selection Handlers =====
     
     selectOrder(orderId) {
-        this.state.selectedOrderId = orderId === this.state.selectedOrderId ? null : orderId;
+        const wasSelected = this.state.selectedOrderId === orderId;
+        this.state.selectedOrderId = wasSelected ? null : orderId;
+        
+        // Clear selected loads when changing order selection
+        if (!wasSelected) {
+            this.state.selectedLoads = [];
+        }
+        
         this.state.loads.page = 1;
         this.loadLoads();
     }
@@ -852,6 +864,12 @@ export class ConcreteDashboard extends Component {
         if (!this.state.permissions.can_delete) {
             return;
         }
+        
+        // Only show context menu if the clicked row is selected
+        if (!this.isLoadSelected(loadId)) {
+            return;
+        }
+        
         event.preventDefault();
         event.stopPropagation();
         this.state.contextMenu = {
@@ -865,7 +883,9 @@ export class ConcreteDashboard extends Component {
     getContextMenuItems() {
         const items = [];
         
-        if (this.state.permissions.can_delete) {
+        // Only show "Delete Load" if the context menu loadId is selected
+        const contextLoadId = this.state.contextMenu.loadId;
+        if (this.state.permissions.can_delete && contextLoadId && this.isLoadSelected(contextLoadId)) {
             items.push({
                 label: _t('Delete Load'),
                 icon: 'fa fa-trash',
@@ -884,28 +904,61 @@ export class ConcreteDashboard extends Component {
     }
 
     async confirmDeleteLoad() {
-        const loadId = this.state.contextMenu.loadId;
+        // Get fresh state at the moment of click
+        const currentSelectedLoads = [...this.state.selectedLoads];
+        const contextLoadId = this.state.contextMenu.loadId;
+        
+        // Build list of loads to delete from current state
+        let loadIds = [];
+        
+        // If there are selected loads, use them
+        if (currentSelectedLoads.length > 0) {
+            loadIds = [...currentSelectedLoads];
+        } 
+        // Otherwise, if context menu has a loadId and it's selected, use it
+        else if (contextLoadId && this.isLoadSelected(contextLoadId)) {
+            loadIds = [contextLoadId];
+        }
+        
+        if (loadIds.length === 0) {
+            this.notification.add(_t("Please select at least one Load to delete"), { type: "warning" });
+            this.state.contextMenu.show = false;
+            return;
+        }
+        
+        const message = loadIds.length === 1
+            ? _t('Are you sure you want to delete this Load? The volume will be returned to the unallocated volume of the SO.')
+            : _t('Are you sure you want to delete {count} Loads? The volume will be returned to the unallocated volume of the SO.').replace('{count}', loadIds.length);
+        
+        // Store loadIds in closure to use fresh state
+        const loadIdsToDelete = [...loadIds];
+        
         this.state.confirmModal = {
             show: true,
-            title: _t('Confirm Delete Load'),
-            message: _t('Are you sure you want to delete this Load? The volume will be returned to the unallocated volume of the SO.'),
-            action: async () => await this.deleteLoad(loadId)
+            title: loadIdsToDelete.length === 1 ? _t('Confirm Delete Load') : _t('Confirm Delete Loads'),
+            message: message,
+            action: async () => await this.deleteLoads(loadIdsToDelete)
         };
         this.state.contextMenu.show = false;
     }
 
-    async deleteLoad(loadId) {
+    async deleteLoads(loadIds) {
         try {
-            const result = await this.rpc("/concrete/dashboard/delete_load", { load_id: loadId });
+            const result = await this.rpc("/concrete/dashboard/delete_loads", { load_ids: loadIds });
             if (result.success) {
-                this.notification.add(_t("Load deleted successfully"), { type: "success" });
+                const count = loadIds.length;
+                const message = count === 1 
+                    ? _t("Load deleted successfully")
+                    : _t("{count} loads deleted successfully").replace('{count}', count);
+                this.notification.add(message, { type: "success" });
+                this.state.selectedLoads = [];
                 await Promise.all([this.loadOrders(), this.loadLoads()]);
             } else {
-                this.notification.add(result.error || _t("Failed to delete load"), { type: "danger" });
+                this.notification.add(result.error || _t("Failed to delete loads"), { type: "danger" });
             }
         } catch (error) {
-            console.error("Error deleting load:", error);
-            this.notification.add(_t("Failed to delete load"), { type: "danger" });
+            console.error("Error deleting loads:", error);
+            this.notification.add(_t("Failed to delete loads"), { type: "danger" });
         }
         this.closeConfirmModal();
     }
@@ -1172,6 +1225,43 @@ export class ConcreteDashboard extends Component {
         });
     }
 
+    calcTimeDiffMinutes(startStr, endStr) {
+        if (!startStr || !endStr) return 0;
+        const start = new Date(startStr);
+        const end = new Date(endStr);
+        const diffMs = end - start;
+        if (diffMs < 0) return 0;
+        const minutes = Math.round(diffMs / 60000);
+        return minutes;
+    }
+
+    getTicketTimeCalc(ticket, colKey) {
+        if (colKey === 'concrete_lifetime') {
+            // TG Sống BT: Không yêu cầu state = 'completed'
+            return this.calcTimeDiffMinutes(ticket.arrived_datetime, ticket.unloading_datetime);
+        }
+        if (colKey === 'wait_time') {
+            // TG Chờ Trạm: Chỉ tính cho tickets đã completed
+            if (ticket.state !== 'completed') return 0;
+            return this.calcTimeDiffMinutes(ticket.assigned_datetime, ticket.leave_datetime);
+        }
+        if (colKey === 'delivery_time') {
+            // TG Giao Hàng: Chỉ tính cho tickets đã completed
+            if (ticket.state !== 'completed') return 0;
+            return this.calcTimeDiffMinutes(ticket.leave_datetime, ticket.completed_datetime);
+        }
+        return 0;
+    }
+
+    formatMinutes(val) {
+        if (!val || val <= 0) return '';
+        return `${val} phút`;
+    }
+
+    isTimeCalcColumn(key) {
+        return TIME_CALC_COLUMNS.has(key);
+    }
+
     // ===== Translation Helpers =====
     
     t(key) {
@@ -1248,6 +1338,9 @@ export class ConcreteDashboard extends Component {
             'Unloading': _t('Unloading'),
             'Return': _t('Return'),
             'Completed': _t('Completed'),
+            'TG Sống BT': _t('TG Sống BT'),
+            'TG Chờ Trạm': _t('TG Chờ Trạm'),
+            'TG Giao Hàng': _t('TG Giao Hàng'),
             'Allocated Volume (m³)': _t('Allocated Volume (m³)'),
             'KL đã chia Load (m³)': _t('Allocated Volume (m³)'),
             'Unallocated Volume (m³)': _t('Unallocated Volume (m³)'),
