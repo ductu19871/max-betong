@@ -2,12 +2,12 @@
 <odoo>
     <!-- Client Action for Dashboard -->
     <record id="action_concrete_tag_dashboard" model="ir.actions.client">
-        <field name="name">Điều phối bê tông</field>
+        <field name="name">Concrete Dispatching</field>
         <field name="tag">concrete_dashboard</field>
     </record>
     <!-- Sub Menus -->
     <menuitem id="menu_concrete_dashboard"
-              name="Phiếu giao hàng"
+              name="Tickets"
               parent="max_betong_sale.menu_concrete_coordination_root"
               action="action_concrete_tag_dashboard"
               sequence="1"

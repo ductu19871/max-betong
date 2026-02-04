@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 
 class WizardChangeState(models.TransientModel):
     _inherit = 'wizard.change.state'
+    _description = 'Wizard change state'
     
     state_ticket = fields.Selection(
         selection=[
