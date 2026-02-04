@@ -251,9 +251,9 @@ class Production(models.Model):
     def action_confirm(self):
         res = super().action_confirm()
         self.assigned_datetime = fields.Datetime.now()
-        tickets_on_hold = self.ticket_on_hold_id
-        tickets_on_hold.state_concrete = 'remix'
-        tickets_on_hold.vehicle_id.state_concrete = 'not_available'
+        self.filtered(lambda t: t.ticket_on_hold_type == 'remix').ticket_on_hold_id.state_concrete = 'remix'
+        self.filtered(lambda t: t.ticket_on_hold_type == 'swap').ticket_on_hold_id.state_concrete = 'swap'
+        self.load_id.filtered(lambda l: l.state != 'completed').action_set_completed()
         return res
 
     def action_open_concrete_ticket_form(self):
@@ -291,7 +291,7 @@ class Production(models.Model):
         return action
 
     def action_view_on_hold_ticket(self):
-        if not self.on_hold_ticket_type:
+        if not self.on_hold_ticket_id:
             raise ValidationError(_("No on hold ticket found."))
         action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
         action['views'] = [(False, 'form')]
@@ -299,13 +299,14 @@ class Production(models.Model):
         return action
 
     def action_view_ticket_on_hold(self):
-        if not self.ticket_on_hold_type:
+        if not self.ticket_on_hold_id:
             raise ValidationError(_("No ticket on hold found."))
         action = self.env["ir.actions.actions"]._for_xml_id('max_betong_sale.action_concrete_ticket')
         action['views'] = [(False, 'form')]
         action['res_id'] = self.ticket_on_hold_id.id
         return action
 
+    # NOT USED
     def action_swap(self):
         self.write({'state_concrete': 'swap'})
 

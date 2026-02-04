@@ -14,12 +14,6 @@
 			            class="oe_stat_button"
 			            invisible="state_concrete not in('loading','loaded','leave','arrived','unloading','return') or mo_type !='concrete'"
 			            confirm="Are you sure you want to switch on hold? Switching on hold will not revert to the previous state."/>
-			    <button name="action_swap"
-			            string="Swap"
-			            type="object"
-			            class="oe_stat_button"
-			            invisible="state_concrete not in('loading','loaded','leave','arrived','unloading','return') or mo_type !='concrete'"
-			            confirm="Are you sure you want to mark this ticket as Swap? This action will not revert to the previous state."/>
 			   <button string="Update State"
 		        		class="btn btn-primary"
 		        		type="action" name="%(max_betong_sale.action_wizard_change_state_ticket)d"
@@ -83,15 +77,14 @@
 				        class="oe_stat_button"
 				        icon="fa-ticket"
 				        invisible="not on_hold_ticket_id">
-					<span invisible="on_hold_ticket_type != 'remix'">Ticket On Hold Remix</span>
-					<span invisible="on_hold_ticket_type != 'swap'">Ticket On Hold Swap</span>
+					Refer to
 				</button>
 				<button name="action_view_ticket_on_hold"
 				        type="object"
 				        class="oe_stat_button"
 				        icon="fa-ticket"
 				        invisible="not ticket_on_hold_id">
-					On Hold Ticket
+					Refer from
 				</button>
 			</div>
 
