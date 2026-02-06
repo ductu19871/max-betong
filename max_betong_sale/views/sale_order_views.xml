@@ -190,7 +190,13 @@
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="so_type"/>
+                    <field name="so_type" column_invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='amount_total']" position="before">
+                    <field name="product_id" optional="show"/>
+                    <field name="volume" optional="show"/>
+                    <field name="partner_shipping_id" optional="show"/>
                 </xpath>
             </field>
         </record>

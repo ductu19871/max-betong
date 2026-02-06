@@ -251,6 +251,12 @@ msgid "Concrete Products"
 msgstr "Sản phẩm bê tông"
 
 #. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_sale_order__product_id
+#: model:ir.model.fields,help:max_betong_sale.field_sale_order__product_id
+msgid "Concrete Products"
+msgstr "Sản phẩm"
+
+#. module: max_betong_sale
 #: model:ir.actions.act_window,name:max_betong_sale.product_concrete_bill_of_material_action
 msgid "Concrete Bill of Material"
 msgstr "Danh mục vật tư bê tông"

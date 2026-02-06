@@ -17,7 +17,7 @@
                 </xpath>
 
                 <xpath expr="//group[@name='order_details']" position="inside">
-                    <field name="commitment_date" invisible="so_type not in ['concrete', 'bom']" required="so_type in ['concrete', 'bom']"/>
+                    <field name="commitment_date" invisible="so_type not in ['concrete', 'bom']" required="so_type in ['concrete', 'bom']" readonly="so_type == 'concrete' and state in ['dispatching', 'done']"/>
                 </xpath>
 
                 <xpath expr="//field[@name='validity_date']" position="attributes">
