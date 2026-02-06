@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_sale_order_form_custom_betong">
+            <field name="name">sale.order.form.custom.betong</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">9999</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='optional_products']" position="attributes">
+                    <attribute name="invisible" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                </xpath>
+
+                <xpath expr="//page[@name='customer_signature']" position="attributes">
+                    <attribute name="invisible" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                </xpath>
+
+                <xpath expr="//group[@name='order_details']" position="inside">
+                    <field name="commitment_date" invisible="so_type not in ['concrete', 'bom']" required="so_type in ['concrete', 'bom']"/>
+                </xpath>
+
+                <xpath expr="//field[@name='validity_date']" position="attributes">
+                    <attribute name="invisible" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_order'][1]" position="attributes">
+                    <attribute name="readonly" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='date_order'][2]" position="attributes">
+                    <attribute name="readonly" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='validity_date']" position="attributes">
+                    <attribute name="readonly" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                    <attribute name="invisible" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}" readonly="state in ['cancel', 'planned', 'dispatching', 'done'] or locked" invisible="so_type not in ['concrete', 'bom']"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_sale_order_form_inherit_xb_job_costing_management">
+            <field name="name">sale.order.form.inherit.xb_job_costing_management</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="xb_job_costing_management.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='contract_details']" position="attributes">
+                    <attribute name="invisible" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_sale_order_tree_inherit_sh_register_payment_so_po">
+            <field name="name">sale.order.tree.inherit.sh_register_payment_so_po</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sh_register_payment_so_po.view_order_form_inherited_payment_advance"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sh_account_payment_ids']/parent::page" position="attributes">
+                    <attribute name="invisible" add="so_type in ['concrete', 'bom']" separator=" or "/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_sale_order_tree_inherit_max_betong_sale">
+            <field name="name">sale.order.tree.inherit.max_betong_sale</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="max_betong_sale.sale_order_tree_view_betong"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='so_type']" position="after">
+                    <field name="concrete_station_id" column_invisible="context.get('default_so_type') not in ['concrete', 'bom']" optional="show"/>
+                    <field name="sale_concrete_id" column_invisible="context.get('default_so_type') != 'bom'" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
