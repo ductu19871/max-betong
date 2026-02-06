@@ -49,7 +49,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_sale_order_form_inherit_xb_job_costing_management">
+        <!-- <record model="ir.ui.view" id="view_sale_order_form_inherit_xb_job_costing_management">
             <field name="name">sale.order.form.inherit.xb_job_costing_management</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="xb_job_costing_management.view_order_form"/>
@@ -58,9 +58,9 @@
                     <attribute name="invisible" add="so_type in ['concrete', 'bom']" separator=" or "/>
                 </xpath>
             </field>
-        </record>
+        </record> -->
 
-        <record model="ir.ui.view" id="view_sale_order_tree_inherit_sh_register_payment_so_po">
+        <!-- <record model="ir.ui.view" id="view_sale_order_tree_inherit_sh_register_payment_so_po">
             <field name="name">sale.order.tree.inherit.sh_register_payment_so_po</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sh_register_payment_so_po.view_order_form_inherited_payment_advance"/>
@@ -69,7 +69,7 @@
                     <attribute name="invisible" add="so_type in ['concrete', 'bom']" separator=" or "/>
                 </xpath>
             </field>
-        </record>
+        </record> -->
 
         <record model="ir.ui.view" id="view_sale_order_tree_inherit_max_betong_sale">
             <field name="name">sale.order.tree.inherit.max_betong_sale</field>

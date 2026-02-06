@@ -178,10 +178,9 @@
                     <xpath expr="//field[@name='partner_id']" position="before">
                         <field name="blanket_order_id" readonly="1" invisible="not blanket_order_id" />
                     </xpath>
-                    <!-- check priority, if sale_blanket_order load before this module, view gone wrong, product_beton not exists yet -->
-                    <xpath expr="//field[@class='product_beton']" position="attributes">
+                    <!-- <xpath expr="//field[@class='product_beton']" position="attributes">
                         <attribute name="readonly">not product_updatable or blanket_order_line</attribute>
-                    </xpath>
+                    </xpath> -->
                     <xpath expr="//field[@name='partner_id']" position="attributes">
                         <attribute name="readonly">state in ['cancel', 'sale'] or (blanket_order_id and so_type == 'concrete')</attribute>
                     </xpath>
