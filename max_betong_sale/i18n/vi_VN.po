@@ -152,6 +152,13 @@ msgid "Cannot cancel SO when there are tickets in Completed status."
 msgstr "Không thể hủy đơn đặt hàng khi có ticket ở trạng thái Đã hoàn thành."
 
 #. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:353
+#, python-format
+msgid "Pumb Orders are already completed and cannot be modified."
+msgstr "Đơn Bơm đã hoàn tất và không thể thay đổi."
+
+#. module: max_betong_sale
 #: model:ir.actions.act_window,name:max_betong_sale.action_wizard_change_state_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 msgid "Change State"
