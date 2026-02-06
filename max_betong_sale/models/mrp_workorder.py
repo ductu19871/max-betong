@@ -8,8 +8,8 @@ class MrpWorkorder(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if vals.get('state') == 'progress':
-            for wo in self:
+        for wo in self:
+            if vals.get('state') == 'progress' or wo.state == 'progress':
                 production = wo.production_id
                 if production.state == 'progress' and production.mo_type == 'concrete':
                     production.action_loading()

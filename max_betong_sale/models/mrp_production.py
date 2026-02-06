@@ -3,6 +3,17 @@ from odoo.tools import float_round
 from datetime import date,timedelta
 from odoo.exceptions import UserError, ValidationError
 
+state_to_datetime_field = {
+                'assigned': 'assigned_datetime',
+                'loading': 'loading_datetime',
+                'loaded': 'loaded_datetime',
+                'leave': 'leave_datetime',
+                'arrived': 'arrived_state_tracking_datetime',
+                'unloading': 'unloading_state_tracking_datetime',
+                'return': 'return_state_tracking_datetime',
+                'completed': 'completed_state_tracking_datetime',
+            }
+
 class Production(models.Model):
     _inherit = 'mrp.production'
     
@@ -236,13 +247,13 @@ class Production(models.Model):
     def action_loading(self):
         self.write({'loading_datetime':fields.Datetime.now(),
                    'state_concrete':'loading'})
-        self.vehicle_id.state_concrete='loading'
+        self.vehicle_id.write({'state_concrete':'loading'})
         self.sale_order_id.action_betong_set_dispatching()
     
     def action_loaded(self):
         self.write({'loaded_datetime':fields.Datetime.now(),
                    'state_concrete':'loaded'})
-        self.vehicle_id.state_concrete='loaded'
+        self.vehicle_id.write({'state_concrete':'loaded'})
         
     def action_leave(self):
         self.write({'leave_datetime':fields.Datetime.now(),
@@ -250,7 +261,7 @@ class Production(models.Model):
 
     def action_confirm(self):
         res = super().action_confirm()
-        self.assigned_datetime = fields.Datetime.now()
+        self.write({'assigned_datetime':fields.Datetime.now()})
         self.filtered(lambda t: t.ticket_on_hold_type == 'remix').ticket_on_hold_id.state_concrete = 'remix'
         self.filtered(lambda t: t.ticket_on_hold_type == 'swap').ticket_on_hold_id.state_concrete = 'swap'
         self.load_id.filtered(lambda l: l.state != 'completed').action_set_completed()
@@ -371,9 +382,18 @@ class Production(models.Model):
                 seconds=total_seconds
             )
     
-    @api.model
-    def create(self, vals):
-        today = fields.Date.context_today(self)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals['name'] = self.get_name_sequene()
+        new_tickets = super().create(vals_list)
+        for ticket in new_tickets:
+            if ticket.ticket_on_hold_id:
+                ticket.ticket_on_hold_id.on_hold_ticket_id = ticket
+        return new_tickets
+    
+    def get_name_sequene(self, today=None):
+        today = today or fields.Date.context_today(self)
         date_str = today.strftime('%Y%m%d')
         seq = self.env['ir.sequence'].next_by_code(
             f'mrp.production.ticket.{date_str}'
@@ -389,44 +409,28 @@ class Production(models.Model):
             seq = self.env['ir.sequence'].next_by_code(
                 f'mrp.production.ticket.{date_str}'
             )
-        vals['name'] = seq
-        mo = super().create(vals)
-        for ticket in mo:
-            if ticket.ticket_on_hold_id:
-                ticket.ticket_on_hold_id.on_hold_ticket_id = ticket
-        return mo
+
+        return seq
 
     def write(self, vals):
-        if 'state_concrete' in vals and self.mo_type == 'concrete':
-            new_state = vals['state_concrete']
-            state_to_datetime_field = {
-                'assigned': 'assigned_datetime',
-                'loading': 'loading_datetime',
-                'loaded': 'loaded_datetime',
-                'leave': 'leave_datetime',
-                'arrived': 'arrived_state_tracking_datetime',
-                'unloading': 'unloading_state_tracking_datetime',
-                'return': 'return_state_tracking_datetime',
-                'completed': 'completed_state_tracking_datetime',
-            }
-            if new_state in state_to_datetime_field:
-                datetime_field = state_to_datetime_field[new_state]
-                for record in self:
-                    if not getattr(record, datetime_field, False):
-                        vals[datetime_field] = fields.Datetime.now()
-            
-            # Set incident_datetime for on_hold or completed states
-            if new_state in ('on_hold', 'completed', 'dump', 'remix', 'swap'):
-                for record in self:
+        res = super().write(vals)
+        if 'state_concrete' in vals:
+            for record in self.filtered(lambda r: r.mo_type == 'concrete'):
+                new_state = record.state_concrete
+                datetime_field = state_to_datetime_field.get(new_state)
+                if datetime_field and not getattr(record, datetime_field):
+                    record.write({
+                        datetime_field: fields.Datetime.now()
+                    })
+                if new_state in ('on_hold', 'completed', 'dump', 'remix', 'swap'):
                     if not record.incident_datetime:
-                        vals['incident_datetime'] = fields.Datetime.now()
-        
-        result = super().write(vals)
+                        record.write({
+                            'incident_datetime': fields.Datetime.now()
+                        })
         if 'state' in vals:
-            for mo in self:
-                if mo.mo_type == 'concrete':
-                    mo.update_state_concrete()
-        return result
+            for record in self:
+                record.update_state_concrete()
+        return res
     
     def update_state_concrete(self):
         if self.state =='confirmed':
@@ -443,8 +447,7 @@ class Production(models.Model):
     
     def action_cancel(self):
         res = super().action_cancel()
-        for mo in self:
-            mo.state_concrete = 'cancel'
+        self.write({'state_concrete': 'cancel'})
         return res
     
     

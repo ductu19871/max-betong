@@ -149,14 +149,15 @@ export class AnalyticDashboard extends Component {
 
             // IMPORTANT: Clear data AFTER validation checks, not before
             // This prevents clearing existing data when user is still in the date picker
+            // Use empty objects instead of null to avoid Owl validation errors
             this.state.data = {
                 kpis: {},
                 stations: this.state.stations,
-                trips_per_vehicle: null,
-                return_volume: null,
-                on_time_delivery: null,
-                concrete_lifetime: null,
-                vehicle_cycle_time: null,
+                trips_per_vehicle: { data: [], labels: [], average: 0 },
+                return_volume: { percentage: 0, remix: { value: 0, color: '#1976D2' }, dump: { value: 0, color: '#FB8C00' }, swap: { value: 0, color: '#43A047' } },
+                on_time_delivery: 0,
+                concrete_lifetime: { data: [], labels: [], average: 0 },
+                vehicle_cycle_time: { average: 0, wait_time: [], delivery_time: [], labels: [] },
                 debug: null,
             };
 
@@ -196,15 +197,15 @@ export class AnalyticDashboard extends Component {
                 return;
             }
 
-            // Normalization
+            // Normalization - use empty objects instead of null to avoid Owl validation errors
             const normalizedData = {
                 kpis: data.kpis || {},
                 stations: data.stations || [],
-                trips_per_vehicle: data.trips_per_vehicle || null,
-                return_volume: data.return_volume || null,
-                on_time_delivery: data.on_time_delivery !== undefined ? data.on_time_delivery : null,
-                concrete_lifetime: data.concrete_lifetime || null,
-                vehicle_cycle_time: data.vehicle_cycle_time || null,
+                trips_per_vehicle: data.trips_per_vehicle || { data: [], labels: [], average: 0 },
+                return_volume: data.return_volume || { percentage: 0, remix: { value: 0, color: '#1976D2' }, dump: { value: 0, color: '#FB8C00' }, swap: { value: 0, color: '#43A047' } },
+                on_time_delivery: data.on_time_delivery !== undefined ? data.on_time_delivery : 0,
+                concrete_lifetime: data.concrete_lifetime || { data: [], labels: [], average: 0 },
+                vehicle_cycle_time: data.vehicle_cycle_time || { average: 0, wait_time: [], delivery_time: [], labels: [] },
                 debug: data.debug || null,
             };
 
