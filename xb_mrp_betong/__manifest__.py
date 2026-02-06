@@ -6,8 +6,8 @@
     "author": "Xboss",
     "depends": [
         "max_betong_sale",
-        "xb_job_costing_management",
-        'sh_register_payment_so_po'
+        # "xb_job_costing_management",
+        # 'sh_register_payment_so_po'
     ],
     "data": [
         'views/sale_order_views.xml',

@@ -18,7 +18,7 @@
         'views/menu_views.xml'
     ],
     'external_dependencies': {
-        'bin': ['libreoffice'],
+        # 'bin': ['libreoffice'],
         'python': ['docx-mailmerge']
     },
     'auto_install': True,
