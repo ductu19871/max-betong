@@ -199,13 +199,19 @@ class ConcreteDashboard(models.AbstractModel):
         all_vehicles = self.env['fleet.vehicle'].search(domain)
         total_count = len(all_vehicles)
         
-        available_vehicles = all_vehicles.filtered(lambda v: v.state_concrete == 'available')
-        other_vehicles = all_vehicles.filtered(lambda v: v.state_concrete != 'available')
+        # Define priority for vehicle states on the dashboard
+        priority_map = {
+            'available': 1,      # Available
+            'completed': 2,      # Completed
+            'not_available': 3,  # Not Available
+            'broken': 4,         # Broken
+        }
         
-        sorted_available = available_vehicles.sorted(key=lambda v: v.write_date or v.create_date)
-        sorted_other = other_vehicles.sorted(key=lambda v: v.write_date or v.create_date)
-        
-        sorted_vehicles = sorted_available + sorted_other
+        # Sort vehicles: Primary sort by state priority (as defined in priority_map),
+        # secondary sort by last update date (write_date) or creation date (create_date)
+        sorted_vehicles = all_vehicles.sorted(
+            key=lambda v: (priority_map.get(v.state_concrete, 99), v.write_date or v.create_date)
+        )
         
         paginated_vehicles = sorted_vehicles[offset:offset + limit]
         
@@ -324,6 +330,10 @@ class ConcreteDashboard(models.AbstractModel):
         PROGRESS_STATES = ['assigned', 'loading', 'loaded', 'leave', 'arrived', 'unloading', 'return', 'completed']
         
         for t in tickets:
+            
+            if t.vehicle_id.state_concrete != 'completed':
+                continue
+
             state_concrete = t.state_concrete or 'draft'
             
             # Find the highest index state that was passed
