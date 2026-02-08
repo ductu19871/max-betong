@@ -157,6 +157,7 @@ class Production(models.Model):
 
     ticket_on_hold_reason = fields.Text(related='ticket_on_hold_id.on_hold_reason', string='Ticket On Hold Reason', readonly=False)
     on_hold_ticket_type = fields.Selection(related='on_hold_ticket_id.ticket_on_hold_type')
+    is_invisible_dashboard = fields.Boolean(string="Invisible Dashboard")
 
     @api.constrains('ticket_on_hold_type', 'ticket_on_hold_id')
     def _check_ticket_on_hold_type(self):

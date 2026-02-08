@@ -284,7 +284,8 @@ class ConcreteDashboard(models.AbstractModel):
         search = params.get('search', '')
         domain = [
             ('mo_type', '=', 'concrete'),
-            ('state_concrete', '!=', 'draft')
+            ('state_concrete', '!=', 'draft'),
+            ('is_invisible_dashboard', '=', False)
         ]
         
         station_id = params.get('station_id')
@@ -330,10 +331,6 @@ class ConcreteDashboard(models.AbstractModel):
         PROGRESS_STATES = ['assigned', 'loading', 'loaded', 'leave', 'arrived', 'unloading', 'return', 'completed']
         
         for t in tickets:
-            
-            if t.vehicle_id.state_concrete != 'completed':
-                continue
-
             state_concrete = t.state_concrete or 'draft'
             
             # Find the highest index state that was passed
@@ -583,6 +580,10 @@ class ConcreteDashboard(models.AbstractModel):
                 return {'success': False, 'error': _('Cannot change to Not Available from current state')}
         
         try:
+            if vehicle.state_concrete == 'completed' and state_concrete != 'completed':
+                ticket_ids = self.env['mrp.production'].search([('vehicle_id', '=', vehicle_id), ('state_concrete', '=', 'completed')])
+                if ticket_ids:
+                    ticket_ids[-1].write({'is_invisible_dashboard': True})
             vehicle.write({'state_concrete': state_concrete})
             return {'success': True}
         except Exception as e:
