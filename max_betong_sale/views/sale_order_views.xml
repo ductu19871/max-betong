@@ -124,7 +124,7 @@
                 </button>
 			 </div>
 			 <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom_qty']" position="attributes">
-	           		<attribute name="readonly">parent.state == 'done'</attribute>
+	           		<attribute name="readonly" add="parent.state == 'done'" separator=" or "/>
              </xpath>
 			 <xpath expr="//field[@name='order_line']//tree//field[@name='qty_delivered']" position="attributes">
 	           		<attribute name="column_invisible">(parent.state not in ('planned','dispatching','done') and parent.so_type =='concrete') or (parent.state !='sale' and parent.so_type !='concrete')</attribute>
