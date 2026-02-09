@@ -21,11 +21,11 @@ export class OnTimeListRenderer extends ListRenderer {
 
         aggregates.is_late = {
             help: _t("Is Late (%)"),
-            value: list.records.length > 0 ? `${is_late_data / list.records.length}%` : '0%',
+            value: list.records.length > 0 ? `${is_late_data.length / list.records.length * 100}%` : '0%',
         };
         aggregates.is_on_time = {
             help: _t("Is On Time (%)"),
-            value: list.records.length > 0 ? `${is_on_time_data / list.records.length}%` : '0%',
+            value: list.records.length > 0 ? `${is_on_time_data.length / list.records.length * 100}%` : '0%',
         };
         return aggregates;
     }
