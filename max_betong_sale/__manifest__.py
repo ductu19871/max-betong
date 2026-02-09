@@ -36,6 +36,11 @@
         'report/template.xml',
         
     ],
+    'assets': {
+        'web.assets_backend': [
+            'max_betong_sale/static/src/js/**/*'
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,

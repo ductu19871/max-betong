@@ -4,6 +4,7 @@
     <field name="model">mrp.production</field>
     <field name="arch" type="xml">
         <tree string="Concrete ETA Report"
+              js_class="on_time_list_view"       
               decoration-danger="eta_status == 'late'"
               decoration-success="eta_status == 'on_time'">
             <!-- Thời gian tạo -->
