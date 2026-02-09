@@ -1108,3 +1108,25 @@ msgstr "Khối lượng chưa chia load phải lớn hơn 0."
 #: model:ir.ui.menu,name:max_betong_sale.menu_concrete_coordination_root
 msgid "Điều phối bê tông"
 msgstr ""
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"- The %s order has not been allocated or the allocation is insufficient."
+msgstr ""
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "- The %s order has tickets that are not yet completed."
+msgstr ""
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "- The %s order still has loads without any assigned tickets."
+msgstr ""

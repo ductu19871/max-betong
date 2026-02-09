@@ -1134,3 +1134,25 @@ msgstr ""
 #: model:ir.ui.menu,name:max_betong_sale.menu_view_resource_search_mrp
 msgid "Work Centers"
 msgstr "Trạm"
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"- The %s order has not been allocated or the allocation is insufficient."
+msgstr "- Đơn hàng %s chưa được chia hoặc chia load chưa đủ."
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "- The %s order has tickets that are not yet completed."
+msgstr "- Đơn hàng %s có ticket chưa được hoàn thành."
+
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid "- The %s order still has loads without any assigned tickets."
+msgstr "- Đơn hàng %s vẫn còn load chưa assign ticket."

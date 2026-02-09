@@ -292,15 +292,15 @@ class SaleOrder(models.Model):
         for so in self:
             if so.so_type != 'bom':
                 if so.volume_unallocated != 0:
-                    order_waiting.append(_('- The %s order has a mismatch in the load split volume.') % so.display_name)
+                    order_waiting.append(_('- The %s order has not been allocated or the allocation is insufficient.') % so.display_name)
                     continue
-                if not so.load_ids.production_ids:
-                    order_waiting.append(_('- The %s order has no assigned concrete tickets from any loads yet.') % so.display_name)
+                if any(not mo.production_ids for mo in so.load_ids):
+                    order_waiting.append(_('- The %s order still has loads without any assigned tickets.') % so.display_name)
                     continue
                 if any(mo.state_concrete not in ['completed', 'remix', 'cancel'] for mo in so.load_ids.production_ids):
-                    order_waiting.append(_('- The %s order has concrete tickets in not completed status.') % so.display_name)
+                    order_waiting.append(_('- The %s order has tickets that are not yet completed.') % so.display_name)
         if order_waiting:
-            raise UserError(_('You still have pending tasks to complete. Please finish them before completing the order.\n%s') % '\n'.join(order_waiting))
+            raise UserError('\n'.join(order_waiting))
         self.write({'state':'done'})
     
     def action_betong_set_dispatching(self):
