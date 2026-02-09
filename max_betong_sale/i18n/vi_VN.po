@@ -1129,3 +1129,8 @@ msgstr "Khối lượng chưa chia load phải lớn hơn 0."
 #: model:ir.ui.menu,name:max_betong_sale.menu_concrete_coordination_root
 msgid "Điều phối bê tông"
 msgstr ""
+
+#. module: max_betong_sale
+#: model:ir.ui.menu,name:max_betong_sale.menu_view_resource_search_mrp
+msgid "Work Centers"
+msgstr "Trạm"

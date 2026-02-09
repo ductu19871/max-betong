@@ -199,13 +199,19 @@ class ConcreteDashboard(models.AbstractModel):
         all_vehicles = self.env['fleet.vehicle'].search(domain)
         total_count = len(all_vehicles)
         
-        available_vehicles = all_vehicles.filtered(lambda v: v.state_concrete == 'available')
-        other_vehicles = all_vehicles.filtered(lambda v: v.state_concrete != 'available')
+        # Define priority for vehicle states on the dashboard
+        priority_map = {
+            'available': 1,      # Available
+            'completed': 2,      # Completed
+            'not_available': 3,  # Not Available
+            'broken': 4,         # Broken
+        }
         
-        sorted_available = available_vehicles.sorted(key=lambda v: v.write_date or v.create_date)
-        sorted_other = other_vehicles.sorted(key=lambda v: v.write_date or v.create_date)
-        
-        sorted_vehicles = sorted_available + sorted_other
+        # Sort vehicles: Primary sort by state priority (as defined in priority_map),
+        # secondary sort by last update date (write_date) or creation date (create_date)
+        sorted_vehicles = all_vehicles.sorted(
+            key=lambda v: (priority_map.get(v.state_concrete, 99), v.write_date or v.create_date)
+        )
         
         paginated_vehicles = sorted_vehicles[offset:offset + limit]
         
@@ -278,7 +284,8 @@ class ConcreteDashboard(models.AbstractModel):
         search = params.get('search', '')
         domain = [
             ('mo_type', '=', 'concrete'),
-            ('state_concrete', '!=', 'draft')
+            ('state_concrete', '!=', 'draft'),
+            ('is_invisible_dashboard', '=', False)
         ]
         
         station_id = params.get('station_id')
@@ -573,6 +580,10 @@ class ConcreteDashboard(models.AbstractModel):
                 return {'success': False, 'error': _('Cannot change to Not Available from current state')}
         
         try:
+            if vehicle.state_concrete == 'completed' and state_concrete != 'completed':
+                ticket_ids = self.env['mrp.production'].search([('vehicle_id', '=', vehicle_id), ('state_concrete', '=', 'completed')])
+                if ticket_ids:
+                    ticket_ids[-1].write({'is_invisible_dashboard': True})
             vehicle.write({'state_concrete': state_concrete})
             return {'success': True}
         except Exception as e:
