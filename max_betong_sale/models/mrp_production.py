@@ -48,6 +48,50 @@ class Production(models.Model):
         string='Construction Site Address',
         store=True,
     )
+    partner_id = fields.Many2one(
+        related="sale_order_id.partner_id",
+        string='Khách hàng',
+        store=True,
+    )
+    driver_id = fields.Many2one(
+        related="vehicle_id.driver_id",
+        # string='Khách hàng',
+        store=True,
+    )
+
+    eta_status = fields.Selection(
+        selection=[
+            ('on_time', 'On time'),
+            ('late', 'Late'),
+        ],
+        string='ETA Status',
+        compute='_compute_eta_status',
+        store=True,
+        readonly=True,
+    )
+
+    late_minutes = fields.Integer(
+        string='Late (minutes)',
+        compute='_compute_eta_status',
+        store=True,
+        readonly=True,
+    )
+
+    @api.depends('eta', 'arrived_state_tracking_datetime')
+    def _compute_eta_status(self):
+        for rec in self:
+            if rec.eta and rec.arrived_state_tracking_datetime:
+                delta = (rec.arrived_state_tracking_datetime - rec.eta).total_seconds() / 60
+                if delta > 0:
+                    rec.late_minutes = int(delta)
+                    rec.eta_status = 'late'
+                else:
+                    rec.late_minutes = 0
+                    rec.eta_status = 'on_time'
+            else:
+                rec.late_minutes = 0
+                rec.eta_status = False
+
     vehicle_station_id = fields.Many2one(
         'mrp.workcenter',
         compute='_compute_vehicle_station_id',

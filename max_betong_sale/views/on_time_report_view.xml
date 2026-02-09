@@ -1,0 +1,66 @@
+<odoo>
+    <record id="view_mrp_production_concrete_eta_tree" model="ir.ui.view">
+    <field name="name">mrp.production.concrete.eta.tree</field>
+    <field name="model">mrp.production</field>
+    <field name="arch" type="xml">
+        <tree string="Concrete ETA Report"
+              decoration-danger="eta_status == 'late'"
+              decoration-success="eta_status == 'on_time'">
+            <!-- Thời gian tạo -->
+            <field name="loaded_datetime" string="Thời gian tạo"/>
+            <!-- SO -->
+            <field name="sale_order_id" string="Đơn hàng"/>
+            <!-- Load -->
+            <field name="load_id"/>
+            <!-- Ticket -->
+            <field name="name" string="Ticket"/>
+            <field name="partner_id"/>
+            <field name="delivery_address_id"/>
+            <!-- Công trường -->
+            <field name="delivery_address_id" string="Công trường"/>
+            <!-- Trạm -->
+            <field name="load_station_id" string="Trạm"/>
+            <!-- Xe -->
+            <field name="vehicle_id"/>
+            <!-- Tài xế -->
+            <field name="driver_id"/>
+            <!-- Sản phẩm -->
+            <field name="product_id"/>
+            <!-- Cấp phối -->
+            <field name="bom_id" string="Cấp phối"/>
+            <!-- ETA -->
+            <field name="eta"/>
+            <!-- Thời gian đến -->
+            <field name="arrived_state_tracking_datetime"
+                   string="Thời gian đến"/>
+            <field name="late_minutes"
+                   string="Trễ (phút)"
+                   sum="Tổng phút trễ"/>
+            <field name="eta_status"
+                   widget="badge"
+                   decoration-success="eta_status == 'on_time'"
+                   decoration-danger="eta_status == 'late'"/>
+
+        </tree>
+    </field>
+</record>
+
+
+
+    <record id="action_concrete_eta_report" model="ir.actions.act_window">
+        <field name="name">ETA Report</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_mrp_production_concrete_eta_tree"/>
+    </record>
+
+    <menuitem id="menu_concrete_coordination_report"
+		name="Report"
+		parent="menu_concrete_coordination_root"
+		sequence="90"/>
+
+    <menuitem id="menu_concrete_eta_report"
+              name="ETA Report"
+              parent="max_betong_sale.menu_concrete_coordination_report"
+              action="action_concrete_eta_report"/>
+</odoo>
