@@ -17,13 +17,17 @@
                     <field name="sale_pumb_ids" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='state']" position="attributes">
-	           		<attribute name="invisible">so_type == 'concrete'</attribute>
+	           		<attribute name="invisible">so_type in ['concrete','bom']</attribute>
 	           </xpath>
 	           <xpath expr="//button[@id='create_invoice_percentage']" position="attributes">
 	           		<attribute name="invisible">so_type == 'concrete' or invoice_status != 'no' or state != 'sale'</attribute>
 	           </xpath>
 	           <xpath expr="//field[@name='state']" position="after">
-	           		<field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,planned,dispatching,done" 
+                   <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,planned,done"
+	           			invisible="so_type != 'bom'"/>
+               </xpath>
+	           <xpath expr="//field[@name='state']" position="after">
+	           		<field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,planned,dispatching,done"
 	           			invisible="so_type != 'concrete'"/>
 	           </xpath>
 	           <xpath expr="//field[@name='validity_date']" position="before">
@@ -80,12 +84,12 @@
 			            string="Planned" 
 			            type="object"
 			            class="oe_stat_button"
-			            invisible="so_type != 'concrete' or state not in ['sale']"/>
+			            invisible="so_type not in ['concrete', 'bom'] or state not in ['sale']"/>
 			    <button name="action_betong_set_completed" 
 			            string="Completed" 
 			            type="object"
 			            class="oe_stat_button"
-			            invisible="so_type != 'concrete' or state not in ['planned','dispatching']"/>
+			            invisible="so_type not in ['concrete', 'bom'] or state not in ['planned','dispatching']"/>
 			    />
 			    <button name="action_betong_set_dispatching" 
 			            string="Dispatching" 
@@ -119,6 +123,9 @@
 	                invisible="so_type != 'bom' or not sale_concrete_id">
                 </button>
 			 </div>
+			 <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom_qty']" position="attributes">
+	           		<attribute name="readonly">parent.state == 'done'</attribute>
+             </xpath>
 			 <xpath expr="//field[@name='order_line']//tree//field[@name='qty_delivered']" position="attributes">
 	           		<attribute name="column_invisible">(parent.state not in ('planned','dispatching','done') and parent.so_type =='concrete') or (parent.state !='sale' and parent.so_type !='concrete')</attribute>
              </xpath>
@@ -191,7 +198,13 @@
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="so_type"/>
+                    <field name="so_type" column_invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='amount_total']" position="before">
+                    <field name="product_id" optional="show"/>
+                    <field name="volume" optional="show"/>
+                    <field name="partner_shipping_id" optional="show"/>
                 </xpath>
             </field>
         </record>

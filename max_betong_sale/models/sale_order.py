@@ -63,6 +63,14 @@ class SaleOrder(models.Model):
         help='Volume of Concrete product in the order (m³)',
         store =True
     )
+    
+    product_id = fields.Many2one(
+        'product.product',
+        string='Concrete Products',
+        compute='_compute_product_id',
+        store=True,
+        help='Concrete Products'
+    )
 
     volume_allocated = fields.Float(
         string='Allocated Volume',
@@ -106,6 +114,13 @@ class SaleOrder(models.Model):
     product_uom = fields.Many2one(related='order_line.product_uom',string='UoM',store =True)
     bom_id = fields.Many2one('mrp.bom',string='Mix',compute="compute_bom",store =True)
     mix_note = fields.Text(string='Mix Note',compute="compute_bom",store =True)
+
+    @api.constrains('commitment_date')
+    def _check_commitment_date(self):
+        for so in self:
+            if so.so_type in ['concrete']:
+                if so.commitment_date and so.commitment_date < fields.Datetime.now():
+                    raise ValidationError(_('Commitment date cannot be in the past.'))
     
     @api.depends('order_line','order_line.product_id')
     def compute_bom(self):
@@ -196,6 +211,17 @@ class SaleOrder(models.Model):
             else:
                 order.volume = 0.0
 
+    @api.depends('order_line', 'order_line.product_id', 'so_type')
+    def _compute_product_id(self):
+        for order in self:
+            order.product_id = False
+            if order.so_type == 'concrete':
+                betong_line = order.order_line.filtered(
+                    lambda l: l.product_id and l.product_id.is_concrete_product
+                )
+                if betong_line:
+                    order.product_id = betong_line[0].product_id
+
     @api.depends('load_ids', 'load_ids.volume', 'so_type')
     def _compute_volume_allocated(self):
         """Calculate total volume from linked Loads"""
@@ -246,12 +272,7 @@ class SaleOrder(models.Model):
                 'state': 'sale',
             })
             order.message_post(body=_('Order has been confirmed (no MO/DO generated)'))
-        return True
-
-    def action_betong_set_planned(self):
-        self.write({'state':'planned'})
-        for order in self:
-            if order.has_pump:
+            if order.has_pump and order.state == 'sale':
                 note = ''
                 order_line = order.order_line.filtered(lambda so: not so.display_type)
                 if order_line:
@@ -260,22 +281,27 @@ class SaleOrder(models.Model):
                                     "order_line":[],
                                     "note":note,
                                     "so_type":'bom'})
-        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
+        return True
 
+    def action_betong_set_planned(self):
+        self.write({'state':'planned'})            
+        return True
+    
     def action_betong_set_completed(self):
         order_waiting = []
-        for so in self:
-            if so.volume_unallocated != 0:
-                order_waiting.append(_('- The %s order has a mismatch in the load split volume.') % so.display_name)
-                continue
-            if not so.load_ids.production_ids:
-                order_waiting.append(_('- The %s order has no assigned concrete tickets from any loads yet.') % so.display_name)
-                continue
-            if any(mo.state_concrete not in ['completed', 'remix', 'cancel'] for mo in so.load_ids.production_ids):
-                order_waiting.append(_('- The %s order has concrete tickets in not completed status.') % so.display_name)
+        if self.so_type != 'bom':
+            for so in self:
+                if so.volume_unallocated != 0:
+                    order_waiting.append(_('- The %s order has a mismatch in the load split volume.') % so.display_name)
+                    continue
+                if not so.load_ids.production_ids:
+                    order_waiting.append(_('- The %s order has no assigned concrete tickets from any loads yet.') % so.display_name)
+                    continue
+                if any(mo.state_concrete not in ['completed', 'remix', 'cancel'] for mo in so.load_ids.production_ids):
+                    order_waiting.append(_('- The %s order has concrete tickets in not completed status.') % so.display_name)
 
-        if order_waiting:
-            raise UserError(_('You still have pending tasks to complete. Please finish them before completing the order.\n%s') % '\n'.join(order_waiting))
+            if order_waiting:
+                raise UserError(_('You still have pending tasks to complete. Please finish them before completing the order.\n%s') % '\n'.join(order_waiting))
         self.write({'state':'done'})
     
     def action_betong_set_dispatching(self):
@@ -341,7 +367,16 @@ class SaleOrder(models.Model):
             'delivery_address_id': self.partner_shipping_id.id,
             'company_id':self.company_id.id,
         }
-    
+
+    def write(self, vals):
+        if 'state' in vals and vals['state'] == 'done':
+            return super(SaleOrder, self).write(vals)
+
+        blocked = self.filtered(lambda r: r.state == 'done')
+        if blocked:
+            raise UserError(_("Pumb Orders are already completed and cannot be modified."))
+        return super(SaleOrder, self).write(vals)
+
     def action_view_load(self):
         return {
             'type': 'ir.actions.act_window',
