@@ -76,6 +76,10 @@ class Production(models.Model):
         store=True,
         readonly=True,
     )
+    is_on_time = fields.Boolean('On time', compute='_compute_eta_status',
+        store=True)
+    is_late = fields.Boolean('is late', compute='_compute_eta_status',
+        store=True)
 
     @api.depends('eta', 'arrived_state_tracking_datetime')
     def _compute_eta_status(self):
@@ -85,12 +89,18 @@ class Production(models.Model):
                 if delta > 0:
                     rec.late_minutes = int(delta)
                     rec.eta_status = 'late'
+                    rec.is_on_time = False
+                    rec.is_late = True
                 else:
                     rec.late_minutes = 0
                     rec.eta_status = 'on_time'
+                    rec.is_on_time = True
+                    rec.is_late = False
             else:
                 rec.late_minutes = 0
                 rec.eta_status = False
+                rec.is_on_time = False
+                rec.is_late = False
 
     vehicle_station_id = fields.Many2one(
         'mrp.workcenter',

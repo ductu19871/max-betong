@@ -33,9 +33,15 @@
             <!-- Thời gian đến -->
             <field name="arrived_state_tracking_datetime"
                    string="Thời gian đến"/>
+            <field name="completed_state_tracking_datetime"/>
             <field name="late_minutes"
                    string="Trễ (phút)"
                    sum="Tổng phút trễ"/>
+            <field name="is_on_time"
+                   decoration-success="is_on_time == True"
+                   />
+            <field name="is_late"
+                   decoration-danger="eta_status == 'late'"/>
             <field name="eta_status"
                    widget="badge"
                    decoration-success="eta_status == 'on_time'"
@@ -52,6 +58,7 @@
         <field name="res_model">mrp.production</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="view_mrp_production_concrete_eta_tree"/>
+        <!-- <field name="search_view_id" ref="concrete_eta_report_search_view"/> -->
     </record>
 
     <menuitem id="menu_concrete_coordination_report"
