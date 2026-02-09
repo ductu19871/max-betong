@@ -1127,6 +1127,7 @@ export class ConcreteDashboard extends Component {
             if (result.success) {
                 this.notification.add(_t("State updated successfully"), { type: "success" });
                 await this.loadVehicles();
+                await this.loadTickets();
             } else {
                 this.notification.add(result.error || _t("Failed to update state"), { type: "danger" });
             }

@@ -17,7 +17,7 @@
 
 			<menuitem id="menu_sale_order_pumb"
 			name="Pumb Orders"
-			parent="menu_sale_order"
+			parent="max_betong_sale.menu_sale_order"
 			action="max_betong_sale.action_pumb_orders"
 			sequence="20"/>
 
@@ -79,10 +79,22 @@
 				action="max_betong_sale.product_concrete_bill_of_material_action"
 				sequence="20"/>
 
+		<menuitem id="menu_mrp_concrete_configuration"
+			parent="menu_concrete_coordination_root" 
+            name="Configuration"
+            groups="mrp.group_mrp_manager"
+            sequence="100"/>
+
 		<menuitem id="menu_concrete_load_setting" 
-		name="Cài đặt"
-		parent="menu_concrete_coordination_root" 
-		sequence="100" 
-		action="action_concrete_load_config_settings"/>
+			name="Cài đặt"
+			parent="menu_mrp_concrete_configuration" 
+			sequence="10" 
+			action="action_concrete_load_config_settings"/>
+
+		<menuitem id="menu_view_resource_search_mrp"
+			parent="menu_mrp_concrete_configuration"
+			action="mrp.mrp_workcenter_action"
+			groups="mrp.group_mrp_routings"
+			sequence="20"/>
 
 </odoo>
