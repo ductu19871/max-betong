@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Max Betong Sale',
-    'version': '17.0.1.0.2',
+    'version': '17.0.1.0.3',
     'category': 'Sale',
     'summary': 'Sale',
     'description': """

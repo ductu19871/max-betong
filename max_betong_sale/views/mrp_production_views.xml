@@ -22,12 +22,12 @@
 		        		string="Remix"
 		        		type="object"
 		        		class="oe_stat_button"
-		        		invisible="state_concrete != 'on_hold' or mo_type !='concrete' or on_hold_ticket_id"/>
+		        		invisible="state_concrete not in ['on_hold','remix'] or mo_type !='concrete' or on_hold_ticket_id"/>
 				<button name="action_concrete_swap"
 		        		string="Swap"
 		        		type="object"
 		        		class="oe_stat_button"
-		        		invisible="state_concrete != 'on_hold' or mo_type !='concrete' or on_hold_ticket_id"/>
+		        		invisible="state_concrete not in ['on_hold','swap'] or mo_type !='concrete' or on_hold_ticket_id"/>
 			</xpath>
 			<xpath expr="//field[@name='product_id']" position="before">
                 <field name="mo_type" invisible="1"/>
@@ -103,6 +103,14 @@
 			</xpath>
 			<xpath expr="//field[@name='move_raw_ids']/tree" position="inside">
 				<field name="ticket_on_hold_id" column_invisible="1"/>
+			</xpath>
+			<xpath expr="//field[@name='product_qty']" position="attributes">
+				<attribute name="readonly" add="ticket_on_hold_id" separator=" or "/>
+                <attribute name="force_save">1</attribute>
+			</xpath>
+			<xpath expr="//field[@name='product_uom_id'][@groups='uom.group_uom']" position="attributes">
+				<attribute name="readonly" add="ticket_on_hold_id" separator=" or "/>
+				<attribute name="force_save">1</attribute>
 			</xpath>
         </field>
     </record>
