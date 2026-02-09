@@ -29,22 +29,21 @@
         <field name="arch" type="xml">
             <form string="Load">
 				<header>
-                    <button string="Assign Ticket" type="object" name="action_assign_ticket"
+                    <button string="Assign Ticket" 
+                            type="action" 
+                            name="%(action_wizard_confirm_fields)d"
                             invisible="state == 'completed'"
+                            context="{'default_vehicle_station_id': load_station_id}"
                             groups="max_betong_sale.group_betong_load_manager"/>
+
+
                     <!--<button string="Set to Draft" type="object" name="action_set_draft"
                             invisible="state =='draft'"/>-->
                     <button
 				        name="%(action_wizard_confirm_fields_station_volumn)d"
 				        string="Load Station"
 				        type="action"
-				        class="oe_highlight"
-				        invisible="state == 'completed'"
-				    />
-                    <button
-				        name="%(action_wizard_confirm_fields)d"
-				        string="Load Vehicle"
-				        type="action"
+                        context="{'default_volume': volume}"
 				        class="oe_highlight"
 				        invisible="state == 'completed'"
 				    />

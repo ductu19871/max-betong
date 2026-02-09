@@ -6,14 +6,14 @@
         <field name="arch" type="xml">
             <form string="Select Vehicle - Station">
                 <group>
-                    <field name="vehicle_id" required='1' domain="[('state_concrete','=','available')]"/>
-                    <field name="vehicle_station_id" required='1'/>
+                    <field name="vehicle_id" required='1' domain="[('state_concrete','=','available'), ('station_id','=',vehicle_station_id)]"/>
+                    <field name="vehicle_station_id" required='1' readonly="1" force_save="1"/>
                 </group>
 
                 <footer>
                     <button
-                        name="action_confirm"
-                        string="Confirm"
+                        name="action_assign_ticket"
+                        string="Assign Ticket"
                         type="object"
                         class="btn-primary"
                         confirm="Are you sure you've selected the correct information above?"

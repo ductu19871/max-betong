@@ -25,15 +25,12 @@ class WizardConfirmFields(models.TransientModel):
         help="Load volume must be greater than 0.",
     )
     
-    @api.onchange('vehicle_id')
-    def onchange_vehicle(self):
-        self.vehicle_station_id = self.vehicle_id.station_id.id and self.vehicle_id.station_id or False
-    
-    def action_confirm(self):
+    def action_assign_ticket(self):
         active_id = self.env.context.get('active_id')
         record = self.env['concrete.load'].browse(active_id)
         record.write({'vehicle_id':self.vehicle_id.id,
                       'vehicle_station_id':self.vehicle_station_id.id})
+        record.action_assign_ticket()
         return
     
     def action_confirm_volumn(self):
