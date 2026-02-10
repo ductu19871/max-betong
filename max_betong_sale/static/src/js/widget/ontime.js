@@ -13,10 +13,10 @@ export class OntimeComponent extends Component {
         let record = this.props.record;
 
         if (fieldName === 'is_late' && record.data.is_late) {
-            return 'Is Late';
+            return 'Late';
         }
         if (fieldName === 'is_on_time' && record.data.is_on_time) {
-            return 'Is On Time';
+            return 'On Time';
         }
         return '';
     }
