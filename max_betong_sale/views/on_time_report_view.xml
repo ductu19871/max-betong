@@ -39,9 +39,11 @@
                    string="Trễ (phút)"
                    sum="Tổng phút trễ"/>
             <field name="is_on_time"
+                   widget="ontime"
                    decoration-success="is_on_time == True"
                    />
             <field name="is_late"
+                   widget="ontime"
                    decoration-danger="eta_status == 'late'"/>
             <field name="eta_status"
                    widget="badge"
