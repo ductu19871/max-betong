@@ -113,7 +113,7 @@ class ConcreteLoad(models.Model):
         if not vals.get('bom_id'):
             raise UserError(_("BOM not found."))
         production_id = self.env['mrp.production'].create(vals)
-        production_id.action_confirm()
+        production_id.with_context(from_assign_ticket=True).action_confirm()
         self.write({'state':'completed'})
         self._create_delivery_order(production_id)
 

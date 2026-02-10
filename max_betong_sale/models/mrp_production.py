@@ -263,12 +263,14 @@ class Production(models.Model):
     def action_confirm(self):
         res = super().action_confirm()
         self.write({'assigned_datetime':fields.Datetime.now()})
+        self.load_id.filtered(lambda l: l.state != 'completed').action_set_completed()
+
         self.filtered(lambda t: t.ticket_on_hold_type == 'remix').ticket_on_hold_id.state_concrete = 'remix'
         self.filtered(lambda t: t.ticket_on_hold_type == 'swap').ticket_on_hold_id.state_concrete = 'swap'
-        self.load_id.filtered(lambda l: l.state != 'completed').action_set_completed()
         self.ticket_on_hold_id.do_ids.filtered(lambda p: p.state != 'cancel').action_cancel()
-        for ticket in self.filtered(lambda t: t.load_id and not t.do_ids):
-            ticket.load_id._create_delivery_order(ticket)
+        if not self._context.get('from_assign_ticket'):
+            for ticket in self.filtered(lambda t: t.load_id and not t.do_ids):
+                ticket.load_id._create_delivery_order(ticket)
         return res
 
     def action_open_concrete_ticket_form(self):
