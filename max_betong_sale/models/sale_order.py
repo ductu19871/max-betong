@@ -309,7 +309,11 @@ class SaleOrder(models.Model):
         
         if self.state not in allowed_states:
             errors.append(
-                _("Cannot cancel SO in state '%s'. Allowed: Báo giá, Báo giá đã gửi, Đơn bán hàng, Đã lên kế hoạch.") % self.state
+                _(
+                    "Cannot cancel the Sales Order in state '%s'. "
+                    "Allowed states: Quotation, Quotation Sent, Sales Order, Planned."
+                ) % self.state
+
             )
             return False, errors, ""
         
@@ -369,15 +373,9 @@ class SaleOrder(models.Model):
     def _cancel_all_loads(self):
         """Cancel all loads of SO"""
         self.ensure_one()
-        
         loads_to_cancel = self.load_ids.filtered(lambda l: l.state != 'cancelled')
-        
-        for load in loads_to_cancel:
-            load.write({'state': 'cancelled'})
-            # load.message_post(
-            #     body=_("Load cancelled automatically due to SO cancellation.")
-            # )
-    
+        loads_to_cancel.write({'state': 'cancelled'})
+       
     def action_cancel(self):
         """Override cancel to add custom logic"""
         for order in self:
