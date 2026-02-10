@@ -54,7 +54,10 @@
                </xpath>
 	           <xpath expr="//button[@name='action_cancel']" position="attributes">
 	           		<attribute name="invisible">so_type == 'concrete'</attribute>
-	           	           </xpath>
+	           </xpath>
+               <xpath expr="//button[@name='action_draft']" position="attributes">
+	           		<attribute name="invisible" add="so_type == 'concrete'" separator=" or "/>
+	           </xpath>
                <xpath expr="//field[@name='commitment_date']" position="attributes">
 	           		<attribute name="readonly">so_type == 'concrete' and state not in ['draft', 'sent', 'sale', 'planned']</attribute>
 	           </xpath>
