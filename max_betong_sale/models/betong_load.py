@@ -227,12 +227,8 @@ class ConcreteLoad(models.Model):
             errors = load._can_cancel_validation()
             if errors:
                 raise ValidationError('\n'.join(errors))
-            
-            load.write({'state': 'cancelled'})
-            # load.message_post(
-            #     body=_("Load cancelled automatically due to all tickets cancelled.")
-            # )
-    
+        self.write({'state': 'cancelled'})
+         
     def _check_and_auto_cancel(self):
         """Auto cancel Load if all related tickets are cancelled"""
         self.ensure_one()
