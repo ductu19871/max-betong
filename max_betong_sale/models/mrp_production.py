@@ -449,9 +449,81 @@ class Production(models.Model):
         if self.state == 'loading':
             self.sale_order_id.state = 'dispatching'
     
+    def _can_cancel_validation(self):
+        """Validate if Ticket can be cancelled
+        Returns: list of error messages (empty if valid)
+        """
+        self.ensure_one()
+        errors = []
+        
+        # Chỉ cho phép cancel khi: Draft hoặc Assigned (confirmed)
+        valid_states = ['draft', 'confirmed']
+        valid_concrete_states = ['draft', 'assigned']
+        
+        if self.mo_type == 'concrete':
+            if self.state not in valid_states:
+                errors.append(
+                    _("Cannot cancel ticket in state '%s'. Only Draft/Assigned allowed.") % self.state
+                )
+            if self.state_concrete not in valid_concrete_states:
+                errors.append(
+                    _("Cannot cancel ticket in concrete state '%s'.") % self.state_concrete
+                )
+        
+        return errors
+    
+    def _cancel_related_delivery_orders(self):
+        """Cancel all related Delivery Orders"""
+        self.ensure_one()
+        
+        for picking in self.do_ids:
+            if picking.state not in ('done', 'cancel'):
+                try:
+                    picking.action_cancel()
+                    picking.message_post(
+                        body=_("DO cancelled automatically due to Ticket cancellation.")
+                    )
+                except Exception as e:
+                    raise ValidationError(
+                        _("Cannot cancel DO %s: %s") % (picking.name, str(e))
+                    )
+    
     def action_cancel(self):
+        """Override Odoo's action_cancel to add custom logic"""
+        # Validate trước khi cancel (nếu không phải force cancel từ SO)
+        force_cancel = self.env.context.get('force_cancel_from_so', False)
+        
+        if not force_cancel:
+            for mo in self:
+                if mo.mo_type == 'concrete':
+                    errors = mo._can_cancel_validation()
+                    if errors:
+                        raise ValidationError('\n'.join(errors))
+        
+        # Gọi super để cancel theo chuẩn Odoo
         res = super().action_cancel()
-        self.write({'state_concrete': 'cancel'})
+        
+        # Custom logic sau khi cancel
+        for mo in self.filtered(lambda m: m.mo_type == 'concrete'):
+            # 1. Update state_concrete
+            mo.state_concrete = 'cancel'
+            
+            # 2. Cancel tất cả DO liên quan
+            mo._cancel_related_delivery_orders()
+            
+            # 3. Chuyển vehicle sang Not Available
+            if mo.vehicle_id:
+                mo.vehicle_id.write({'state_concrete': 'not_available'})
+            
+            # 4. Cancel Load nếu tất cả tickets đã cancelled
+            if mo.load_id:
+                mo.load_id._check_and_auto_cancel()
+            
+            # Log message
+            mo.message_post(
+                body=_("Ticket cancelled. Related DOs cancelled, Vehicle set to Not Available.")
+            )
+        
         return res
     
     

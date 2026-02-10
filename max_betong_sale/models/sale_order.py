@@ -127,9 +127,8 @@ class SaleOrder(models.Model):
         for so in self:
             bom_id = False
             mix_note = ''
-            order_line = so.order_line.filtered(lambda so: not so.display_type)
-            if order_line:
-                product_tmpl_id = order_line[0].product_template_id
+            if so.order_line:
+                product_tmpl_id = so.order_line[0].product_template_id
                 if product_tmpl_id:
                     bom_mix_id = self.env['mrp.bom'].with_context(active_test=False).search([('product_tmpl_id','=',product_tmpl_id.id),
                                                              ('type','=','mix')],limit=1)
@@ -222,13 +221,15 @@ class SaleOrder(models.Model):
                 if betong_line:
                     order.product_id = betong_line[0].product_id
 
-    @api.depends('load_ids', 'load_ids.volume', 'so_type')
+    @api.depends('load_ids', 'load_ids.volume', 'load_ids.state', 'so_type')
     def _compute_volume_allocated(self):
-        """Calculate total volume from linked Loads"""
+        """Calculate total volume from linked Loads (excluding cancelled)"""
         for order in self:
             order.volume_allocated = 0.0
             if order.so_type == 'concrete':
-                order.volume_allocated = sum(order.load_ids.mapped('volume'))
+                # Only count loads that are NOT cancelled
+                active_loads = order.load_ids.filtered(lambda l: l.state != 'cancelled')
+                order.volume_allocated = sum(active_loads.mapped('volume'))
             else:
                 order.volume_allocated = 0.0
 
@@ -247,20 +248,6 @@ class SaleOrder(models.Model):
             self.trial_mix = False
             self.has_pump = False
             self.related_pump_so_id = False
-
-    def action_cancel(self):
-        for order in self:
-            if order.so_type == 'concrete':
-                if order.state == 'dispatching':
-                    if order.ticket_ids:
-                        mo = self.env['mrp.production'].search([('sale_order_id','=',order.id)])
-                        mo_completed = mo.filtered(lambda m: m.state_concrete == 'completed')
-                        if mo_completed:
-                            raise ValidationError(_('Cannot cancel SO when there are MOs in Completed status.'))
-                        mo_dump_and_remix = mo.filtered(lambda m: m.state_concrete in ['dump', 'remix'])
-                        if mo_dump_and_remix:
-                            raise ValidationError(_('Cannot cancel SO when there are MOs in Dump/Remix status.'))
-        return super().action_cancel()
             
     def action_confirm(self):
         betong_orders = self.filtered(lambda o: o.so_type == 'concrete')
@@ -305,21 +292,111 @@ class SaleOrder(models.Model):
     
     def action_betong_set_dispatching(self):
         self.write({'state':'dispatching'})
-
+    
+    def _can_cancel_so_validation(self):
+        """Validate if SO can be cancelled
+        Returns: (can_cancel: bool, errors: list, warning_msg: str)
+        """
+        self.ensure_one()
+        errors = []
+        warning = ""
+        
+        if self.so_type != 'concrete':
+            return True, [], ""
+        
+        # Các trạng thái được phép cancel
+        allowed_states = ['draft', 'sent', 'sale', 'planned']
+        
+        if self.state not in allowed_states:
+            errors.append(
+                _("Cannot cancel SO in state '%s'. Allowed: Báo giá, Báo giá đã gửi, Đơn bán hàng, Đã lên kế hoạch.") % self.state
+            )
+            return False, errors, ""
+        
+        # Kiểm tra tickets completed
+        if self.state == 'planned':
+            all_tickets = self.load_ids.production_ids
+            completed_tickets = all_tickets.filtered(
+                lambda t: t.state_concrete == 'completed'
+            )
+            if completed_tickets:
+                errors.append(
+                    _("Cannot cancel: %s ticket(s) already completed: %s") % (
+                        len(completed_tickets),
+                        ', '.join(completed_tickets.mapped('name'))
+                    )
+                )
+            
+            # Cảnh báo sẽ cancel tickets và loads
+            tickets_to_cancel = all_tickets.filtered(
+                lambda t: t.state_concrete != 'cancel'
+            )
+            loads_to_cancel = self.load_ids.filtered(
+                lambda l: l.state != 'cancelled'
+            )
+            
+            if tickets_to_cancel or loads_to_cancel:
+                warning = (
+                    _("Warning: Cancelling this SO will also cancel:\n"
+                      "- %s Ticket(s)\n"
+                      "- %s Load(s)\n"
+                      "- Related Delivery Orders\n"
+                      "- Vehicles will be set to Not Available") % (
+                        len(tickets_to_cancel),
+                        len(loads_to_cancel)
+                    )
+                )
+        
+        return len(errors) == 0, errors, warning
+    
+    def _cancel_all_tickets(self):
+        """Cancel all tickets của SO"""
+        self.ensure_one()
+        
+        tickets_to_cancel = self.load_ids.production_ids.filtered(
+            lambda t: t.state != 'cancel' and t.state_concrete != 'cancel'
+        )
+        
+        for ticket in tickets_to_cancel:
+            try:
+                if ticket.state != 'cancel':
+                    ticket.with_context(force_cancel_from_so=True).action_cancel()
+            except Exception as e:
+                raise ValidationError(
+                    _("Error cancelling ticket %s: %s") % (ticket.name, str(e))
+                )
+    
+    def _cancel_all_loads(self):
+        """Cancel all loads of SO"""
+        self.ensure_one()
+        
+        loads_to_cancel = self.load_ids.filtered(lambda l: l.state != 'cancelled')
+        
+        for load in loads_to_cancel:
+            load.write({'state': 'cancelled'})
+            # load.message_post(
+            #     body=_("Load cancelled automatically due to SO cancellation.")
+            # )
+    
     def action_cancel(self):
+        """Override cancel to add custom logic"""
         for order in self:
-            if order.so_type != 'concrete':
-                continue
-            if order.state == 'dispatching':
-                if order.ticket_ids:
-                    completed_tickets = order.ticket_ids.filtered(lambda t: t.state == 'completed')
-                    if completed_tickets:
-                        raise ValidationError(_('Cannot cancel SO when there are tickets in Completed status.'))
-                    valid_states = ['dum', 'remix_swapped']
-                    if not all(t.state in valid_states for t in order.ticket_ids):
-                        raise ValidationError(_('Can only cancel SO when all tickets are in Dum/Remix&Swapped status.'))
+            if order.so_type == 'concrete':
+                # Validate
+                can_cancel, errors, warning = order._can_cancel_so_validation()
+                if not can_cancel:
+                    raise ValidationError('\n'.join(errors))
+                
+                # Cancel logic dựa vào state
+                if order.state == 'planned':
+                    # Cancel tất cả tickets trước
+                    order._cancel_all_tickets()
+                    
+                    # Sau đó cancel tất cả loads
+                    order._cancel_all_loads()
+        
+        # Gọi super để cancel SO
         return super().action_cancel()
-
 
     def _check_ticket_loading_and_update_state(self):
         """Check tickets and auto-transition to Dispatching if there's a Loading ticket"""
