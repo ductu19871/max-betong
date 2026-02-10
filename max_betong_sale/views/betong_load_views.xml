@@ -32,7 +32,7 @@
                     <button string="Assign Ticket" 
                             type="action" 
                             name="%(action_wizard_confirm_fields)d"
-                            invisible="state == 'completed'"
+                            invisible="state in ('completed', 'cancelled')"
                             context="{'default_vehicle_station_id': load_station_id}"
                             groups="max_betong_sale.group_betong_load_manager"/>
 
@@ -45,9 +45,9 @@
 				        type="action"
                         context="{'default_volume': volume}"
 				        class="oe_highlight"
-				        invisible="state == 'completed'"
+				        invisible="state in ('completed', 'cancelled')"
 				    />
-                    <field name="state" widget="statusbar" statusbar_visible="draft,completed"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,completed,cancelled"/>
                 </header>
                 <sheet>
 					<div name="button_box" >
@@ -103,6 +103,7 @@
                 <field name="vehicle_station_id"/>
                 <filter string="Draft" name="filter_draft" domain="[('state','=','draft')]"/>
                 <filter string="Completed" name="filter_completed" domain="[('state','=','completed')]"/>
+                <filter string="Cancelled" name="filter_cancelled" domain="[('state','=','cancelled')]"/>
                 <group expand="0" string="Group By">
 					<filter name="groupby_sale_order_id" string="Sale order" context="{'group_by': 'sale_order_id'}"/>
 					<filter name="groupby_load_station_id" string="Load Station" context="{'group_by': 'load_station_id'}"/>

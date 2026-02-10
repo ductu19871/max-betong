@@ -54,7 +54,7 @@
                </xpath>
 	           <xpath expr="//button[@name='action_cancel']" position="attributes">
 	           		<attribute name="invisible">so_type == 'concrete'</attribute>
-	           </xpath>
+	           	           </xpath>
                <xpath expr="//field[@name='commitment_date']" position="attributes">
 	           		<attribute name="readonly">so_type == 'concrete' and state not in ['draft', 'sent', 'sale', 'planned']</attribute>
 	           </xpath>
@@ -63,7 +63,9 @@
 	           </xpath>
 	           <xpath expr="//button[@name='action_cancel']" position="after">
 	           		<button name="action_cancel" type="object" string="Cancel" 
-	           		invisible="state not in ['sale', 'planned', 'dispatching'] or not id or locked or so_type != 'concrete'" data-hotkey="x"/>
+                    invisible="state not in ('draft', 'sent', 'sale', 'planned') or not id or locked or so_type != 'concrete'" 
+                    confirm="Are you sure you want to cancel this Sale Order? For Planned orders, all related Tickets, Loads and DOs will be cancelled."
+	           		data-hotkey="x"/>
 	           </xpath>
 	           <xpath expr="//group[@name='note_group']//field[@name='note']" position="before">
 	           		<label for="volume" invisible="so_type != 'concrete'"/>

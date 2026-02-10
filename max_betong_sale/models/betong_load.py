@@ -57,6 +57,7 @@ class ConcreteLoad(models.Model):
         [
             ('draft', 'Draft'),
             ('completed', 'Completed'),
+            ('cancelled', 'Cancelled'),
         ],
         string='Status',
         default='draft',
@@ -192,7 +193,70 @@ class ConcreteLoad(models.Model):
             'res_model': 'mrp.production',
             'view_mode': 'tree,form',
             'domain': [('id', 'in', self.production_ids.ids)],
-        } 
+        }
+    
+    def _can_cancel_validation(self):
+        """Validate if Load can be cancelled
+        Returns: list of error messages (empty if valid)
+        """
+        self.ensure_one()
+        errors = []
+        
+        # Load chỉ được cancel từ Ticket, không từ Load trực tiếp
+        # Kiểm tra tất cả tickets liên quan đã cancelled
+        tickets = self.production_ids
+        non_cancelled_tickets = tickets.filtered(
+            lambda t: t.state_concrete != 'cancel'
+        )
+        
+        if non_cancelled_tickets:
+            errors.append(
+                _("Cannot cancel Load: %s ticket(s) not yet cancelled: %s") % (
+                    len(non_cancelled_tickets),
+                    ', '.join(non_cancelled_tickets.mapped('name'))
+                )
+            )
+        
+        return errors
+    
+    def action_cancel_from_ticket(self):
+        """Cancel Load when all related tickets are cancelled
+        This method should only be called from Ticket cancel logic
+        """
+        for load in self:
+            errors = load._can_cancel_validation()
+            if errors:
+                raise ValidationError('\n'.join(errors))
+            
+            load.write({'state': 'cancelled'})
+            # load.message_post(
+            #     body=_("Load cancelled automatically due to all tickets cancelled.")
+            # )
+    
+    def _check_and_auto_cancel(self):
+        """Auto cancel Load if all related tickets are cancelled"""
+        self.ensure_one()
+        
+        # Skip if already cancelled or being cancelled from load level
+        if self.state == 'cancelled':
+            return
+        
+        # Don't auto-cancel if we're in a force cancel from load context
+        if self.env.context.get('force_cancel_from_load'):
+            return
+        
+        all_tickets = self.production_ids
+        if not all_tickets:
+            return
+        
+        # Check tất cả tickets đều cancelled
+        all_cancelled = all(
+            ticket.state_concrete == 'cancel' 
+            for ticket in all_tickets
+        )
+        
+        if all_cancelled:
+            self.action_cancel_from_ticket() 
         
         
         
