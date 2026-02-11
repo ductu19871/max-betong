@@ -1,5 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import float_compare
 
 
 class StockMove(models.Model):
@@ -18,7 +19,12 @@ class StockMove(models.Model):
     @api.constrains('product_id', 'product_uom_qty')
     def _check_ticket_on_hold_line(self):
         for line in self.filtered('ticket_on_hold_id'):
-            if line.product_id != line.ticket_on_hold_id.product_id or line.product_uom_qty != line.ticket_on_hold_id.product_qty:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if (
+                line.product_id != line.ticket_on_hold_id.product_id
+                or
+                float_compare(line.product_uom_qty, line.ticket_on_hold_id.product_qty, precision_digits=precision) != 0
+            ):
                 raise ValidationError(_(
                     "You cannot change the product or quantity of a component line %s of ticket on hold as it would impact the ticket on hold production" % line.product_id.display_name
                 ))
