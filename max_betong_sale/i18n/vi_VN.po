@@ -1338,4 +1338,28 @@ msgstr "Ghi chú"
 msgid "On Hold Reason"
 msgstr "Lý do sự cố"
 
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__waiting_at_plant_minutes
+msgid "Waiting at Plant (min)"
+msgstr "Waiting at Plant (phút)"
 
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__trip_cycle_time_minutes
+msgid "Trip Cycle Time (min)"
+msgstr "Trip Cycle Time (phút)"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__full_cycle_time_minutes
+msgid "Full Cycle Time (min)"
+msgstr "Full Cycle Time (phút)"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.cycle_time_report_tree_view
+msgid "Trip Completion time"
+msgstr "Thời gian xe hoàn tất chuyến"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_cycle_time_report
+#: model:ir.ui.menu,name:max_betong_sale.menu_cycle_time_report
+msgid "Cycle Time Report"
+msgstr "Phân tích chi tiết thời gian di chuyển"

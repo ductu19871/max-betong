@@ -178,6 +178,25 @@ class Production(models.Model):
         store=True)
     is_late = fields.Boolean('Late', compute='_compute_eta_status',
         store=True)
+    
+    waiting_at_plant_minutes = fields.Float(
+        string='Waiting at Plant (min)',
+        compute='_compute_cycle_times',
+        store=True
+        )
+
+    trip_cycle_time_minutes = fields.Float(
+        string='Trip Cycle Time (min)',
+        compute='_compute_cycle_times',
+        store=True
+        )   
+
+    full_cycle_time_minutes = fields.Float(
+        string='Full Cycle Time (min)',
+        compute='_compute_cycle_times',
+        store=True
+        )
+    
 
     @api.constrains('ticket_on_hold_type', 'ticket_on_hold_id')
     def _check_ticket_on_hold_type(self):
@@ -269,6 +288,29 @@ class Production(models.Model):
                 rec.is_on_time = False
                 rec.is_late = False
 
+    def _compute_cycle_times(self):
+        for rec in self:
+            if rec.loading_datetime and rec.leave_datetime:
+                rec.waiting_at_plant_minutes = (
+                    (rec.leave_datetime - rec.loading_datetime).total_seconds() / 60
+                )
+            else:
+                rec.waiting_at_plant_minutes = 0
+
+            if rec.leave_datetime and rec.completed_state_tracking_datetime:
+                rec.trip_cycle_time_minutes = (
+                    (rec.completed_state_tracking_datetime - rec.leave_datetime).total_seconds() / 60
+                )
+            else:
+                rec.trip_cycle_time_minutes = 0
+
+            if rec.loading_datetime and rec.completed_state_tracking_datetime:
+                rec.full_cycle_time_minutes = (
+                    (rec.completed_state_tracking_datetime - rec.loading_datetime).total_seconds() / 60
+                )
+            else:
+                rec.full_cycle_time_minutes = 0
+    
     def action_view_do(self):
         return {
             'type': 'ir.actions.act_window',

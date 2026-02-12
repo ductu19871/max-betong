@@ -4,11 +4,11 @@
         <field name="model">mrp.production</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <tree string="Delivered Volume Report">
+            <tree string="Delivered Volume Report" create="false">
                 <!-- Thời gian đến công trường -->
                 <field name="arrived_state_tracking_datetime" string="Site Arrival Time"/>
                 <!-- SO -->
-                <field name="sale_order_id"/>
+                <field name="sale_order_id" options="{'no_open': False}"/>
                 <!-- Load -->
                 <field name="load_id"/>
                 <!-- Ticket -->
@@ -132,5 +132,5 @@
 
     <menuitem id="menu_concrete_coordination_report" name="Report" parent="menu_concrete_coordination_root" sequence="90"/>
 
-    <menuitem id="menu_delivered_volume_reportreport" parent="menu_concrete_coordination_report" action="action_delivered_volume_report" sequence="10"/>
+    <menuitem id="menu_delivered_volume_reportreport" parent="menu_concrete_coordination_report" action="action_delivered_volume_report" sequence="20"/>
 </odoo>

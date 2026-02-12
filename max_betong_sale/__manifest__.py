@@ -28,6 +28,7 @@
         'views/report_delivered_volume_views.xml',
         'views/report_on_time_delivery_views.xml',
         'views/report_rejected_volume_views.xml',
+        'views/report_cycle_time_views.xml',
         'wizard/change_production_qty_views.xml',
         #menu
         'views/menu_views.xml',
