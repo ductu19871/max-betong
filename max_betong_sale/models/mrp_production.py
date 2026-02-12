@@ -271,6 +271,7 @@ class Production(models.Model):
         if not self._context.get('from_assign_ticket'):
             for ticket in self.filtered(lambda t: t.load_id and not t.do_ids):
                 ticket.load_id._create_delivery_order(ticket)
+        self.ticket_on_hold_id.vehicle_id.state_concrete = 'not_available'
         return res
 
     def action_open_concrete_ticket_form(self):
