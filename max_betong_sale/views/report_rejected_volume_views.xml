@@ -1,0 +1,31 @@
+<odoo>
+    <record id="rejected_volume_report_tree_view" model="ir.ui.view">
+        <field name="name">rejected.volume.delivery.report.tree.view</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="delivered_volume_report_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='arrived_state_tracking_datetime']" position="replace">
+                <field name="return_state_tracking_datetime" string="Return Start Time"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='load_bom_id']" position="after">
+                <field name="on_hold_reason"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+    <record id="action_rejected_volume_report" model="ir.actions.act_window">
+        <field name="name">Rejected Volume Report</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rejected_volume_report_tree_view"/>
+        <field name="search_view_id" ref="view_concrete_ticket_report_search"/>
+        <field name="domain">[('state_concrete', 'in', ('dump', 'remix', 'swap'))]</field>
+        <field name="context">{'rejected_volume_report': True}</field>
+    </record>
+
+    <menuitem id="menu_rejected_volume_report" parent="menu_concrete_coordination_report" action="action_rejected_volume_report" sequence="10"/>
+</odoo>

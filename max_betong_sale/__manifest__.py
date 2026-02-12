@@ -25,6 +25,9 @@
         'views/stock_picking_view.xml',
         'views/product_views.xml',
         'views/sale_blanket_order_views.xml',
+        'views/report_delivered_volume_views.xml',
+        'views/report_on_time_delivery_views.xml',
+        'views/report_rejected_volume_views.xml',
         'wizard/change_production_qty_views.xml',
         #menu
         'views/menu_views.xml',
@@ -35,6 +38,11 @@
         'report/template.xml',
         
     ],
+    'assets': {
+        'web.assets_backend': [
+            'max_betong_sale/static/src/js/**/*'
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,

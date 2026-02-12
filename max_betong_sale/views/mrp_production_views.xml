@@ -91,6 +91,7 @@
 			 <xpath expr="//notebook" position="inside">
 				<page name="ticket_notes_page" string="Ticket Notes" invisible="mo_type != 'concrete'">
 					<group>
+						<field name="ticket_note" widget="text" />
 						<field name="on_hold_reason" string="Remix Reason" readonly="1" widget="text" invisible="not on_hold_reason"/>
 					</group>
 				</page>
