@@ -324,7 +324,14 @@ class Production(models.Model):
     def _compute_do_count(self):
         for mo in self:
             mo.do_count = len(mo.do_ids)
-    
+
+    @api.depends('state')
+    def _compute_show_lock(self):
+        super()._compute_show_lock()
+        for order in self:
+            if order.mo_type == 'concrete':
+                order.show_lock = False
+        
     def action_loading(self):
         self.write({'loading_datetime':fields.Datetime.now(),
                    'state_concrete':'loading'})
@@ -533,6 +540,26 @@ class Production(models.Model):
         res = super().action_cancel()
         self.write({'state_concrete': 'cancel'})
         return res
+    
+    def button_scrap(self):
+        self.ensure_one()
+        # res = super().button_scrap()
+        default_is_readonly_product = self.state_concrete not in ('draft', 'assigned', 'loading')
+        return {
+            'name': _('Scrap Products'),
+            'view_mode': 'form',
+            'res_model': 'stock.scrap',
+            'views': [[self.env.ref('stock.stock_scrap_form_view2').id, 'form']],
+            'type': 'ir.actions.act_window',
+            'context': {
+                        'default_production_id': self.id,
+                        'default_is_readonly_product': default_is_readonly_product,
+                        'default_product_id': self.product_id.id,
+                        'product_ids': (self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids,
+                        'default_company_id': self.company_id.id
+                        },
+            'target': 'new',
+        }
     
     
     

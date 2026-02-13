@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields,api
+from odoo import models, fields,api, _
+from odoo.exceptions import ValidationError
 
 class WizardConfirmFields(models.TransientModel):
     _name = 'wizard.confirm.fields'
@@ -39,3 +40,11 @@ class WizardConfirmFields(models.TransientModel):
         record.write({'load_station_id':self.load_station_id.id,
                       'volume':self.volume})
         return
+
+    @api.constrains('volume')
+    def _check_volume(self):
+        for rec in self:
+            if rec.volume < 10:
+                raise ValidationError(
+                    _("Volume must be greater than or equal to 10.")
+                )

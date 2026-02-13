@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 class SaleBlanketOrder(models.Model):
     _inherit = 'sale.blanket.order'
@@ -24,3 +25,11 @@ class SaleBlanketOrder(models.Model):
             return action
         else:
             return super().action_view_sale_orders()
+        
+    @api.constrains('product_uom_qty')
+    def _check_product_uom_qty(self):
+        for r in self:
+            if r.product_uom_qty < 10:
+                raise ValidationError(
+                                    _("Original product quantity  must be greater than or equal to 10.")
+                                )

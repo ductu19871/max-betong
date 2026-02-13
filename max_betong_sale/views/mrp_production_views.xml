@@ -6,6 +6,7 @@
         <field name="model">mrp.production</field>
     	<field name="mode">extension</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+		<field name="mode">primary</field>
 		<field name="priority">9999</field>
         <field name="arch" type="xml">
 			<xpath expr="//header" position="inside">
@@ -18,7 +19,7 @@
 			   <button string="Update State"
 		        		class="btn btn-primary"
 		        		type="action" name="%(max_betong_sale.action_wizard_change_state_ticket)d"
-		        		invisible="state_concrete in ('completed','on_hold','dump','remix','swap','cancel') or mo_type !='concrete'"/>
+		        		invisible="state_concrete in ('draft','assigned','loading') or mo_type != 'concrete'"/>
 				<button name="action_concrete_remix"
 		        		string="Remix"
 		        		type="object"
@@ -260,10 +261,25 @@
 			</p>
 		</field>
 	</record>
-    
+
+	<record id="action_concrete_ticket_form" model="ir.actions.act_window.view">
+		<field name="sequence" eval="2"/>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="mrp_production_form_view_inherit_max_betong_sale"/>
+		<field name="act_window_id" ref="action_concrete_ticket"/>
+	</record>
+
+	<record id="action_concrete_ticket_tree" model="ir.actions.act_window.view">
+		<field name="sequence" eval="1"/>
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="mrp_production_tree_view_inherit_max_betong_sale"/>
+		<field name="act_window_id" ref="action_concrete_ticket"/>
+	</record>
+	
     <record id="mrp_production_tree_view_inherit_max_betong_sale" model="ir.ui.view">
         <field name="name">mrp.production.tree.view.inherit.max.betong.sale</field>
         <field name="model">mrp.production</field>
+		<field name="mode">primary</field>
         <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="before">
@@ -297,5 +313,27 @@
 	        </xpath>
 	    </field>
 	 </record>
+
+	<record id="stock_scrap_form_view2_inherit" model="ir.ui.view">
+		<field name="name">stock.scrap.form2.inherit</field>
+		<field name="model">stock.scrap</field>
+		<field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='product_id']" position="after">
+				<field name="is_readonly_product"/>
+			</xpath>
+			<xpath expr="//field[@name='product_id']" position="attributes">
+				<attribute name="readonly">is_readonly_product</attribute>
+				<attribute name="force_save">1</attribute>
+			</xpath>
+
+			<xpath expr="//field[@name='scrap_qty']" position="attributes">
+				<attribute name="readonly">is_readonly_product</attribute>
+				<attribute name="force_save">1</attribute>
+			</xpath>
+
+
+		</field>
+	</record>
     
 </odoo>

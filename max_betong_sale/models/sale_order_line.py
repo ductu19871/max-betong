@@ -68,6 +68,14 @@ class SaleOrderLine(models.Model):
             if float_compare(qty_current, line.blanket_order_line.original_uom_qty, precision_digits=precision) > 0:
                 raise UserError(_('The product quantity cannot be greater than the blanket order line original quantity.'))
 
+    @api.constrains('product_uom_qty')
+    def _check_product_uom_qty(self):
+        for r in self:
+            if r.order_id.so_type == 'concrete' and r.product_uom_qty < 10:
+                raise ValidationError(
+                    _("Product quantity must be greater than or equal to 10.")
+                )
+
     def product_uom_change(self):
         concrete_so_lines = self.filtered(lambda line: line.order_id.so_type == 'concrete' and line.blanket_order_line)
         super(SaleOrderLine, concrete_so_lines.with_context(skip_blanket_find=True)).product_uom_change()
