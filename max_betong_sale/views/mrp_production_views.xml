@@ -45,7 +45,7 @@
            </xpath>
             <xpath expr="//group[1]//group[1]" position="inside">
 				<field name="mix_note"/>
-                <field name="load_id" invisible='1'/>
+                <field name="load_id" invisible='0'/>
                 <field name="sale_order_id"/>
                 <field name="vehicle_id" readonly="1" force_save="1"/>
                 <field name="vehicle_station_id"/>

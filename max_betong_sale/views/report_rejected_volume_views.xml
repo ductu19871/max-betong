@@ -6,11 +6,18 @@
         <field name="inherit_id" ref="delivered_volume_report_tree_view"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">on_time_list_view</attribute>
+            </xpath>
             <xpath expr="//tree/field[@name='arrived_state_tracking_datetime']" position="replace">
                 <field name="return_state_tracking_datetime" string="Return Start Time"/>
             </xpath>
             <xpath expr="//tree/field[@name='load_bom_id']" position="after">
                 <field name="on_hold_reason"/>
+            </xpath>
+
+            <xpath expr="//tree/field[@name='sale_order_id']" position="attributes">
+                <attribute name="widget">many2one</attribute>
             </xpath>
         </field>
     </record>
