@@ -6,7 +6,35 @@ import { useState, onWillUnmount } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 const formatters = registry.category("formatters");
 
-export class OnTimeListRenderer extends ListRenderer {
+export class ClickableListRenderer extends ListRenderer {
+    setup() {
+        super.setup();
+    }
+
+    async onCellClicked(record, column, ev) {
+        if (column.name === "name") {
+            this.env.services.action.doAction({
+                type: "ir.actions.act_window",
+                res_model: "mrp.production",
+                res_id: record.resId,
+                views: [[false, "form"]],
+            });
+            return;
+        }
+        super.onCellClicked(record, column, ev);
+    }
+
+    getCellClass(column, record) {
+        var cellClass = super.getCellClass(column, record);
+
+        if (column.name === "name") {
+            cellClass += " custom_clickable_cell";
+        }
+        return cellClass;
+    }
+}
+
+export class OnTimeListRenderer extends ClickableListRenderer {
     setup() {
         super.setup();
     }

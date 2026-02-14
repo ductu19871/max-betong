@@ -4,11 +4,11 @@
         <field name="model">mrp.production</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <tree string="Delivered Volume Report" create="false">
+            <tree string="Delivered Volume Report" create="false" js_class="clickable_list_renderer">
                 <!-- Thời gian đến công trường -->
                 <field name="arrived_state_tracking_datetime" string="Site Arrival Time"/>
                 <!-- SO -->
-                <field name="sale_order_id" options="{'no_open': False}"/>
+                <field name="sale_order_id" options="{'no_open': False}" widget="many2one"/>
                 <!-- Load -->
                 <field name="load_id"/>
                 <!-- Ticket -->

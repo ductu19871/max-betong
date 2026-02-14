@@ -41,7 +41,8 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'max_betong_sale/static/src/js/**/*'
+            'max_betong_sale/static/src/js/**/*',
+            'max_betong_sale/static/src/scss/**/*'
         ],
     },
     'installable': True,
