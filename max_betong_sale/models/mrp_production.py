@@ -196,7 +196,23 @@ class Production(models.Model):
         compute='_compute_cycle_times',
         store=True
         )
-    
+    # concrete_lifespan
+
+    lifetime_minutes = fields.Float(
+        string="Lifetime (minutes)",
+        compute="_compute_lifetime",
+        store=True
+    )
+
+    @api.depends('loaded_datetime', 'return_state_tracking_datetime')
+    def _compute_lifetime(self):
+        for rec in self:
+            if rec.loaded_datetime and rec.return_state_tracking_datetime:
+                delta = rec.return_state_tracking_datetime - rec.loaded_datetime
+                minutes = delta.total_seconds() / 60
+                rec.lifetime_minutes = minutes if minutes > 0 else 0
+            else:
+                rec.lifetime_minutes = 0
 
     @api.constrains('ticket_on_hold_type', 'ticket_on_hold_id')
     def _check_ticket_on_hold_type(self):
