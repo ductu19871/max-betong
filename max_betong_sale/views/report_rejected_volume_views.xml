@@ -1,0 +1,79 @@
+<odoo>
+    <record id="rejected_volume_report_tree_view" model="ir.ui.view">
+        <field name="name">rejected.volume.delivery.report.tree.view</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="delivered_volume_report_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">on_time_list_view</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='arrived_state_tracking_datetime']" position="replace">
+                <field name="return_state_tracking_datetime" string="Return Start Time"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='load_bom_id']" position="after">
+                <field name="on_hold_reason"/>
+            </xpath>
+
+            <xpath expr="//tree/field[@name='sale_order_id']" position="attributes">
+                <attribute name="widget">many2one</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rejected_volume_report_search_view" model="ir.ui.view">
+        <field name="name">rejected.volume.report.search.view</field>
+        <field name="model">mrp.production</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_concrete_ticket_report_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='date_filter_group']" position="replace">
+                <group string="Date Filter" name="date_filter_group">
+                    <filter string="Today" name="today" domain="[
+                            ('incident_datetime', '&gt;=', context_today()),
+                            ('incident_datetime', '&lt;',  context_today() + relativedelta(days=1))
+                        ]"/>
+
+                    <filter string="This Week" name="this_week" domain="[
+                            ('incident_datetime', '&gt;=', context_today() + relativedelta(weekday=0)),
+                            ('incident_datetime', '&lt;',  context_today() + relativedelta(weekday=0, weeks=1))
+                        ]"/>
+
+                    <filter string="This Month" name="this_month" domain="[
+                            ('incident_datetime', '&gt;=', context_today() + relativedelta(day=1)),
+                            ('incident_datetime', '&lt;',  context_today() + relativedelta(day=1, months=1))
+                        ]"/>
+
+                    <filter string="This Quarter" name="this_quarter" domain="[
+                            ('incident_datetime', '&gt;=',
+                                context_today() + relativedelta( month=((context_today().month - 1) // 3) * 3 + 1, day=1
+                                )
+                            ),
+                            ('incident_datetime', '&lt;',
+                                context_today() + relativedelta( month=((context_today().month - 1) // 3) * 3 + 4, day=1
+                                )
+                            )
+                        ]"/>
+
+                    <filter string="This Year" name="this_year" domain="[
+                            ('incident_datetime', '&gt;=', context_today() + relativedelta(month=1, day=1)),
+                            ('incident_datetime', '&lt;',  context_today() + relativedelta(years=1, month=1, day=1))
+                        ]"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_rejected_volume_report" model="ir.actions.act_window">
+        <field name="name">Rejected Volume Report</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="rejected_volume_report_tree_view"/>
+        <field name="search_view_id" ref="rejected_volume_report_search_view"/>
+        <field name="domain">[('state_concrete', 'in', ('dump', 'remix', 'swap'))]</field>
+        <field name="context">{'rejected_volume_report': True, 'date_field': 'incident_datetime'}</field>
+    </record>
+
+    <menuitem id="menu_rejected_volume_report" parent="menu_concrete_coordination_report" action="action_rejected_volume_report" sequence="20"/>
+</odoo>

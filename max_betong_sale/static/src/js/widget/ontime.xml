@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.BooleanField" t-name="max_betong_sale.BooleanField" t-inherit-mode="primary">
+        <xpath expr="//CheckBox" position="replace">
+            <OntimeComponent/>
+        </xpath>
+    </t>
+
+    <t t-name="max_betong_sale.ontime">
+        <div t-if="getTitle" t-attf-class="badge rounded-pill text-bg-{{getBadgeClass}}" t-esc="getTitle"/>
+    </t>
+
+</templates>

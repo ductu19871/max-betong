@@ -4,6 +4,7 @@
     <record id="mrp_production_form_view_inherit_max_betong_sale" model="ir.ui.view">
         <field name="name">mrp.production.form.view.inherit.max.betong.sale</field>
         <field name="model">mrp.production</field>
+    	<field name="mode">extension</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
 		<field name="priority">9999</field>
         <field name="arch" type="xml">
@@ -45,7 +46,7 @@
            </xpath>
             <xpath expr="//group[1]//group[1]" position="inside">
 				<field name="mix_note"/>
-                <field name="load_id" invisible='1'/>
+                <field name="load_id" invisible='0'/>
                 <field name="sale_order_id"/>
                 <field name="vehicle_id" readonly="1" force_save="1"/>
                 <field name="vehicle_station_id"/>
@@ -91,6 +92,7 @@
 			 <xpath expr="//notebook" position="inside">
 				<page name="ticket_notes_page" string="Ticket Notes" invisible="mo_type != 'concrete'">
 					<group>
+						<field name="ticket_note" widget="text" />
 						<field name="on_hold_reason" string="Remix Reason" readonly="1" widget="text" invisible="not on_hold_reason"/>
 					</group>
 				</page>

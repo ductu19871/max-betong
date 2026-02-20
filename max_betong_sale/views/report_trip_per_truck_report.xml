@@ -1,0 +1,62 @@
+<odoo>
+    <record id="trip_per_trunk_report_tree_view" model="ir.ui.view">
+        <field name="name">trip.per.trunk.report.tree.view</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="delivered_volume_report_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='user_id']" position="replace">
+            </xpath>
+            <xpath expr="//tree/field[@name='load_bom_id']" position="replace">
+            </xpath>
+            <xpath expr="//tree/field[@name='arrived_state_tracking_datetime']" position="replace">
+                <field name="completed_state_tracking_datetime"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_qty']" position="after">
+                <field name="state_concrete"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_concrete_trip_pivot" model="ir.ui.view">
+        <field name="name">trip.per.trunk.report.pivot</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="vehicle_id" type="row"/>
+                <field name="trip_count" type="measure"/>
+                <field name="working_day" type="measure"/>
+                <field name="avg_trip_per_day" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_trip_per_trunk_report" model="ir.actions.act_window">
+        <field name="name">Trip Per Trunk Report</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="view_id" ref="trip_per_trunk_report_tree_view"/>
+        <field name="search_view_id" ref="rejected_volume_report_search_view"/>
+        <field name="domain">[('state_concrete', 'in', ('completed','dump', 'remix', 'swap'))]</field>
+        <field name="context">{'trip_per_trunk_report': True}</field>
+    </record>
+
+    <!-- GẮN VIEW VÀO ACTION -->
+    <record id="action_trip_per_trunk_report_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_concrete_trip_pivot"/>
+        <field name="act_window_id" ref="action_trip_per_trunk_report"/>
+    </record>
+
+    <record id="action_trip_per_trunk_report_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="trip_per_trunk_report_tree_view"/>
+        <field name="act_window_id" ref="action_trip_per_trunk_report"/>
+    </record>
+
+
+    <menuitem id="menu_trip_per_trunk_report" parent="menu_concrete_coordination_report" action="action_trip_per_trunk_report" sequence="60"/>
+</odoo>

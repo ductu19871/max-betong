@@ -158,6 +158,106 @@ class Production(models.Model):
     ticket_on_hold_reason = fields.Text(related='ticket_on_hold_id.on_hold_reason', string='Ticket On Hold Reason', readonly=False)
     on_hold_ticket_type = fields.Selection(related='on_hold_ticket_id.ticket_on_hold_type')
     is_invisible_dashboard = fields.Boolean(string="Invisible Dashboard")
+    ticket_note = fields.Text()
+    partner_id = fields.Many2one(
+        related="sale_order_id.partner_id",
+        store=True,
+    )
+    driver_id = fields.Many2one(
+        related="vehicle_id.driver_id",
+        store=True,
+    )
+    load_bom_id = fields.Many2one(related='load_id.bom_id', string="Load BOM")
+    late_minutes = fields.Integer(
+        string='Late (minutes)',
+        compute='_compute_eta_status',
+        store=True,
+        readonly=True,
+    )
+    is_on_time = fields.Boolean('On time', compute='_compute_eta_status',
+        store=True)
+    is_late = fields.Boolean('Late', compute='_compute_eta_status',
+        store=True)
+    
+    waiting_at_plant_minutes = fields.Float(
+        string='Waiting at Plant (min)',
+        compute='_compute_cycle_times',
+        store=True
+        )
+
+    trip_cycle_time_minutes = fields.Float(
+        string='Trip Cycle Time (min)',
+        compute='_compute_cycle_times',
+        store=True
+        )   
+
+    full_cycle_time_minutes = fields.Float(
+        string='Full Cycle Time (min)',
+        compute='_compute_cycle_times',
+        store=True
+        )
+    # concrete_lifespan
+
+    lifetime_minutes = fields.Float(
+        string="Lifetime (minutes)",
+        compute="_compute_lifetime",
+        store=True
+    )
+
+    concrete_lifespan = fields.Integer(related='product_id.concrete_lifespan', store=True)
+    
+    trip_count = fields.Integer(string="Trip")
+    working_day = fields.Integer(string="Working Day")
+    avg_trip_per_day = fields.Float(string="Average Trip / Day")
+
+    @api.model
+    def read_group(self, domain, fields, groupby,
+                offset=0, limit=None, orderby=None, lazy=True):
+        result = super().read_group(
+            domain, fields, groupby,
+            offset=offset,
+            limit=limit,
+            orderby=orderby,
+            lazy=lazy
+        )
+        if not self.env.context.get('trip_per_trunk_report'):
+            return result
+        required_fields = {'trip_count', 'working_day', 'avg_trip_per_day'}
+        field_names = {f.split(':')[0] for f in fields}
+        if not required_fields.intersection(field_names):
+            return result
+        for line in result:
+            domain_line = line.get('__domain')
+            if not domain_line:
+                continue
+            records = self.search(domain_line)
+            trip = len(records)
+            days = {
+                rec.completed_state_tracking_datetime.date()
+                for rec in records
+                if rec.completed_state_tracking_datetime
+            }
+
+            working_day = len(days)
+
+            line['trip_count'] = trip
+            line['working_day'] = working_day
+            line['avg_trip_per_day'] = (
+                trip / working_day if working_day else 0
+            )
+
+        return result
+    
+
+    @api.depends('loaded_datetime', 'return_state_tracking_datetime')
+    def _compute_lifetime(self):
+        for rec in self:
+            if rec.loaded_datetime and rec.return_state_tracking_datetime:
+                delta = rec.return_state_tracking_datetime - rec.loaded_datetime
+                minutes = delta.total_seconds() / 60
+                rec.lifetime_minutes = minutes if minutes > 0 else 0
+            else:
+                rec.lifetime_minutes = 0
 
     @api.constrains('ticket_on_hold_type', 'ticket_on_hold_id')
     def _check_ticket_on_hold_type(self):
@@ -231,6 +331,47 @@ class Production(models.Model):
         for mo in productions_load:
             mo.product_qty = mo.load_id.volume
 
+    @api.depends('eta', 'arrived_state_tracking_datetime')
+    def _compute_eta_status(self):
+        for rec in self:
+            if rec.eta and rec.arrived_state_tracking_datetime:
+                delta = (rec.arrived_state_tracking_datetime - rec.eta).total_seconds() / 60
+                if delta > 0:
+                    rec.late_minutes = int(delta)
+                    rec.is_on_time = False
+                    rec.is_late = True
+                else:
+                    rec.late_minutes = 0
+                    rec.is_on_time = True
+                    rec.is_late = False
+            else:
+                rec.late_minutes = 0
+                rec.is_on_time = False
+                rec.is_late = False
+
+    def _compute_cycle_times(self):
+        for rec in self:
+            if rec.loading_datetime and rec.leave_datetime:
+                rec.waiting_at_plant_minutes = (
+                    (rec.leave_datetime - rec.loading_datetime).total_seconds() / 60
+                )
+            else:
+                rec.waiting_at_plant_minutes = 0
+
+            if rec.leave_datetime and rec.completed_state_tracking_datetime:
+                rec.trip_cycle_time_minutes = (
+                    (rec.completed_state_tracking_datetime - rec.leave_datetime).total_seconds() / 60
+                )
+            else:
+                rec.trip_cycle_time_minutes = 0
+
+            if rec.loading_datetime and rec.completed_state_tracking_datetime:
+                rec.full_cycle_time_minutes = (
+                    (rec.completed_state_tracking_datetime - rec.loading_datetime).total_seconds() / 60
+                )
+            else:
+                rec.full_cycle_time_minutes = 0
+    
     def action_view_do(self):
         return {
             'type': 'ir.actions.act_window',

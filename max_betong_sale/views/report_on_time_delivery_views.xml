@@ -1,0 +1,43 @@
+<odoo>
+    <record id="on_time_delivery_report_tree_view" model="ir.ui.view">
+        <field name="name">on.time.delivery.report.tree.view</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="delivered_volume_report_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">on_time_list_view</attribute>
+            </xpath>
+            <xpath expr="field[@name='arrived_state_tracking_datetime']" position="replace">
+                <field name="loaded_datetime" string="Delivery Time"/>
+            </xpath>
+            <xpath expr="field[@name='user_id']" position="replace">
+            </xpath>
+            <xpath expr="field[@name='load_bom_id']" position="after">
+                <field name="eta"/>
+                <!-- Thời gian đến -->
+                <field name="arrived_state_tracking_datetime" string="Arrival Time"/>
+                <!-- <field name="late_minutes" string="Trễ (phút)" sum="Tổng phút trễ"/> -->
+                <field name="late_minutes" sum="Total Delay Minutes"/>
+                <field name="is_on_time" widget="ontime" decoration-success="is_on_time == True" />
+                <field name="is_late" widget="ontime" />
+            </xpath>
+            <xpath expr="field[@name='product_qty']" position="replace">
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="action_on_time_delivery_report" model="ir.actions.act_window">
+        <field name="name">On-Time Delivery Report</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="on_time_delivery_report_tree_view"/>
+        <field name="search_view_id" ref="view_concrete_ticket_report_search"/>
+        <field name="domain">[('state_concrete', '=', 'completed')]</field>
+        <field name="context">{'on_time_delivery_report':True}</field>
+    </record>
+
+    <menuitem id="menu_on_time_delivery_report" parent="menu_concrete_coordination_report" action="action_on_time_delivery_report" sequence="30"/>
+</odoo>
