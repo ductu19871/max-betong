@@ -4,7 +4,8 @@ from odoo.tools import float_is_zero, float_compare, float_round, format_date, g
 from odoo.exceptions import ValidationError, UserError
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _name = 'sale.order.line'
+    _inherit = ['sale.order.line', 'common.validation.mixin']
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -67,6 +68,11 @@ class SaleOrderLine(models.Model):
             qty_current = sum(self.sudo().search([('blanket_order_line', '=', line.blanket_order_line.id), ('state', '!=', 'cancel')]).mapped('product_uom_qty'))
             if float_compare(qty_current, line.blanket_order_line.original_uom_qty, precision_digits=precision) > 0:
                 raise UserError(_('The product quantity cannot be greater than the blanket order line original quantity.'))
+
+    @api.constrains('product_uom_qty')
+    def _check_product_uom_qty(self):
+        self._validate_positive_with_decimal_limit('product_uom_qty', 1)
+
 
     def product_uom_change(self):
         concrete_so_lines = self.filtered(lambda line: line.order_id.so_type == 'concrete' and line.blanket_order_line)

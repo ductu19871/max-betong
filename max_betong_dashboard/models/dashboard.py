@@ -284,7 +284,7 @@ class ConcreteDashboard(models.AbstractModel):
         search = params.get('search', '')
         domain = [
             ('mo_type', '=', 'concrete'),
-            ('state_concrete', '!=', 'draft'),
+            ('state_concrete', 'not in', ('draft','dump','remix','swap','cancel')), 
             ('is_invisible_dashboard', '=', False)
         ]
         

@@ -6,7 +6,8 @@
         <field name="model">mrp.production</field>
     	<!-- <field name="mode">extension</field> -->
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
-		<field name="priority">9999</field>
+		<field name="mode">primary</field>
+		<field name="priority">10</field>
         <field name="arch" type="xml">
 			<xpath expr="//header" position="inside">
 			    <button name="action_on_hold"
@@ -29,6 +30,9 @@
 		        		type="object"
 		        		class="oe_stat_button"
 		        		invisible="state_concrete not in ['on_hold','swap'] or mo_type !='concrete' or on_hold_ticket_id"/>
+			</xpath>
+			<xpath expr="//button[@name='button_scrap']" position="attributes">
+				<attribute name="invisible" add="mo_type == 'concrete' and state_concrete != 'on_hold'"  separator=" or "/>
 			</xpath>
 			<xpath expr="//field[@name='product_id']" position="before">
                 <field name="mo_type" invisible="1"/>
@@ -120,7 +124,7 @@
 	<record id="mrp_production_ticket_on_hold_wizard_view" model="ir.ui.view">
 		<field name="name">mrp.production.ticket.on.hold.wizard.view</field>
 		<field name="model">mrp.production</field>
-		<field name="priority">9999</field>
+		<field name="priority">10</field>
 		<field name="arch" type="xml">
 			<form string="Ticket On Hold">
 				<field name="mo_type" invisible="1"/>
@@ -260,12 +264,34 @@
 			</p>
 		</field>
 	</record>
-    
+
+	<record id="action_concrete_ticket_form" model="ir.actions.act_window.view">
+		<field name="sequence" eval="2"/>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="mrp_production_form_view_inherit_max_betong_sale"/>
+		<field name="act_window_id" ref="action_concrete_ticket"/>
+	</record>
+
+	<record id="action_concrete_ticket_tree" model="ir.actions.act_window.view">
+		<field name="sequence" eval="1"/>
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="mrp_production_tree_view_inherit_max_betong_sale"/>
+		<field name="act_window_id" ref="action_concrete_ticket"/>
+	</record>
+	
     <record id="mrp_production_tree_view_inherit_max_betong_sale" model="ir.ui.view">
         <field name="name">mrp.production.tree.view.inherit.max.betong.sale</field>
         <field name="model">mrp.production</field>
+		<field name="mode">primary</field>
+		<field name="priority">10</field>
         <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
         <field name="arch" type="xml">
+			<field name="state" position="attributes">
+				<attribute name="column_invisible">True</attribute>
+			</field> 
+			<field name="state" position="after">
+				<field name="state_concrete"/>
+			</field> 
             <xpath expr="//field[@name='state']" position="before">
             	<field name="eta" optional="show"/>
             	<field name="vehicle_station_id" optional="show"/>
@@ -297,5 +323,35 @@
 	        </xpath>
 	    </field>
 	 </record>
+
+	<record id="stock_scrap_form_view2_inherit" model="ir.ui.view">
+		<field name="name">stock.scrap.form2.inherit</field>
+		<field name="model">stock.scrap</field>
+		<field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+		<field name="arch" type="xml">
+		
+			<xpath expr="//field[@name='product_id']" position="after">
+				<field name="is_readonly_product" invisible="1"/>
+			</xpath>
+			<xpath expr="//field[@name='product_id']" position="attributes">
+				<attribute name="readonly" add="is_readonly_product" separator=" or "/>
+				<attribute name="force_save">1</attribute>
+			</xpath>
+
+			<xpath expr="//field[@name='scrap_qty']" position="attributes">
+				<attribute name="readonly" add="is_readonly_product" separator=" or "/>
+				<attribute name="force_save">1</attribute>
+			</xpath>
+
+			<xpath expr="//field[@name='product_uom_id']" position="attributes">
+				<attribute name="readonly" add="is_readonly_product" separator=" or "/>
+				<attribute name="force_save">1</attribute>
+			</xpath>
+			<xpath expr="//group/group[1]" position="inside">
+				<field name="dump_reason"  invisible="not is_readonly_product" required="1"/>
+			</xpath>
+
+		</field>
+	</record>
     
 </odoo>

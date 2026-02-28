@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 class SaleBlanketOrder(models.Model):
     _inherit = 'sale.blanket.order'
@@ -24,3 +25,12 @@ class SaleBlanketOrder(models.Model):
             return action
         else:
             return super().action_view_sale_orders()
+
+class SaleBlanketOrder(models.Model):
+    _name = 'sale.blanket.order.line'
+    _inherit = ['sale.blanket.order.line', 'common.validation.mixin']
+
+
+    @api.constrains('original_uom_qty')
+    def _check_product_uom_qty(self):
+        self._validate_positive_with_decimal_limit('original_uom_qty', 1)

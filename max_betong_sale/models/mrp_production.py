@@ -344,7 +344,14 @@ class Production(models.Model):
     def _compute_do_count(self):
         for mo in self:
             mo.do_count = len(mo.do_ids)
-    
+
+    @api.depends('state')
+    def _compute_show_lock(self):
+        super()._compute_show_lock()
+        for order in self:
+            if order.mo_type == 'concrete':
+                order.show_lock = False
+        
     def action_loading(self):
         self.write({'loading_datetime':fields.Datetime.now(),
                    'state_concrete':'loading'})
@@ -637,6 +644,17 @@ class Production(models.Model):
                 body=_("Ticket cancelled. Related DOs cancelled, Vehicle set to Not Available.")
             )
         
+        return res
+    
+    def button_scrap(self):
+        self.ensure_one()
+        res = super().button_scrap()
+        if self.mo_type == 'concrete' and self.state_concrete not in ('draft', 'assigned', 'loading'):
+            res['context'].update({
+                'default_is_readonly_product': True,
+                'default_product_id': self.product_id.id,
+                'default_scrap_qty': self.product_qty,
+            })
         return res
     
     

@@ -5,7 +5,9 @@
         <record id="sale_order_form_view_betong" model="ir.ui.view">
             <field name="name">sale.order.form.betong</field>
             <field name="model">sale.order</field>
+            <field name="mode">primary</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <field name="so_type" invisible="1"/>
@@ -23,11 +25,11 @@
 	           		<attribute name="invisible">so_type == 'concrete' or invoice_status != 'no' or state != 'sale'</attribute>
 	           </xpath>
 	           <xpath expr="//field[@name='state']" position="after">
-                   <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,planned,done"
+                   <field name="state_raw" widget="statusbar" statusbar_visible="draft,sent,sale,planned,done"
 	           			invisible="so_type != 'bom'"/>
                </xpath>
 	           <xpath expr="//field[@name='state']" position="after">
-	           		<field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,planned,dispatching,done"
+	           		<field name="state_raw" widget="statusbar" statusbar_visible="draft,sent,sale,planned,dispatching,done"
 	           			invisible="so_type != 'concrete'"/>
 	           </xpath>
 	           <xpath expr="//field[@name='validity_date']" position="before">
@@ -53,13 +55,13 @@
                     <attribute name="readonly">state not in ['draft', 'sent']</attribute>
                </xpath>
 	           <xpath expr="//button[@name='action_cancel']" position="attributes">
-	           		<attribute name="invisible">so_type == 'concrete'</attribute>
+	           		<attribute name="invisible">so_type in ('concrete', 'bom')</attribute>
 	           </xpath>
                <xpath expr="//button[@name='action_draft']" position="attributes">
 	           		<attribute name="invisible" add="so_type == 'concrete'" separator=" or "/>
 	           </xpath>
                <xpath expr="//field[@name='commitment_date']" position="attributes">
-	           		<attribute name="readonly">so_type == 'concrete' and state not in ['draft', 'sent', 'sale', 'planned']</attribute>
+	           		<attribute name="readonly">so_type in ['concrete', 'bom'] and state not in ['draft', 'sent', 'sale', 'planned']</attribute>
 	           </xpath>
                <xpath expr="//div[hasclass('o_row')]//field[@name='expected_date']/../../span[hasclass('text-muted')]" position="attributes">
 	           		<attribute name="invisible" add="so_type == 'concrete'" separator=" or "></attribute>
@@ -68,7 +70,15 @@
 	           		<button name="action_cancel" type="object" string="Cancel" 
                     invisible="state not in ('draft', 'sent', 'sale', 'planned') or not id or locked or so_type != 'concrete'" 
                     confirm="Are you sure you want to cancel this Sale Order? For Planned orders, all related Tickets, Loads and DOs will be cancelled."
-	           		data-hotkey="x"/>
+	           		data-hotkey="x"
+                    context="{'disable_cancel_warning':True}"
+                    />
+	           </xpath>
+               <xpath expr="//button[@name='action_cancel']" position="after">
+	           		<button name="action_cancel" type="object" string="Cancel" 
+	           		invisible="so_type != 'bom'"
+                    context="{'disable_cancel_warning':True}"
+                    />
 	           </xpath>
 	           <xpath expr="//group[@name='note_group']//field[@name='note']" position="before">
 	           		<label for="volume" invisible="so_type != 'concrete'"/>
@@ -173,7 +183,7 @@
         <record id="blanket_order_view_order_form_betong" model="ir.ui.view">
             <field name="name">blanket.sale.order.form.betong</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale_blanket_order.view_order_form"/>
+            <field name="inherit_id" ref="sale_order_form_view_betong"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='blanket_order_line']" position="attributes">
@@ -199,8 +209,16 @@
         <record id="sale_order_tree_view_betong" model="ir.ui.view">
             <field name="name">sale.order.tree.betong</field>
             <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
+                <field name="state" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                </field>
+                <field name="state" position="after">
+                    <field name="state_raw"/>
+                </field>
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="so_type" column_invisible="1"/>
                 </xpath>
@@ -281,6 +299,20 @@
             </field>
         </record>
 
+        <record id="action_concrete_orders_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_order_form_view_betong"/>
+            <field name="act_window_id" ref="action_concrete_orders"/>
+        </record>
+
+        <record id="action_concrete_orders_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sale_order_tree_view_betong"/>
+            <field name="act_window_id" ref="action_concrete_orders"/>
+        </record>
+
         <record id="action_pumb_orders" model="ir.actions.act_window">
             <field name="name">Pumb Orders</field>
             <field name="res_model">sale.order</field>
@@ -297,6 +329,20 @@
             </field>
         </record>
 
+        <record id="action_pumb_orders_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sale_order_form_view_betong"/>
+            <field name="act_window_id" ref="action_pumb_orders"/>
+        </record>
+
+        <record id="action_pumb_orders_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sale_order_tree_view_betong"/>
+            <field name="act_window_id" ref="action_pumb_orders"/>
+        </record>
+        
     </data>
 </odoo>
 

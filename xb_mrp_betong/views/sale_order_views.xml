@@ -5,7 +5,7 @@
         <record model="ir.ui.view" id="view_sale_order_form_custom_betong">
             <field name="name">sale.order.form.custom.betong</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="inherit_id" ref="max_betong_sale.sale_order_form_view_betong"/>
             <field name="priority">9999</field>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='optional_products']" position="attributes">

@@ -50,6 +50,26 @@ class SaleOrder(models.Model):
                     ('dispatching', 'Dispatching'),
                     ('done', 'Completed'),
                 ])
+    
+    state_raw = fields.Selection(
+        selection=[
+                    ('draft', 'Draft'),
+                    ('sent', 'Quotation Sent'),
+                    ('sale', 'Created'),
+                    ('cancel', 'Cancelled'),
+                    ('planned', 'Planned'),
+                    ('dispatching', 'Dispatching'),
+                    ('done', 'Completed')
+                    ],
+        string="Status",
+        compute="_compute_state_raw",
+        store=True
+    )
+
+    @api.depends('state')
+    def _compute_state_raw(self):
+        for rec in self:
+            rec.state_raw = rec.state
 
     dispatching_date = fields.Datetime(
         string='Dispatching Date',

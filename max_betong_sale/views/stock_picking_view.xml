@@ -4,6 +4,19 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form/header/field[@name='state']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            
+            <xpath expr="(//form/header/field[@name='state'])[2]" position="after">
+                <field name="state_raw" widget="statusbar" invisible="picking_type_code != 'incoming'" statusbar_visible="draft,assigned,done" readonly="1"/>
+                <field name="state_raw" widget="statusbar" invisible="picking_type_code == 'incoming'" statusbar_visible="draft,confirmed,assigned,done" readonly="1"/>
+            </xpath>
+
+            <xpath expr="(//form/header/field[@name='state'])[2]" position="attributes">
+                <attribute name="invisible" add="1" separator=" or " />
+            </xpath>
+
             <xpath expr="//field[@name='backorder_id']" position="after">
             	<field name="do_type" invisible="1"/>
             	<field name="ticket_id" invisible="do_type !='concrete'"/>
@@ -21,6 +34,21 @@
 				</div>
            </xpath>
         </field>
+    </record>
+
+    <record id="stock_picking_tree_concrete" model="ir.ui.view">
+        <field name="name">stock.picking.tree.concrete</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="column_invisible">True</attribute>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="state_raw" widget="badge" decoration-danger="state=='cancel'" decoration-info="state== 'assigned'" decoration-muted="state == 'draft'" decoration-success="state == 'done'" decoration-warning="state not in ('draft','cancel','done','assigned')"/>
+                </xpath>
+            </field>
     </record>
 
     <record id="action_concrete_delivery_order" model="ir.actions.act_window">

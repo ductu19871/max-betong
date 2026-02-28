@@ -52,6 +52,20 @@ class StockPicking(models.Model):
         readonly=True
     )
     
+    state_raw = fields.Selection([
+        ('draft', 'Draft'),
+        ('waiting', 'Waiting Another Operation'),
+        ('confirmed', 'Waiting'),
+        ('assigned', 'Ready'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+    ], compute='_compute_state_raw', string="Status", store=True)
+    
+    @api.depends('state')
+    def _compute_state_raw(self):
+        for rec in self:
+            rec.state_raw = rec.state
+
     @api.depends('sale_id','sale_id.order_line')
     def _compute_accumulated_qty(self):
         for picking in self:
