@@ -423,7 +423,9 @@ msgid "Draft"
 msgstr "Nháp"
 
 #. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__driver_id
 #: model:ir.model.fields,field_description:max_betong_sale.field_stock_picking__driver_id
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
 msgid "Driver"
 msgstr "Tài xế"
 
@@ -1156,3 +1158,255 @@ msgstr "- Đơn hàng %s có ticket chưa được hoàn thành."
 #, python-format
 msgid "- The %s order still has loads without any assigned tickets."
 msgstr "- Đơn hàng %s vẫn còn load chưa assign ticket."
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_load__state__completed
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__completed
+msgid "Completed"
+msgstr "Completed"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__cancel
+msgid "Canceled"
+msgstr "Canceled"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_load__state__draft
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__draft
+msgid "Draft"
+msgstr "Draft"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__loading
+msgid "Loading"
+msgstr "Loading"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__ticket_note
+msgid "Ticket Note"
+msgstr "Ghi chú ticket"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__partner_id
+msgid "Customer"
+msgstr "Khách hàng"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__load_bom_id
+msgid "Load BOM"
+msgstr "Cấp phối"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__late_minutes
+msgid "Late (minutes)"
+msgstr "Thời gian trễ (phút)"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__is_on_time
+#. odoo-javascript
+#: code:addons/max_betong_sale/static/src/js/widget/ontime.js:0
+#, python-format
+msgid "On time"
+msgstr "Đúng giờ"
+
+#. module: max_betong_sale
+#. odoo-javascript
+#: code:addons/max_betong_sale/static/src/js/list/list_renderer.js:0
+#, python-format
+msgid "On time (%)"
+msgstr "Đúng giờ (%)"
+
+#. module: max_betong_sale
+#. odoo-javascript
+#: code:addons/max_betong_sale/static/src/js/widget/ontime.js:0
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__is_late
+#, python-format
+msgid "Late"
+msgstr "Trễ"
+
+#. module: max_betong_sale
+#. odoo-javascript
+#: code:addons/max_betong_sale/static/src/js/list/list_renderer.js:0
+#, python-format
+msgid "Late (%)"
+msgstr "Trễ (%)"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.on_time_delivery_report_tree_view
+msgid "Total Delay Minutes"
+msgstr ""
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_concrete_load__load_station_id
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__load_station_id
+#: model:ir.model.fields,field_description:max_betong_sale.field_wizard_confirm_fields__load_station_id
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_form
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
+msgid "Load Station"
+msgstr "Trạm của Load"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.on_time_delivery_report_tree_view
+msgid "Arrival Time"
+msgstr "Thời gian đến"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.trip_per_trunk_report_tree_view
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
+msgid "Vehicle"
+msgstr "Xe"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.rejected_volume_report1_tree_view
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.rejected_volume_report_tree_view
+msgid "Return Start Time"
+msgstr "Thời gian xe bắt đầu quay về"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+msgid "Site Arrival Time"
+msgstr "Thời gian đến công trường"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.on_time_delivery_report_tree_view
+msgid "Delivery Time"
+msgstr "Thời gian giao hàng"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
+msgid "Construction site"
+msgstr "Công trường"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.trip_per_trunk_report_tree_view
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
+msgid "Station"
+msgstr "Trạm"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+msgid "Vehicle"
+msgstr "Xe"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_delivered_volume_report
+#: model:ir.ui.menu,name:max_betong_sale.menu_delivered_volume_reportreport
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+msgid "Delivered Volume Report"
+msgstr "Theo dõi sản lượng giao thực tế"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_rejected_volume_report
+#: model:ir.ui.menu,name:max_betong_sale.menu_rejected_volume_report
+msgid "Rejected Volume Report"
+msgstr "Theo dõi khối lượng bê tông sự cố"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_on_time_delivery_report
+#: model:ir.ui.menu,name:max_betong_sale.menu_on_time_delivery_report
+msgid "On-Time Delivery Report"
+msgstr "Đánh giá tỉ lệ giao đúng ETA"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+msgid "Volume (m³)"
+msgstr "Khối lượng (m³)"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+msgid "Total Volume"
+msgstr "Tổng khối lượng"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
+msgid "Today"
+msgstr "Hôm nay"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
+msgid "This Month"
+msgstr "Tháng này"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
+msgid "This Quarter"
+msgstr "Quý này"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
+msgid "This Week"
+msgstr "Tuần này"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_ticket_report_search
+msgid "This Year"
+msgstr "Năm này"
+
+#. module: max_betong_sale
+#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_coordination_report
+msgid "Report"
+msgstr "Báo cáo"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.delivered_volume_report_tree_view
+msgid "Note"
+msgstr "Ghi chú"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__on_hold_reason
+msgid "On Hold Reason"
+msgstr "Lý do sự cố"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__waiting_at_plant_minutes
+msgid "Waiting at Plant (min)"
+msgstr "Waiting at Plant (phút)"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__trip_cycle_time_minutes
+msgid "Trip Cycle Time (min)"
+msgstr "Trip Cycle Time (phút)"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__full_cycle_time_minutes
+msgid "Full Cycle Time (min)"
+msgstr "Full Cycle Time (phút)"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.cycle_time_report_tree_view
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.trip_per_trunk_report_tree_view
+msgid "Trip Completion time"
+msgstr "Thời gian xe hoàn tất chuyến"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_cycle_time_report
+#: model:ir.ui.menu,name:max_betong_sale.menu_cycle_time_report
+msgid "Cycle Time Report"
+msgstr "Phân tích chi tiết thời gian di chuyển"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__concrete_lifespan
+msgid "Concrete Lifespan"
+msgstr "Thời gian sống của bê tông"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_concrete_lifetime_report
+#: model:ir.ui.menu,name:max_betong_sale.menu_concrete_lifetime_report
+msgid "Concrete Lifetime Report"
+msgstr "Báo cáo thời gian sống của Bê Tông"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__lifetime_minutes
+msgid "Lifetime (minutes)"
+msgstr "TG sống của Bê Tông"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_trip_per_trunk_report
+#: model:ir.ui.menu,name:max_betong_sale.menu_trip_per_trunk_report
+msgid "Trip Per Trunk Report"
+msgstr "Đánh Giá Năng Suất Hoạt Động Của Từng Xe"
