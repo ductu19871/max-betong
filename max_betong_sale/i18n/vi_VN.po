@@ -1408,3 +1408,13 @@ msgstr "TG sống của Bê Tông"
 #: model:ir.ui.menu,name:max_betong_sale.menu_trip_per_trunk_report
 msgid "Trip Per Trunk Report"
 msgstr "Đánh Giá Năng Suất Hoạt Động Của Từng Xe"
+
+#. module: max_betong_sale
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.mrp_production_form_view_inherit_max_betong_sale
+msgid "Station"
+msgstr "Trạm"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_workcenter__linked_workcenter_id
+msgid "Linked Workcenter"
+msgstr "Trạm liên kết"

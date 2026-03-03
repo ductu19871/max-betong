@@ -13,6 +13,7 @@ class FleetVehicle(models.Model):
     station_id = fields.Many2one(
         'mrp.workcenter',
         string='Station',
+        tracking=True,
         help=(
             "The station to which the vehicle belongs.\n"
             "Used to determine the batching plant when the vehicle participates in concrete delivery."

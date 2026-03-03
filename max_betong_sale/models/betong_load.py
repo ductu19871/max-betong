@@ -63,16 +63,34 @@ class ConcreteLoad(models.Model):
         default='draft',
     )
     company_id = fields.Many2one('res.company', string='Company', required=True,default=lambda self: self.env.company)
-    
+
     production_ids = fields.One2many('mrp.production','load_id',string='Tickets')
     
-    
+    linked_group_workcenter_ids = fields.Many2many(
+        'mrp.workcenter',
+        compute='_compute_linked_group_workcenters',
+        search='_search_linked_group_workcenters',
+        store=False,
+        string="Linked Group Workcenters")
+
+    @api.depends('load_station_id')
+    def _compute_linked_group_workcenters(self):
+        for rec in self:
+            rec.linked_group_workcenter_ids = rec.load_station_id.linked_group_workcenter_ids
+
+    def _search_linked_group_workcenters(self, operator, value):
+        if not value:
+            return [('id', '=', 0)]
+        if not isinstance(value, (list, tuple)):
+            value = [value]
+        related_ids = self.env['mrp.workcenter'].browse(value).linked_group_workcenter_ids.ids
+        return [('load_station_id', 'in', related_ids)]
+
     @api.constrains('volume')
     def _check_volume_positive(self):
         for rec in self:
             if not rec.volume or rec.volume <= 0:
                 raise ValidationError(_('Volume must be greater than 0.'))
-    
     @api.model
     def create(self, vals):
         today = fields.Date.context_today(self)

@@ -31,6 +31,9 @@
 		        		class="oe_stat_button"
 		        		invisible="state_concrete not in ['on_hold','swap'] or mo_type !='concrete' or on_hold_ticket_id"/>
 			</xpath>
+			<xpath expr="//button[@name='action_cancel']" position="attributes">
+				<attribute name="invisible" add="mo_type == 'concrete' and ticket_on_hold_id"  separator=" or "/>
+			</xpath>
 			<xpath expr="//button[@name='button_scrap']" position="attributes">
 				<attribute name="invisible" add="mo_type == 'concrete' and state_concrete != 'on_hold'"  separator=" or "/>
 			</xpath>
@@ -53,7 +56,7 @@
                 <field name="load_id" invisible='1'/>
                 <field name="sale_order_id"/>
                 <field name="vehicle_id" readonly="1" force_save="1"/>
-                <field name="vehicle_station_id"/>
+                <field name="load_station_id" string="Station"/>
                 <field name="delivery_address_id"/>
             </xpath>
             <xpath expr="//field[@name='components_availability']" position="before">
@@ -110,6 +113,10 @@
 			<xpath expr="//field[@name='move_raw_ids']/tree" position="inside">
 				<field name="ticket_on_hold_id" column_invisible="1"/>
 			</xpath>
+			<xpath expr="//field[@name='product_id']" position="attributes">
+				<attribute name="readonly" add="ticket_on_hold_id" separator=" or "/>
+                <attribute name="force_save">1</attribute>
+			</xpath>
 			<xpath expr="//field[@name='product_qty']" position="attributes">
 				<attribute name="readonly" add="ticket_on_hold_id" separator=" or "/>
                 <attribute name="force_save">1</attribute>
@@ -138,10 +145,14 @@
 				</group>
 				<group>
 					<group>
-						<field name="load_id" domain="vehicle_station_id and [('load_station_id', '=', vehicle_station_id)] or []"/>
+						<field name="load_id" domain="ticket_on_hold_type == 'remix' and [
+								('linked_group_workcenter_ids', '=', load_station_id), ('state', '=', 'draft'),
+								('product_id', '=', product_id),
+								('delivery_address_id', '=', delivery_address_id)
+								 ]  or [('linked_group_workcenter_ids', '=', load_station_id), ('state', '=', 'draft')]" />
 						<label for="product_qty" string="Quantity"/>
 						<div class="o_row">
-							<field name="product_qty" class="oe_inline"/>
+							<field name="product_qty" class="oe_inline" readonly="1" force_save="1"/>
 							<field name="product_uom_id" class="oe_inline" readonly="1" force_save="1" groups="uom.group_uom"/>
 						</div>
 						<field name="load_station_id"/>
@@ -321,6 +332,9 @@
 	        <xpath expr="//group//group[2]//field[@name='company_id']" position="after">
 	            <field name="responsible_id"/>
 	        </xpath>
+			<field name="alternative_workcenter_ids" position="after">
+				<field name="linked_workcenter_id"/>
+			</field>
 	    </field>
 	 </record>
 

@@ -186,7 +186,7 @@ class Production(models.Model):
     @api.constrains('load_station_id', 'vehicle_station_id')
     def _check_station_concrete_load(self):
         for mo in self.filtered(lambda mo: mo.load_station_id and mo.vehicle_station_id):
-            if mo.load_station_id != mo.vehicle_station_id:
+            if mo.load_station_id.linked_group_workcenter_ids != mo.vehicle_station_id.linked_group_workcenter_ids:
                 raise UserError(_("Load station and vehicle station are not consistent."))
 
     @api.onchange('load_id')
@@ -504,6 +504,11 @@ class Production(models.Model):
         for ticket in new_tickets:
             if ticket.ticket_on_hold_id:
                 ticket.ticket_on_hold_id.on_hold_ticket_id = ticket
+                if ticket.ticket_on_hold_type == 'remix':
+                    ticket.vehicle_id.station_id = ticket.load_station_id
+                elif ticket.ticket_on_hold_type == 'swap':
+                    if ticket.vehicle_id == ticket.ticket_on_hold_id.vehicle_id:
+                        ticket.vehicle_id.station_id = ticket.load_station_id
         return new_tickets
     
     def get_name_sequene(self, today=None):
