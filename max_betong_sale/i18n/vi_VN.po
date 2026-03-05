@@ -1418,3 +1418,9 @@ msgstr "Trạm"
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_workcenter__linked_workcenter_id
 msgid "Linked Workcenter"
 msgstr "Trạm liên kết"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__load_station_id
+msgid "Load Station"
+msgstr "Trạm"
+

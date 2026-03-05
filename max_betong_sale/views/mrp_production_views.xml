@@ -168,7 +168,6 @@
 							force_save="1"
 							domain="load_station_id and [('station_id', '=', load_station_id), ('state_concrete', '=', 'available')] or [('state_concrete', '=', 'available')]"
 						/>
-						<field name="vehicle_station_id"/>
 					</group>
 				</group>
 				<footer>
@@ -305,7 +304,7 @@
 			</field> 
             <xpath expr="//field[@name='state']" position="before">
             	<field name="eta" optional="show"/>
-            	<field name="vehicle_station_id" optional="show"/>
+            	<field name="load_station_id" optional="show"/>
             	<field name="vehicle_id" optional="show"/>
             	<field name="sale_order_id" optional="show"/>
             	<field name="create_date" optional="show"/>

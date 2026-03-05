@@ -366,7 +366,7 @@ class Production(models.Model):
     def action_leave(self):
         self.write({'leave_datetime':fields.Datetime.now(),
                    'state_concrete':'leave'})
-
+    
     def action_confirm(self):
         res = super().action_confirm()
         self.write({'assigned_datetime':fields.Datetime.now()})
@@ -378,7 +378,9 @@ class Production(models.Model):
         if not self._context.get('from_assign_ticket'):
             for ticket in self.filtered(lambda t: t.load_id and not t.do_ids):
                 ticket.load_id._create_delivery_order(ticket)
-        self.ticket_on_hold_id.vehicle_id.state_concrete = 'not_available'
+        if self.ticket_on_hold_id:
+            if self.vehicle_id != self.ticket_on_hold_id.vehicle_id:
+                self.ticket_on_hold_id.vehicle_id.state_concrete = 'not_available'
         return res
 
     def action_open_concrete_ticket_form(self):
