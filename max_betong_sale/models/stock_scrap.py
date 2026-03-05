@@ -16,5 +16,4 @@ class StockScrap(models.Model):
                 this.production_id.write({'state_concrete':'dump'})
                 this.production_id.vehicle_id.state_concrete = 'not_available'
                 this.production_id.on_hold_reason = this.dump_reason
-                this.production_id._cancel_related_delivery_orders()
         return super().action_validate()

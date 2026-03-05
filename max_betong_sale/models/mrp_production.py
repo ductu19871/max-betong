@@ -547,6 +547,8 @@ class Production(models.Model):
                     record.write({
                         datetime_field: fields.Datetime.now()
                     })
+                if new_state in ('dump', 'remix', 'swap'):
+                    record._cancel_related_delivery_orders()
                 if new_state in ('on_hold', 'completed', 'dump', 'remix', 'swap'):
                     if not record.incident_datetime:
                         record.write({
