@@ -32,7 +32,11 @@ class MrpWorkcenter(models.Model):
         store=False,
         string="Linked Group Workcenters"
     )
-
+    warehouse_id = fields.Many2one(
+        'stock.warehouse',
+        string='Warehouse',
+        required=True
+    )
     @api.constrains('linked_workcenter_id')
     def _check_reverse_link(self):
         for rec in self:

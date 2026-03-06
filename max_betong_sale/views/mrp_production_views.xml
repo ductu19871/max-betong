@@ -329,6 +329,7 @@
 	    <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
 	    <field name="arch" type="xml">
 	        <xpath expr="//group//group[2]//field[@name='company_id']" position="after">
+	            <field name="warehouse_id"/>
 	            <field name="responsible_id"/>
 	        </xpath>
 			<field name="alternative_workcenter_ids" position="after">

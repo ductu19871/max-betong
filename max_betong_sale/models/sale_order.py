@@ -268,6 +268,10 @@ class SaleOrder(models.Model):
             self.trial_mix = False
             self.has_pump = False
             self.related_pump_so_id = False
+
+    @api.onchange('concrete_station_id')
+    def _onchange_so_type(self):
+        self.warehouse_id = self.concrete_station_id.warehouse_id
             
     def action_confirm(self):
         betong_orders = self.filtered(lambda o: o.so_type == 'concrete')

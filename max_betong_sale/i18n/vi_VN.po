@@ -1424,3 +1424,8 @@ msgstr "Trạm liên kết"
 msgid "Load Station"
 msgstr "Trạm"
 
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_mrp_workcenter__warehouse_id
+msgid "Warehouse"
+msgstr "Kho hàng"
+
