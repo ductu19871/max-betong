@@ -265,11 +265,12 @@ class Production(models.Model):
                 rec.is_on_time = False
                 rec.is_late = False
 
+    @api.depends('leave_datetime', 'assigned_datetime','completed_state_tracking_datetime')
     def _compute_cycle_times(self):
         for rec in self:
-            if rec.loading_datetime and rec.leave_datetime:
+            if rec.assigned_datetime and rec.leave_datetime:
                 rec.waiting_at_plant_minutes = (
-                    (rec.leave_datetime - rec.loading_datetime).total_seconds() / 60
+                    (rec.leave_datetime - rec.assigned_datetime).total_seconds() / 60
                 )
             else:
                 rec.waiting_at_plant_minutes = 0
@@ -281,9 +282,9 @@ class Production(models.Model):
             else:
                 rec.trip_cycle_time_minutes = 0
 
-            if rec.loading_datetime and rec.completed_state_tracking_datetime:
+            if rec.assigned_datetime and rec.completed_state_tracking_datetime:
                 rec.full_cycle_time_minutes = (
-                    (rec.completed_state_tracking_datetime - rec.loading_datetime).total_seconds() / 60
+                    (rec.completed_state_tracking_datetime - rec.assigned_datetime).total_seconds() / 60
                 )
             else:
                 rec.full_cycle_time_minutes = 0
