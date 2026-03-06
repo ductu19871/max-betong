@@ -8,4 +8,18 @@
     .custom_clickable_cell:hover {
         color: #017e84;
     }
+
+    tbody {
+        td {
+            cursor: default !important;
+        }
+
+        td[name="sale_order_id"] {
+            cursor: pointer !important;
+        }
+
+        td[name="name"] {
+            cursor: pointer !important;
+        }
+    }
 }
