@@ -35,11 +35,11 @@
                             ('incident_datetime', '&lt;',  context_today() + relativedelta(days=1))
                         ]"/>
 
-                    <filter string="This Week" name="this_week" domain="[
-                            ('incident_datetime', '&gt;=', context_today() + relativedelta(weekday=0)),
-                            ('incident_datetime', '&lt;',  context_today() + relativedelta(weekday=0, weeks=1))
+                    <filter string="This Week" name="this_week"
+                        domain="[
+                            ('incident_datetime', '&gt;=', context_today() + relativedelta(weekday=0, days=-7)),
+                            ('incident_datetime', '&lt;', context_today() + relativedelta(weekday=0))
                         ]"/>
-
                     <filter string="This Month" name="this_month" domain="[
                             ('incident_datetime', '&gt;=', context_today() + relativedelta(day=1)),
                             ('incident_datetime', '&lt;',  context_today() + relativedelta(day=1, months=1))

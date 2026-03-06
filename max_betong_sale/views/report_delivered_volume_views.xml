@@ -74,11 +74,11 @@
                             ('completed_state_tracking_datetime', '&lt;',  context_today() + relativedelta(days=1))
                         ]"/>
 
-                    <filter string="This Week" name="this_week" domain="[
-                            ('completed_state_tracking_datetime', '&gt;=', context_today() + relativedelta(weekday=0)),
-                            ('completed_state_tracking_datetime', '&lt;',  context_today() + relativedelta(weekday=0, weeks=1))
+                    <filter string="This Week" name="this_week"
+                        domain="[
+                            ('completed_state_tracking_datetime', '&gt;=', context_today() + relativedelta(weekday=0, days=-7)),
+                            ('completed_state_tracking_datetime', '&lt;', context_today() + relativedelta(weekday=0))
                         ]"/>
-
                     <filter string="This Month" name="this_month" domain="[
                             ('completed_state_tracking_datetime', '&gt;=', context_today() + relativedelta(day=1)),
                             ('completed_state_tracking_datetime', '&lt;',  context_today() + relativedelta(day=1, months=1))
