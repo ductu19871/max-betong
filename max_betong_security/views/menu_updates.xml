@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="max_betong_sale.menu_concrete_coordination_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_sale_order" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_sale_blanket_order" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_sale_order_concrete" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_sale_order_pumb" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_customer" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_manufacturer_and_delivery" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_concrete_load" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_tong_giam_doc'), ref('base.group_system')])]" />
+        </record>
+        <record id="max_betong_sale.menu_concrete_ticket" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_concrete_delivery_order" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_product" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_product_concrete_template" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_product_concrete" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_product_concrete_bill_of_material" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="max_betong_sale.menu_mrp_concrete_configuration" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_tong_giam_doc'), ref('base.group_system')])]" />
+        </record>
+        <record id="max_betong_sale.menu_concrete_load_setting" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_tong_giam_doc'), ref('base.group_system')])]" />
+        </record>
+        <record id="max_betong_dashboard.menu_concrete_dashboard" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_tong_giam_doc'), ref('base.group_system')])]" />
+        </record>
+        <record id="purchase.menu_purchase_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="purchase.menu_procurement_management" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_super_user'), ref('base.group_system'), ref('max_betong_security.group_betong_tong_giam_doc'), ref('max_betong_security.group_betong_mua_hang')])]" />
+        </record>
+        <record id="purchase.menu_purchase_rfq" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_super_user'), ref('base.group_system'), ref('max_betong_security.group_betong_tong_giam_doc'), ref('max_betong_security.group_betong_mua_hang')])]" />
+        </record>
+        <record id="purchase.menu_purchase_form_action" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_super_user'), ref('base.group_system'), ref('max_betong_security.group_betong_tong_giam_doc'), ref('max_betong_security.group_betong_mua_hang')])]" />
+        </record>
+        <record id="purchase.menu_procurement_management_supplier_name" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="purchase.menu_purchase_products" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="purchase.menu_purchase_config" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="purchase.purchase_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="fleet.menu_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="fleet.fleet_vehicles" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="fleet.fleet_vehicle_log_contract_menu" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="fleet.fleet_vehicle_service_types_menu" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="fleet.menu_fleet_reporting" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="fleet.fleet_configuration" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_dvkh'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="mrp.menu_mrp_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_doi_xe'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="mrp.menu_mrp_configuration" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_dieu_phoi'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="mrp.menu_mrp_reporting" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_dvkh'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_ky_thuat'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="stock.menu_stock_root" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="stock.menu_stock_warehouse_mgmt" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="stock.menu_pickingtype" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="stock.menu_stock_inventory_control" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="stock.menu_warehouse_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+        <record id="stock.menu_valuation" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_kinh_doanh'), ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('max_betong_security.group_betong_tram'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record>
+    </data>
+</odoo>
