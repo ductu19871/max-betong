@@ -19,6 +19,7 @@
     ],
     'data': [
         'security/betong_groups.xml',
+        'security/betong_record_rules.xml',
         'security/ir.model.access.csv',
         'views/menu_updates.xml',
     ],
