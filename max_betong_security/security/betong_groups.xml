@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Category -->
+        <record id="module_category_max_betong" model="ir.module.category">
+            <field name="name">ERP Bê Tông</field>
+            <field name="description">Phân quyền hệ thống ERP Bê Tông</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Groups -->
+        <record id="group_betong_dieu_phoi" model="res.groups">
+            <field name="name">Điều phối</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_doi_xe" model="res.groups">
+            <field name="name">Đội xe</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_tram" model="res.groups">
+            <field name="name">Trạm</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_ky_thuat" model="res.groups">
+            <field name="name">Kỹ Thuật</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_kinh_doanh" model="res.groups">
+            <field name="name">Kinh Doanh</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_mua_hang" model="res.groups">
+            <field name="name">Mua hàng</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_dvkh" model="res.groups">
+            <field name="name">DVKH</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_ke_toan" model="res.groups">
+            <field name="name">Kế Toán</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_tong_giam_doc" model="res.groups">
+            <field name="name">Tổng Giám Đốc</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+        </record>
+        <record id="group_betong_super_user" model="res.groups">
+            <field name="name">Super User</field>
+            <field name="category_id" ref="module_category_max_betong"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+    </data>
+</odoo>

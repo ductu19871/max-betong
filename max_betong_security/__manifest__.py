@@ -1,0 +1,28 @@
+{
+    'name': 'Max Bê Tông - Security',
+    'version': '1.0',
+    'category': 'Hidden',
+    'summary': 'Phân quyền hệ thống ERP Bê Tông theo chức năng',
+    'author': 'AHT',
+    'depends': [
+        'base',
+        'sale_management',
+        'purchase',
+        'stock',
+        'fleet',
+        'mrp',
+        'max_betong_dashboard',
+        'xb_mrp_betong',
+        'max_betong_sale',
+        'max_betong_fleet',
+        'max_betong_product'
+    ],
+    'data': [
+        'security/betong_groups.xml',
+        'security/ir.model.access.csv',
+        'views/menu_updates.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}
