@@ -289,6 +289,22 @@
 		<field name="view_id" ref="mrp_production_tree_view_inherit_max_betong_sale"/>
 		<field name="act_window_id" ref="action_concrete_ticket"/>
 	</record>
+
+	<record id="action_mrp_production_form_view_form" model="ir.actions.act_window.view">
+		<field name="sequence" eval="2"/>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="mrp.mrp_production_form_view"/>
+		<field name="act_window_id" ref="mrp.mrp_production_action"/>
+	</record>
+
+	<record id="action_mrp_production_tree_view_tree" model="ir.actions.act_window.view">
+		<field name="sequence" eval="1"/>
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="mrp.mrp_production_tree_view"/>
+		<field name="act_window_id" ref="mrp.mrp_production_action"/>
+	</record>
+
+
 	
     <record id="mrp_production_tree_view_inherit_max_betong_sale" model="ir.ui.view">
         <field name="name">mrp.production.tree.view.inherit.max.betong.sale</field>
