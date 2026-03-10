@@ -141,6 +141,7 @@ export class AnalyticDashboard extends Component {
             time_filter: this.state.periodFilter || 'today',
             date_from: this.state.dateFrom || null,
             date_to: this.state.dateTo || null,
+            allowed_company_ids: this.companyService.activeCompanyIds
         };
 
         try {
@@ -298,7 +299,7 @@ export class AnalyticDashboard extends Component {
         if (this._realtimeDebounceTimer) {
             clearTimeout(this._realtimeDebounceTimer);
         }
-        
+
         // Set new timer
         this._realtimeDebounceTimer = setTimeout(() => {
             this.loadData(source);
@@ -319,7 +320,7 @@ export class AnalyticDashboard extends Component {
                 console.error('[AnalyticDashboard] Error cleaning up subscriptions:', error);
             }
         }
-        
+
         // Clear debounce timer
         if (this._realtimeDebounceTimer) {
             clearTimeout(this._realtimeDebounceTimer);
