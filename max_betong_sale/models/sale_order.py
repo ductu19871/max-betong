@@ -466,7 +466,15 @@ class SaleOrder(models.Model):
             'company_id':self.company_id.id,
         }
 
+
     def write(self, vals):
+        allowed_fields = {'commitment_date', 'order_line', 'state', 'state_raw'}
+        for rec in self:
+            if rec.state == 'planned' and  rec.so_type == 'bom' :
+                if any(field not in allowed_fields for field in vals.keys()):
+                    raise UserError(
+                        "SO Bơm ở trạng thái Planned chỉ được thay đổi commitment_date"
+                    )
         blocked = self.filtered(lambda r: r.state == 'done')
         if blocked:
             raise UserError(_("Pumb Orders are already completed and cannot be modified."))

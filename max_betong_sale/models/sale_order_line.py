@@ -71,7 +71,8 @@ class SaleOrderLine(models.Model):
 
     @api.constrains('product_uom_qty')
     def _check_product_uom_qty(self):
-        self._validate_positive_with_decimal_limit('product_uom_qty', 1)
+        not_display_lines = self.filtered(lambda rec: not rec.display_type)
+        not_display_lines._validate_positive_with_decimal_limit('product_uom_qty', 1)
 
 
     def product_uom_change(self):
@@ -82,3 +83,40 @@ class SaleOrderLine(models.Model):
     def onchange_product_id(self):
         concrete_so_lines = self.filtered(lambda line: line.order_id.so_type == 'concrete' and line.blanket_order_line)
         super(SaleOrderLine, self - concrete_so_lines).onchange_product_id()
+
+    def _check_line_unlink(self):
+        '''Ghi đè hàm gốc của odoo'''
+        return self.filtered(
+            lambda line:
+                line.state == 'sale' and line.order_id.so_type !='bom'
+                and (line.invoice_lines or not line.is_downpayment)
+                and not line.display_type
+        )
+    
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_planned_pump_so(self):
+        for line in self:
+            if line.order_id.state == 'planned' and line.order_id.so_type == 'bom':
+                raise UserError(_(
+                    "You cannot delete a product line when the Pump Sales Order is in the Planned state."
+                ))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            order = self.env['sale.order'].browse(vals.get('order_id'))
+            if order.state == 'planned' and  order.so_type == 'bom' :
+                raise UserError(
+                    "SO Bơm đang ở trạng thái Planned, không được thêm sản phẩm."
+                )
+        return super().create(vals_list)
+    
+    def write(self, vals):
+        allowed_fields = {'product_uom_qty', 'qty_to_invoice'}
+        for line in self:
+            if line.order_id.state == 'planned' and  line.order_id.so_type == 'bom' :
+                if any(field not in allowed_fields for field in vals.keys()):
+                    raise UserError(
+                        "SO Bơm ở trạng thái Planned chỉ được thay đổi số lượng và qty_to_invoice."
+                    )
+        return super().write(vals)

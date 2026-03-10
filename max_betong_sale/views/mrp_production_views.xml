@@ -7,7 +7,7 @@
     	<!-- <field name="mode">extension</field> -->
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
 		<field name="mode">primary</field>
-		<field name="priority">10</field>
+		<field name="priority">999</field>
         <field name="arch" type="xml">
 			<xpath expr="//header" position="inside">
 			    <button name="action_on_hold"
@@ -131,7 +131,7 @@
 	<record id="mrp_production_ticket_on_hold_wizard_view" model="ir.ui.view">
 		<field name="name">mrp.production.ticket.on.hold.wizard.view</field>
 		<field name="model">mrp.production</field>
-		<field name="priority">10</field>
+		<field name="priority">9999</field>
 		<field name="arch" type="xml">
 			<form string="Ticket On Hold">
 				<field name="mo_type" invisible="1"/>
@@ -185,6 +185,7 @@
     <record id="view_mrp_production_filter_inherit_betong" model="ir.ui.view">
         <field name="name">view_mrp_production_filter_inherit_betong</field>
         <field name="model">mrp.production</field>
+		<field name="mode">primary</field>
         <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
@@ -263,7 +264,7 @@
 		<field name="res_model">mrp.production</field>
 		<field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
 		<field name="view_id" eval="False"/>
-		<field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+		<field name="search_view_id" ref="view_mrp_production_filter_inherit_betong"/>
 		<field name="context">{'default_mo_type': 'concrete', 'search_default_todo': True, 'default_company_id': allowed_company_ids[0]}</field>
 		<field name="domain">[('mo_type', '=', 'concrete')]</field>
 		<field name="help" type="html">
@@ -293,7 +294,7 @@
         <field name="name">mrp.production.tree.view.inherit.max.betong.sale</field>
         <field name="model">mrp.production</field>
 		<field name="mode">primary</field>
-		<field name="priority">10</field>
+		<field name="priority">999</field>
         <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
         <field name="arch" type="xml">
 			<field name="state" position="attributes">

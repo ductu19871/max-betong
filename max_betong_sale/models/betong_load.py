@@ -205,13 +205,11 @@ class ConcreteLoad(models.Model):
         }
     
     def action_view_ticket(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Ticket',
-            'res_model': 'mrp.production',
-            'view_mode': 'tree,form',
-            'domain': [('id', 'in', self.production_ids.ids)],
-        }
+        action = self.env.ref('max_betong_sale.action_concrete_ticket').read()[0]
+        action['domain'] = [('id', 'in', self.production_ids.ids)]
+        action['view_mode'] = 'tree,form'
+        action['context'] = {}
+        return action
     
     def _can_cancel_validation(self):
         """Validate if Load can be cancelled
