@@ -34,7 +34,7 @@ class AnalyticDashboard(models.AbstractModel):
         return active_company_ids or [self.env.company.id]
 
     @api.model
-    def get_analytic_data(self, station_id=None, time_filter='today', date_from=None, date_to=None, include_debug=False):
+    def get_analytic_data(self, station_id=None, time_filter='today', date_from=None, date_to=None, include_debug=False, allowed_company_ids = []):
         """
         Get analytics data based on filters
 
@@ -73,6 +73,8 @@ class AnalyticDashboard(models.AbstractModel):
                 f'[AnalyticDashboard] ═══════════════════════════════════════════════════'
             )
 
+            if not self.env.context.get('allowed_company_ids') and allowed_company_ids:
+                self = self.with_context(allowed_company_ids=allowed_company_ids)
             result = {
                 'stations': self._get_stations_data(),
                 'kpis': self._get_kpi_data(station_id, date_range),

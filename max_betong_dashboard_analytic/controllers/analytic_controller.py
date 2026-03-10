@@ -22,6 +22,7 @@ class AnalyticDashboardController(http.Controller):
             station_id=station_id,
             time_filter=time_filter or 'today',
             date_from=date_from,
-            date_to=date_to
+            date_to=date_to,
+            allowed_company_ids=kwargs.get('allowed_company_ids', [])
         )
 
