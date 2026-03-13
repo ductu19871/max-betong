@@ -1,0 +1,110 @@
+<odoo>
+    <data>
+        <!-- Fleet Vehicle Inherited Views -->
+        <record id="fleet_vehicle_view_form_inherit" model="ir.ui.view">
+            <field name="name">fleet_vehicle_view_form_inherit</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@icon='fa-wrench']" position="replace"/>
+                <xpath expr="//div[hasclass('oe_title')]" position="replace">
+                    <div class="oe_title">
+                        <label for="license_plate"/>
+                        <h2>
+                            <field name="license_plate" class="oe_inline" placeholder="e.g. PAE 326"/>
+                        </h2>
+                        <label for="model_id"/>
+                        <h2>
+                            <field name="model_id" placeholder="e.g. Model S" class="w-100"/>
+                        </h2>
+                        <label for="ref"/>
+                        <h2>
+                            <field name="ref" placeholder="e.g. Ref" class="w-100"/>
+                        </h2>
+                        <label for="tag_ids" class="me-3"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='image_128']" position="after">
+                    <div style="position:absolute; right:1.5%; top: 9.5%" class="o_field_widget o_field_state_selection">
+                        <field name="error_select" widget="state_selection" no_label="1" readonly="1" force_save="1" invisible="1"/>
+                        <a name="action_error" type="object" confirm="This will assign vehicle to error. Do you want to proceed?" invisible="error_select == 'blocked'">
+                            <div class="o_status"/>
+                        </a>
+                        <a name="action_non_error" type="object" confirm="This will assign vehicle to non error. Do you want to proceed?" invisible="error_select == 'none'">
+                            <div class="o_status o_status_red"/>
+                        </a>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='driver_id']" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </xpath>
+                <xpath expr="//field[@name='odometer']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <!-- <xpath expr="//field[@name='odometer_unit']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath> -->
+                <xpath expr="//field[@name='order_date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='write_off_date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='page_tax_info']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='page_model']//group/group/field[@name='model_year']" position="after">
+                    <label for="depriciation_method_number"/>
+                    <div class="o_row" name="depriciation_method_number">
+                        <field name="depriciation_method_number"/>
+                        <field name="depriciation_method_period"/>
+                    </div>
+                    <label for="fuel_limit_value"/>
+                    <div class="o_row" name="fuel_limit_value">
+                        <field name="fuel_limit_value"/>
+                        <field name="fuel_limit_type"/>
+                    </div>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Documents" name="documents">
+                        <group>
+                            <group>
+                                <field name="document_ids" widget="many2many_binary"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="fleet_vehicle_view_search_inherit" model="ir.ui.view">
+            <field name="name">fleet_vehicle_view_search_inherit</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="replace">
+                    <search string="All vehicles">
+                        <field string="Vehicle" name="name" filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]"/>
+                        <field string="Drivers" name="log_drivers" filter_domain="[                     '|', '|',                     ('log_drivers.driver_id', 'ilike', self),                     ('driver_id', 'ilike', self),                     ('future_driver_id', 'ilike', self),                 ]"/>
+                        <field string="Model" name="model_id"/>
+                        <field string="License Plate" name="license_plate"/>
+                        <field name="tag_ids"/>
+                        <field string="Status" name="state_id"/>
+                        <field string="Properties" name="vehicle_properties"/>
+                        <separator/>
+                        <filter string="Error Vehicle" name="error_vehicle" domain="[('error_select', '=', 'blocked')]"/>
+                        <separator/>
+                        <group expand="1" string="Group By">
+                            <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
+                            <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
+                            <filter string="Brand" name="groupby_make" context="{'group_by': 'brand_id'}"/>
+                            <filter string="Fuel Type" name="groupby_fueltype" context="{'group_by': 'fuel_type'}"/>
+                        </group>
+                    </search>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo> 

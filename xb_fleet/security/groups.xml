@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="group_fleet_vehicle_user" model="res.groups">
+        <field name="name">Vehicle User</field>
+        <field name="category_id" ref="base.module_category_human_resources_fleet"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="menu_access" eval="[(4, ref('fleet.fleet_vehicle_menu')), (4, ref('fleet.fleet_vehicles')), (4, ref('fleet.menu_root')), (4, ref('fleet.fleet_vehicle_odometer_menu'))]"/>
+    </record>
+
+    <record id="fleet.fleet_group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_fleet_vehicle_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="fleet_vehicle_user_rule">
+        <field name="name">Vehicle User: Create, Read, Write</field>
+        <field name="model_id" ref="fleet.model_fleet_vehicle"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_fleet_vehicle_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="fleet_rule_contract_visibility_normal_user" model="ir.rule">
+        <field name="name">Normal user can only see his/her related contracts</field>
+        <field name="model_id" ref="fleet.model_fleet_vehicle_log_contract"/>
+        <field name="groups" eval="[(4, ref('group_fleet_vehicle_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">['|', ('create_uid', '=', user.id), ('message_partner_ids', 'in', [user.partner_id.id])]</field>
+    </record>
+
+    <record model="ir.rule" id="user_can_see_all_records">
+        <field name="name">User can see created records</field>
+        <field name="model_id" ref="fleet.model_fleet_vehicle_log_services"/>
+        <field name="domain_force">[("create_uid",'=', user.id)]</field>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="groups" eval="[(4,ref('fleet.fleet_group_user')), (4,ref('xb_fleet.group_fleet_vehicle_user'))]"/>
+    </record>
+</odoo> 

@@ -1,0 +1,364 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* xb_fleet
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-18 04:56+0000\n"
+"PO-Revision-Date: 2025-08-18 04:56+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__acc_time
+msgid "ACC-ON Time (s)"
+msgstr "Thời gian ACC-ON (giây)"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "All vehicles"
+msgstr "Tất cả xe"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_ambulance_upgrade
+msgid "Ambulance Upgrade"
+msgstr "Nâng cấp xe cứu thương"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Brand"
+msgstr "Thương hiệu"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__brand_name
+msgid "Brand Name"
+msgstr "Tên thương hiệu"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_bus_repair
+msgid "Bus Repair"
+msgstr "Sửa chữa xe buýt"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__depriciation_method_number
+msgid "Depriciation Method Number"
+msgstr "Số phương pháp khấu hao"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__depriciation_method_period
+msgid "Depriciation Method Period"
+msgstr "Chu kỳ phương pháp khấu hao"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__document_ids
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_form_inherit
+msgid "Documents"
+msgstr "Tài liệu"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__door_open_count
+msgid "Door Open Count"
+msgstr "Số lần mở cửa"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Drivers"
+msgstr "Tài xế"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__error_select
+#: model:ir.model.fields.selection,name:xb_fleet.selection__fleet_vehicle__error_select__blocked
+msgid "Error"
+msgstr "Lỗi"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Error Vehicle"
+msgstr "Xe lỗi"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__first_acc_on_time
+msgid "First ACC-ON Time"
+msgstr "Thời gian ACC-ON đầu tiên"
+
+#. module: xb_fleet
+#: model:account.analytic.plan,name:xb_fleet.plan_fleet
+msgid "Fleet Project"
+msgstr "Dự án đội xe"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__fuel_limit_type
+msgid "Fuel Limit Type"
+msgstr "Loại giới hạn nhiên liệu"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__fuel_limit_value
+msgid "Fuel Limit Value"
+msgstr "Giá trị giới hạn nhiên liệu"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Fuel Type"
+msgstr "Loại nhiên liệu"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Group By"
+msgstr "Nhóm theo"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__hash_status
+msgid "Hash Status"
+msgstr "Trạng thái Hash"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__idle_time
+msgid "Idle Time (s)"
+msgstr "Thời gian chờ (giây)"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__is_error
+msgid "Is Error"
+msgstr "Có lỗi"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__last_acc_off_time
+msgid "Last ACC-ON Time"
+msgstr "Thời gian ACC-ON cuối"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "License Plate"
+msgstr "Biển số xe"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_construction_vehicle
+msgid "Maintenance for Construction Vehicles"
+msgstr "Bảo dưỡng xe xây dựng"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_flammable_cargo
+msgid "Maintenance for Flammable Cargo Vehicles"
+msgstr "Bảo dưỡng xe chở hàng dễ cháy"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_fragile_cargo
+msgid "Maintenance for Fragile Cargo Vehicles"
+msgstr "Bảo dưỡng xe chở hàng dễ vỡ"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_oversized_cargo
+msgid "Maintenance for Oversized Cargo Vehicles"
+msgstr "Bảo dưỡng xe chở hàng quá khổ"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_refrigerated_truck
+msgid "Maintenance for Refrigerated Trucks"
+msgstr "Bảo dưỡng xe tải lạnh"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_special_cargo
+msgid "Maintenance for Special Cargo Vehicles"
+msgstr "Bảo dưỡng xe chở hàng đặc biệt"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_specialized_cargo
+msgid "Maintenance for Specialized Cargo Vehicles"
+msgstr "Bảo dưỡng xe chở hàng chuyên dụng"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__max_speed
+msgid "Max Speed"
+msgstr "Tốc độ tối đa"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Model"
+msgstr "Mẫu xe"
+
+#. module: xb_fleet
+#: model:ir.model.fields.selection,name:xb_fleet.selection__fleet_vehicle__depriciation_method_period__month
+msgid "Month"
+msgstr "Tháng"
+
+#. module: xb_fleet
+#: model:ir.model.fields.selection,name:xb_fleet.selection__fleet_vehicle__error_select__none
+msgid "None"
+msgstr "Không có"
+
+#. module: xb_fleet
+#: model:ir.model,name:xb_fleet.model_fleet_vehicle_odometer
+msgid "Odometer log for a vehicle"
+msgstr "Nhật ký công tơ mét cho từng xe"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__off_time
+msgid "Off Time (s)"
+msgstr "Thời gian tắt (giây)"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__over_speed_count
+msgid "Over Speed Count"
+msgstr "Số lần vượt tốc độ"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_truck_maintenance
+msgid "Periodic Maintenance for Trucks"
+msgstr "Bảo dưỡng định kỳ xe tải"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Properties"
+msgstr "Thuộc tính"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle__ref
+msgid "Ref"
+msgstr "Tham chiếu"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_bulk_cargo
+msgid "Repair for Bulk Cargo Vehicles"
+msgstr "Sửa chữa xe chở hàng rời"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_fuel_tanker
+msgid "Repair for Fuel Tankers"
+msgstr "Sửa chữa xe bồn nhiên liệu"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_valuable_cargo
+msgid "Repair for High-Value Cargo Vehicles"
+msgstr "Sửa chữa xe chở hàng có giá trị cao"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_toxic_cargo
+msgid "Repair for Toxic Cargo Vehicles"
+msgstr "Sửa chữa xe chở hàng độc hại"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_container_parts
+msgid "Replacement of Container Vehicle Parts"
+msgstr "Thay thế phụ tùng xe container"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__run_time
+msgid "Run Time (s)"
+msgstr "Thời gian chạy (giây)"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_tourist_safety
+msgid "Safety Check for Tourist Vehicles"
+msgstr "Kiểm tra an toàn xe du lịch"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__sensor_off_time
+msgid "Sensor Off Time (s)"
+msgstr "Thời gian tắt cảm biến (giây)"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__sensor_time
+msgid "Sensor Time (s)"
+msgstr "Thời gian cảm biến (giây)"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__source
+msgid "Source"
+msgstr "Nguồn"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__stop_time
+msgid "Stop Time (s)"
+msgstr "Thời gian dừng (giây)"
+
+#. module: xb_fleet
+#: model:ir.model.fields,field_description:xb_fleet.field_fleet_vehicle_odometer__sys_time
+msgid "Sys Time"
+msgstr "Thời gian hệ thống"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_form_inherit
+msgid "This will assign vehicle to error. Do you want to proceed?"
+msgstr "Thao tác này sẽ gán xe vào trạng thái lỗi. Bạn có muốn tiếp tục không?"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_form_inherit
+msgid "This will assign vehicle to non error. Do you want to proceed?"
+msgstr "Thao tác này sẽ gán xe vào trạng thái không lỗi. Bạn có muốn tiếp tục không?"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_explosive_cargo
+msgid "Upgrade for Explosive Cargo Vehicles"
+msgstr "Nâng cấp xe chở hàng nổ"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_fresh_cargo
+msgid "Upgrade for Fresh Cargo Vehicles"
+msgstr "Nâng cấp xe chở hàng tươi sống"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_hazardous_cargo
+msgid "Upgrade for Hazardous Cargo Vehicles"
+msgstr "Nâng cấp xe chở hàng nguy hiểm"
+
+#. module: xb_fleet
+#: model:account.analytic.account,name:xb_fleet.project_odorous_cargo
+msgid "Upgrade for Odorous Cargo Vehicles"
+msgstr "Nâng cấp xe chở hàng có mùi"
+
+#. module: xb_fleet
+#: model:ir.model,name:xb_fleet.model_fleet_vehicle
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_search_inherit
+msgid "Vehicle"
+msgstr "Xe"
+
+#. module: xb_fleet
+#: model:res.groups,name:xb_fleet.group_fleet_vehicle_user
+msgid "Vehicle User"
+msgstr "Người sử dụng xe"
+
+#. module: xb_fleet
+#: model:ir.model.fields.selection,name:xb_fleet.selection__fleet_vehicle__depriciation_method_period__year
+msgid "Year"
+msgstr "Năm"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_form_inherit
+msgid "e.g. Model S"
+msgstr "vd. Model S"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_form_inherit
+msgid "e.g. PAE 326"
+msgstr "vd. PAE 326"
+
+#. module: xb_fleet
+#: model_terms:ir.ui.view,arch_db:xb_fleet.fleet_vehicle_view_form_inherit
+msgid "e.g. Ref"
+msgstr "vd. Ref"
+
+#. module: xb_fleet
+#: model:ir.model.fields.selection,name:xb_fleet.selection__fleet_vehicle__fuel_limit_type__ca
+msgid "l/ca"
+msgstr "l/ca"
+
+#. module: xb_fleet
+#: model:ir.model.fields.selection,name:xb_fleet.selection__fleet_vehicle__fuel_limit_type__hour
+msgid "l/hour"
+msgstr "l/giờ"
+
+#. module: xb_fleet
+#: model:ir.model.fields.selection,name:xb_fleet.selection__fleet_vehicle__fuel_limit_type__km
+msgid "l/km"
+msgstr "l/km"

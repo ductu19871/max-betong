@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Vehicle Categories for xb_fleet -->
+        
+        <!-- Truck Category -->
+        <record id="vehicle_category_truck" model="fleet.vehicle.model.category">
+            <field name="name">Xe Tải</field>
+        </record>
+
+        <!-- Bus Category -->
+        <record id="vehicle_category_bus" model="fleet.vehicle.model.category">
+            <field name="name">Xe Khách</field>
+        </record>
+
+        <!-- Ambulance Category -->
+        <record id="vehicle_category_ambulance" model="fleet.vehicle.model.category">
+            <field name="name">Xe Cấp Cứu</field>
+        </record>
+
+        <!-- Construction Vehicle Category -->
+        <record id="vehicle_category_construction" model="fleet.vehicle.model.category">
+            <field name="name">Xe Công Trình</field>
+        </record>
+
+        <!-- Tourist Vehicle Category -->
+        <record id="vehicle_category_tourist" model="fleet.vehicle.model.category">
+            <field name="name">Xe Du Lịch</field>
+        </record>
+
+        <!-- Container Vehicle Category -->
+        <record id="vehicle_category_container" model="fleet.vehicle.model.category">
+            <field name="name">Xe Container</field>
+        </record>
+
+        <!-- Refrigerated Truck Category -->
+        <record id="vehicle_category_refrigerated" model="fleet.vehicle.model.category">
+            <field name="name">Xe Tải Lạnh</field>
+        </record>
+
+        <!-- Fuel Tanker Category -->
+        <record id="vehicle_category_fuel" model="fleet.vehicle.model.category">
+            <field name="name">Xe Bồn Xăng</field>
+        </record>
+
+        <!-- Hazardous Cargo Vehicle Category -->
+        <record id="vehicle_category_hazardous" model="fleet.vehicle.model.category">
+            <field name="name">Xe Chở Hàng Nguy Hiểm</field>
+        </record>
+
+        <!-- Oversized Cargo Vehicle Category -->
+        <record id="vehicle_category_oversized" model="fleet.vehicle.model.category">
+            <field name="name">Xe Chở Hàng Siêu Trường</field>
+        </record>
+
+        <!-- Additional Demo Vehicles for xb_fleet -->
+        
+        <!-- Truck Vehicles -->
+        <record id="xb_vehicle_truck_1" model="fleet.vehicle">
+            <field name="license_plate">30A-12345</field>
+            <field name="vin_sn">VIN123456789</field>
+            <field name="model_id" ref="fleet.model_astra"/>
+            <field name="category_id" ref="vehicle_category_truck"/>
+            <field name="color">White</field>
+            <field name="location">Hanoi</field>
+            <field name="doors">4</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-01-15'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">35000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased')])]" name="tag_ids"/>
+        </record>
+
+        <record id="xb_vehicle_truck_2" model="fleet.vehicle">
+            <field name="license_plate">30A-67890</field>
+            <field name="vin_sn">VIN987654321</field>
+            <field name="model_id" ref="fleet.model_corsa"/>
+            <field name="category_id" ref="vehicle_category_truck"/>
+            <field name="color">Blue</field>
+            <field name="location">Ho Chi Minh City</field>
+            <field name="doors">5</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-02-20'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">28000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Bus Vehicles -->
+        <record id="xb_vehicle_bus_1" model="fleet.vehicle">
+            <field name="license_plate">51B-11111</field>
+            <field name="vin_sn">VIN111222333</field>
+            <field name="model_id" ref="fleet.model_serie1"/>
+            <field name="category_id" ref="vehicle_category_bus"/>
+            <field name="color">Black</field>
+            <field name="location">Da Nang</field>
+            <field name="doors">4</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-03-10'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">45000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+        </record>
+
+        <record id="xb_vehicle_bus_2" model="fleet.vehicle">
+            <field name="license_plate">51B-22222</field>
+            <field name="vin_sn">VIN444555666</field>
+            <field name="model_id" ref="fleet.model_a1"/>
+            <field name="category_id" ref="vehicle_category_bus"/>
+            <field name="color">Silver</field>
+            <field name="location">Hai Phong</field>
+            <field name="doors">4</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-04-05'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">38000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Ambulance Vehicles -->
+        <record id="xb_vehicle_ambulance_1" model="fleet.vehicle">
+            <field name="license_plate">92C-33333</field>
+            <field name="vin_sn">VIN777888999</field>
+            <field name="model_id" ref="fleet.model_classa"/>
+            <field name="category_id" ref="vehicle_category_ambulance"/>
+            <field name="color">Gray</field>
+            <field name="location">Can Tho</field>
+            <field name="doors">5</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-05-12'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">42000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Construction Vehicles -->
+        <record id="xb_vehicle_construction_1" model="fleet.vehicle">
+            <field name="license_plate">75D-44444</field>
+            <field name="vin_sn">VIN999000111</field>
+            <field name="model_id" ref="fleet.model_astra"/>
+            <field name="category_id" ref="vehicle_category_construction"/>
+            <field name="color">Yellow</field>
+            <field name="location">Binh Duong</field>
+            <field name="doors">2</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-06-01'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">55000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Tourist Vehicles -->
+        <record id="xb_vehicle_tourist_1" model="fleet.vehicle">
+            <field name="license_plate">01E-55555</field>
+            <field name="vin_sn">VIN222333444</field>
+            <field name="model_id" ref="fleet.model_corsa"/>
+            <field name="category_id" ref="vehicle_category_tourist"/>
+            <field name="color">Red</field>
+            <field name="location">Nha Trang</field>
+            <field name="doors">5</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-07-15'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">48000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Container Vehicles -->
+        <record id="xb_vehicle_container_1" model="fleet.vehicle">
+            <field name="license_plate">30A-66666</field>
+            <field name="vin_sn">VIN555666777</field>
+            <field name="model_id" ref="fleet.model_serie1"/>
+            <field name="category_id" ref="vehicle_category_container"/>
+            <field name="color">Green</field>
+            <field name="location">Hai Phong</field>
+            <field name="doors">2</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-08-20'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">65000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Refrigerated Trucks -->
+        <record id="xb_vehicle_refrigerated_1" model="fleet.vehicle">
+            <field name="license_plate">51B-77777</field>
+            <field name="vin_sn">VIN888999000</field>
+            <field name="model_id" ref="fleet.model_a1"/>
+            <field name="category_id" ref="vehicle_category_refrigerated"/>
+            <field name="color">White</field>
+            <field name="location">Ho Chi Minh City</field>
+            <field name="doors">2</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-09-10'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">72000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Fuel Tankers -->
+        <record id="xb_vehicle_fuel_1" model="fleet.vehicle">
+            <field name="license_plate">92C-88888</field>
+            <field name="vin_sn">VIN111222333</field>
+            <field name="model_id" ref="fleet.model_classa"/>
+            <field name="category_id" ref="vehicle_category_fuel"/>
+            <field name="color">Orange</field>
+            <field name="location">Binh Dinh</field>
+            <field name="doors">2</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-10-05'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">85000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Hazardous Cargo Vehicles -->
+        <record id="xb_vehicle_hazardous_1" model="fleet.vehicle">
+            <field name="license_plate">75D-99999</field>
+            <field name="vin_sn">VIN444555666</field>
+            <field name="model_id" ref="fleet.model_astra"/>
+            <field name="category_id" ref="vehicle_category_hazardous"/>
+            <field name="color">Red</field>
+            <field name="location">Quang Ninh</field>
+            <field name="doors">2</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-11-15'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">95000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Oversized Cargo Vehicles -->
+        <record id="xb_vehicle_oversized_1" model="fleet.vehicle">
+            <field name="license_plate">01E-00000</field>
+            <field name="vin_sn">VIN777888999</field>
+            <field name="model_id" ref="fleet.model_corsa"/>
+            <field name="category_id" ref="vehicle_category_oversized"/>
+            <field name="color">Blue</field>
+            <field name="location">Dong Nai</field>
+            <field name="doors">2</field>
+            <field name="driver_id" ref="base.partner_demo"/>
+            <field name="acquisition_date" eval="'2024-12-01'"/>
+            <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">120000000</field>
+            <field name="manager_id" ref="base.user_admin"/>
+            <field eval="[(6,0,[ref('fleet.vehicle_tag_leasing'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+        </record>
+
+        <!-- Update categories for original fleet demo vehicles -->
+        
+        <!-- Astra (vehicle_1) - Truck category -->
+        <record id="fleet.vehicle_1" model="fleet.vehicle">
+            <field name="category_id" ref="vehicle_category_truck"/>
+        </record>
+
+        <!-- Corsa (vehicle_2) - Bus category -->
+        <record id="fleet.vehicle_2" model="fleet.vehicle">
+            <field name="category_id" ref="vehicle_category_bus"/>
+        </record>
+
+        <!-- BMW Series 1 (vehicle_3) - Tourist category -->
+        <record id="fleet.vehicle_3" model="fleet.vehicle">
+            <field name="category_id" ref="vehicle_category_tourist"/>
+        </record>
+
+        <!-- Audi A1 (vehicle_4) - Tourist category -->
+        <record id="fleet.vehicle_4" model="fleet.vehicle">
+            <field name="category_id" ref="vehicle_category_tourist"/>
+        </record>
+
+        <!-- Mercedes Class A (vehicle_5) - Tourist category -->
+        <record id="fleet.vehicle_5" model="fleet.vehicle">
+            <field name="category_id" ref="vehicle_category_tourist"/>
+        </record>
+
+    </data>
+</odoo>

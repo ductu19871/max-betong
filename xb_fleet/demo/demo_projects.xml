@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sample Projects for Fleet Work Management -->
+        
+        <!-- 1. Periodic Maintenance for Trucks -->
+        <record id="project_truck_maintenance" model="account.analytic.account">
+            <field name="name">Periodic Maintenance for Trucks</field>
+            <field name="code">TRUCK-MAINT-001</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 2. Bus Repair -->
+        <record id="project_bus_repair" model="account.analytic.account">
+            <field name="name">Bus Repair</field>
+            <field name="code">BUS-REPAIR-002</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 3. Ambulance Upgrade -->
+        <record id="project_ambulance_upgrade" model="account.analytic.account">
+            <field name="name">Ambulance Upgrade</field>
+            <field name="code">AMB-UPGRADE-003</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 4. Maintenance for Construction Vehicles -->
+        <record id="project_construction_vehicle" model="account.analytic.account">
+            <field name="name">Maintenance for Construction Vehicles</field>
+            <field name="code">CONST-VEH-004</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 5. Safety Check for Tourist Vehicles -->
+        <record id="project_tourist_safety" model="account.analytic.account">
+            <field name="name">Safety Check for Tourist Vehicles</field>
+            <field name="code">TOUR-SAFETY-005</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 6. Replacement of Container Vehicle Parts -->
+        <record id="project_container_parts" model="account.analytic.account">
+            <field name="name">Replacement of Container Vehicle Parts</field>
+            <field name="code">CONT-PARTS-006</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 7. Maintenance for Refrigerated Trucks -->
+        <record id="project_refrigerated_truck" model="account.analytic.account">
+            <field name="name">Maintenance for Refrigerated Trucks</field>
+            <field name="code">REFRIG-TRUCK-007</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 8. Repair for Fuel Tankers -->
+        <record id="project_fuel_tanker" model="account.analytic.account">
+            <field name="name">Repair for Fuel Tankers</field>
+            <field name="code">FUEL-TANKER-008</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 9. Upgrade for Hazardous Cargo Vehicles -->
+        <record id="project_hazardous_cargo" model="account.analytic.account">
+            <field name="name">Upgrade for Hazardous Cargo Vehicles</field>
+            <field name="code">HAZARD-CARGO-009</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 10. Maintenance for Oversized Cargo Vehicles -->
+        <record id="project_oversized_cargo" model="account.analytic.account">
+            <field name="name">Maintenance for Oversized Cargo Vehicles</field>
+            <field name="code">OVERSIZE-CARGO-010</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 11. Repair for Bulk Cargo Vehicles -->
+        <record id="project_bulk_cargo" model="account.analytic.account">
+            <field name="name">Repair for Bulk Cargo Vehicles</field>
+            <field name="code">BULK-CARGO-011</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 12. Maintenance for Special Cargo Vehicles -->
+        <record id="project_special_cargo" model="account.analytic.account">
+            <field name="name">Maintenance for Special Cargo Vehicles</field>
+            <field name="code">SPECIAL-CARGO-012</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 13. Upgrade for Fresh Cargo Vehicles -->
+        <record id="project_fresh_cargo" model="account.analytic.account">
+            <field name="name">Upgrade for Fresh Cargo Vehicles</field>
+            <field name="code">FRESH-CARGO-013</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 14. Repair for High-Value Cargo Vehicles -->
+        <record id="project_valuable_cargo" model="account.analytic.account">
+            <field name="name">Repair for High-Value Cargo Vehicles</field>
+            <field name="code">VALUABLE-CARGO-014</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 15. Maintenance for Fragile Cargo Vehicles -->
+        <record id="project_fragile_cargo" model="account.analytic.account">
+            <field name="name">Maintenance for Fragile Cargo Vehicles</field>
+            <field name="code">FRAGILE-CARGO-015</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 16. Upgrade for Odorous Cargo Vehicles -->
+        <record id="project_odorous_cargo" model="account.analytic.account">
+            <field name="name">Upgrade for Odorous Cargo Vehicles</field>
+            <field name="code">ODOROUS-CARGO-016</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 17. Repair for Toxic Cargo Vehicles -->
+        <record id="project_toxic_cargo" model="account.analytic.account">
+            <field name="name">Repair for Toxic Cargo Vehicles</field>
+            <field name="code">TOXIC-CARGO-017</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 18. Maintenance for Flammable Cargo Vehicles -->
+        <record id="project_flammable_cargo" model="account.analytic.account">
+            <field name="name">Maintenance for Flammable Cargo Vehicles</field>
+            <field name="code">FLAMMABLE-CARGO-018</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 19. Upgrade for Explosive Cargo Vehicles -->
+        <record id="project_explosive_cargo" model="account.analytic.account">
+            <field name="name">Upgrade for Explosive Cargo Vehicles</field>
+            <field name="code">EXPLOSIVE-CARGO-019</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- 20. Maintenance for Specialized Cargo Vehicles -->
+        <record id="project_specialized_cargo" model="account.analytic.account">
+            <field name="name">Maintenance for Specialized Cargo Vehicles</field>
+            <field name="code">SPECIALIZED-CARGO-020</field>
+            <field name="plan_id" ref="xb_fleet.plan_fleet"/>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>
