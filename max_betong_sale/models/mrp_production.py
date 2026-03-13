@@ -404,7 +404,9 @@ class Production(models.Model):
             'default_company_id': self.company_id.id or self.env.company.id,
             'default_ticket_on_hold_id': self.id,
             'default_ticket_on_hold_type': 'remix',
-            'default_product_id': self.product_id.id
+            'default_load_station_id': self.load_station_id.id,
+            'default_product_id': self.product_id.id,
+            'default_delivery_address_id': self.delivery_address_id.id,
         }
         action['views'] = [(self.env.ref('max_betong_sale.mrp_production_ticket_on_hold_wizard_view').id, 'form')]
         action['target'] = 'new'
