@@ -20,6 +20,11 @@ class ProductTemplate(models.Model):
              'If transport or waiting time exceeds this value, concrete quality is not guaranteed.'
     )
 
+    is_concrete_pump_product = fields.Boolean(
+        string="Là sản phẩm Bơm bê tông",
+        help="Đánh dấu nếu sản phẩm này là Bơm bê tông, quản lý riêng theo nghiệp vụ sản phẩm Bơm bê tông."
+    )
+    
     _sql_constraints = [
         ('unique_concrete_product_name', 
          'UNIQUE(name) WHERE is_concrete_product = TRUE',

@@ -37,3 +37,8 @@ class FleetVehicle(models.Model):
 
     def action_non_error(self):
         self.update({"error_select": "none"})
+
+    @api.depends('ref', 'driver_id')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = "%s/%s"%(rec.ref, rec.driver_id.name)

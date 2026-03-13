@@ -379,7 +379,7 @@ class ConcreteDashboard(models.AbstractModel):
                 'station': t.load_station_id.name if t.load_station_id else '',
                 'station_id': t.load_station_id.id if t.load_station_id else False,
                 'volume': t.product_qty,
-                'vehicle': t.vehicle_id.license_plate or t.vehicle_id.name if t.vehicle_id else '',
+                'vehicle': t.vehicle_id.ref or t.vehicle_id.name if t.vehicle_id else '',
                 'vehicle_id': t.vehicle_id.id if t.vehicle_id else False,
                 'eta': t.eta.isoformat() if t.eta else '',
                 'state': state_concrete,
