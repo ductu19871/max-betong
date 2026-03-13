@@ -20,6 +20,11 @@ class ProductTemplate(models.Model):
              'If transport or waiting time exceeds this value, concrete quality is not guaranteed.'
     )
 
+    is_concrete_pump_product = fields.Boolean(
+        string="It is a concrete pump product.",
+        help="Check this if the product is a concrete pump. It will be managed separately under the concrete pump product workflow."
+    )
+    
     _sql_constraints = [
         ('unique_concrete_product_name', 
          'UNIQUE(name) WHERE is_concrete_product = TRUE',

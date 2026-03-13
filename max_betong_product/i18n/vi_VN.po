@@ -59,3 +59,17 @@ msgstr ""
 "Thời gian bê tông có thể sử dụng sau khi trộn (tính bằng phút)\n"
 "Dùng để kiểm soát chất lượng và điều phối giao hàng.\n"
 "Nếu thời gian vận chuyển hoặc chờ đổ vượt quá giá trị này, bê tông sẽ không đảm bảo."
+
+#. module: max_betong_product
+#: model:ir.model.fields,field_description:max_betong_product.field_product_product__is_concrete_pump_product
+#: model:ir.model.fields,field_description:max_betong_product.field_product_template__is_concrete_pump_product
+msgid "It is a concrete pump product."
+msgstr "Là sản phẩm Bơm bê tông"
+
+#. module: max_betong_product
+#: model:ir.model.fields,help:max_betong_product.field_product_product__is_concrete_pump_product
+#: model:ir.model.fields,help:max_betong_product.field_product_template__is_concrete_pump_product
+msgid "Check this if the product is a concrete pump. It will be managed separately under the concrete pump product workflow."
+msgstr ""
+"Đánh dấu nếu sản phẩm này là Bơm bê tông, quản lý riêng theo nghiệp vụ sản "
+"phẩm Bơm bê tông."

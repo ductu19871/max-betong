@@ -11,6 +11,10 @@
 	                    <field name="is_concrete_product"/>
 	                    <label for="is_concrete_product"/>
 	                </span>
+                    <span class="d-inline-block">
+	                    <field name="is_concrete_pump_product"/>
+	                    <label for="is_concrete_pump_product"/>
+	                </span>
 				</div>
                 <xpath expr="//field[@name='detailed_type'][1]" position="before">
 	                <label for="concrete_lifespan" invisible="not is_concrete_product"/>
