@@ -158,7 +158,7 @@ class ConcreteLoad(models.Model):
             ('type', '!=', 'mix')
         ])
 
-    def _create_delivery_order(self,mo):
+    def _create_delivery_order(self, mo):
         group_id = self.env['procurement.group'].search([('sale_id','=',self.sale_order_id.id)],limit=1)
         if not group_id:
             group_id = self.env['procurement.group'].create(self._prepare_procurement_group_vals(self.sale_order_id))
@@ -166,7 +166,7 @@ class ConcreteLoad(models.Model):
         picking_type = self.env['stock.picking.type'].search([
             ('code', '=', 'outgoing'),
             ('company_id', '=', self.company_id.id),
-            ('warehouse_id', '=', self.sale_order_id.warehouse_id.id),
+            ('warehouse_id', '=', mo.warehouse_id.id),
         ], limit=1)
         if not picking_type:
             raise UserError(_("Operation Type is not define."))
