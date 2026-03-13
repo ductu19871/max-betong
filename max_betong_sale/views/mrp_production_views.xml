@@ -149,7 +149,8 @@
 								('linked_group_workcenter_ids', '=', load_station_id), ('state', '=', 'draft'),
 								('product_id', '=', product_id),
 								('delivery_address_id', '=', delivery_address_id)
-								 ]  or [('linked_group_workcenter_ids', '=', load_station_id), ('state', '=', 'draft')]" />
+								 ]  or [('linked_group_workcenter_ids', '=', load_station_id), ('state', '=', 'draft')]" 
+								required="1"/>
 						<label for="product_qty" string="Quantity"/>
 						<div class="o_row">
 							<field name="product_qty" class="oe_inline" readonly="1" force_save="1"/>
@@ -164,6 +165,7 @@
 					</group>
 					<group>
 						<field name="vehicle_id"
+							required="1"
 							readonly="ticket_on_hold_type != 'swap'"
 							force_save="1"
 							domain="load_station_id and [('station_id', '=', load_station_id), ('state_concrete', '=', 'available')] or [('state_concrete', '=', 'available')]"
