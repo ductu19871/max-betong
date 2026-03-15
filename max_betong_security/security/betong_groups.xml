@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!-- Category -->
         <record id="module_category_max_betong" model="ir.module.category">
             <field name="name">ERP Bê Tông</field>
@@ -15,6 +15,8 @@
         </record>
         <record id="group_betong_doi_xe" model="res.groups">
             <field name="name">Đội xe</field>
+
+            <field name="implied_ids" eval="[(5,0,0),(4, ref('access_read_concrete_pump_sale_order'))]"/>
             <field name="category_id" ref="module_category_max_betong"/>
         </record>
         <record id="group_betong_tram" model="res.groups">

@@ -18,9 +18,11 @@
         'max_betong_product'
     ],
     'data': [
+        'security/betong_groups_base.xml',
         'security/betong_groups.xml',
         'security/betong_record_rules.xml',
         'security/ir.model.access.csv',
+        'security/base/ir.model.access.csv',
         'views/menu_updates.xml',
     ],
     'installable': True,

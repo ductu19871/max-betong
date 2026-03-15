@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_group_sale_order_line_read,access_group_sale_order_line_read,sale.model_sale_order_line,max_betong_security.group_sale_order_line_read,1,0,0,0
+access_group_sale_order_option_read,access_group_sale_order_option_read,sale_management.model_sale_order_option,group_sale_order_option_read,1,0,0,0
+access_group_stock_picking_read,access_group_stock_picking_read,stock.model_stock_picking,group_stock_picking_read,1,0,0,0
+access_group_stock_move_read,access_group_stock_move_read,stock.model_stock_move,group_stock_move_read,1,0,0,0
+

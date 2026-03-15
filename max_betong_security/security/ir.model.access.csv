@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
 access_sale_order_dieu_phoi,sale.order dieu_phoi,sale.model_sale_order,group_betong_dieu_phoi,1,0,0,0
 access_sale_order_doi_xe,sale.order doi_xe,sale.model_sale_order,group_betong_doi_xe,1,0,0,0
 access_sale_order_tram,sale.order tram,sale.model_sale_order,group_betong_tram,1,0,0,0
