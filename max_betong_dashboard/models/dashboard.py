@@ -236,7 +236,7 @@ class ConcreteDashboard(models.AbstractModel):
             data.append({
                 'id': v.id,
                 'name': v.name,
-                'license_plate': v.license_plate or v.name or '',
+                'license_plate': v.ref or v.name or '',
                 'station': v.station_id.name if v.station_id else '',
                 'station_id': v.station_id.id if v.station_id else False,
                 'state_concrete': state_concrete,
