@@ -193,8 +193,9 @@ class ConcreteDashboard(models.AbstractModel):
         if station_id is not None and station_id != '':
             domain.append(('station_id', '=', station_id))
         
+        # TASK - 10187 - Not search with license_plate
         if search:
-            domain.append(('license_plate', 'ilike', search))
+            domain.append(('ref', 'ilike', search))
         
         all_vehicles = self.env['fleet.vehicle'].search(domain)
         total_count = len(all_vehicles)
@@ -303,9 +304,11 @@ class ConcreteDashboard(models.AbstractModel):
             domain.append(('sale_order_id.name', 'ilike', search))
             domain.append(('product_id.name', 'ilike', search))
             domain.append(('mix_note', 'ilike', search))
+
+            # TASK - 10187 - Not search with license_plate
             domain.append('|')
             domain.append(('vehicle_id.name', 'ilike', search))
-            domain.append(('vehicle_id.license_plate', 'ilike', search))
+            domain.append(('vehicle_id.ref', 'ilike', search))
         
         total_count = self.env['mrp.production'].search_count(domain)
         tickets = self.env['mrp.production'].search(domain, order=order_str, limit=limit, offset=offset)
