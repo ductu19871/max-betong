@@ -23,7 +23,7 @@
         'security/betong_record_rules.xml',
         'security/ir.model.access.csv',
         'security/base/ir.model.access.csv',
-        'views/menu_updates.xml',
+        # 'views/menu_updates.xml',
     ],
     'installable': True,
     'application': False,

@@ -99,7 +99,7 @@ class ConcreteLoad(models.Model):
             f'concrete.load.{date_str}'
         )
         if not seq:
-            self.env['ir.sequence'].create({
+            self.env['ir.sequence'].sudo().create({
                 'name': f'Load {date_str}',
                 'code': f'concrete.load.{date_str}',
                 'prefix': f'L{date_str}-',
