@@ -500,7 +500,7 @@
                                                 </t>
                                                 <t t-elif="col.key === 'mix_note'"><t t-esc="order.mix_note"/></t>
                                                         <t t-elif="col.key === 'station'">
-                                                            <span t-if="state.permissions.can_edit" 
+                                                            <span t-if="state.permissions.can_edit and false" 
                                                                   class="station-value" 
                                                                   t-on-click.stop="(ev) => this.showStationDropdown(ev, 'order', order.id)">
                                                                 <t t-esc="order.station || t('select_station')"/>
