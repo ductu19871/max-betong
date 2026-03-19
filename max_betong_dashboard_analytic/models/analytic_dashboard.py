@@ -393,7 +393,7 @@ class AnalyticDashboard(models.AbstractModel):
         vehicles_with_trips.sort(key=lambda x: x['count'], reverse=True)
         
         data = [v['count'] for v in vehicles_with_trips]
-        labels = [v['vehicle'].license_plate or v['vehicle'].name for v in vehicles_with_trips]
+        labels = [v['vehicle'].ref or v['vehicle'].name for v in vehicles_with_trips]
         
         # Calculate average (only vehicles with trips > 0)
         average = sum(data) / len(data) if data else 0
@@ -401,7 +401,7 @@ class AnalyticDashboard(models.AbstractModel):
         # Detailed logging
         top_5_vehicles = vehicles_with_trips[:5]
         top_5_details = [
-            f"{v['vehicle'].license_plate or v['vehicle'].name}: {v['count']} chuyến"
+            f"{v['vehicle'].ref or v['vehicle'].name}: {v['count']} chuyến"
             for v in top_5_vehicles
         ]
         
@@ -528,7 +528,7 @@ class AnalyticDashboard(models.AbstractModel):
         vehicle_totals.sort(key=lambda x: x['avg_per_vehicle'], reverse=True)
         
         data = [round(v['avg_per_vehicle'], 1) for v in vehicle_totals]  # Bar = TB mỗi xe
-        labels = [v['vehicle'].license_plate or v['vehicle'].name for v in vehicle_totals]
+        labels = [v['vehicle'].ref or v['vehicle'].name for v in vehicle_totals]
         
         # Overall TB = average of "TB mỗi xe" (per mrp.csv row 50: TB = 3.725)
         avg_per_vehicles = [v['avg_per_vehicle'] for v in vehicle_totals if v.get('avg_per_vehicle') and v['avg_per_vehicle'] > 0]
@@ -537,7 +537,7 @@ class AnalyticDashboard(models.AbstractModel):
         # Top 5 vehicles with longest TB mỗi xe
         top_5_vehicles = vehicle_totals[:5]
         top_5_details = [
-            f"{v['vehicle'].license_plate or v['vehicle'].name}: {v['avg_per_vehicle']:.1f} phút (TB mỗi xe)"
+            f"{v['vehicle'].ref or v['vehicle'].name}: {v['avg_per_vehicle']:.1f} phút (TB mỗi xe)"
             for v in top_5_vehicles
         ]
         
@@ -675,7 +675,7 @@ class AnalyticDashboard(models.AbstractModel):
         
         wait_time = [round(v['wait_time'], 1) for v in vehicle_totals]  # TB mỗi xe
         delivery_time = [round(v['delivery_time'], 1) for v in vehicle_totals]  # TB mỗi xe
-        labels = [v['vehicle'].license_plate or v['vehicle'].name for v in vehicle_totals]
+        labels = [v['vehicle'].ref or v['vehicle'].name for v in vehicle_totals]
         
         # Overall TB = average of "TB mỗi xe" (per-vehicle average cycle), per mrp (1).csv row 21: TB = 401.06
         avg_cycles = [v['avg_cycle_per_vehicle'] for v in vehicle_totals if v.get('avg_cycle_per_vehicle') and v['avg_cycle_per_vehicle'] > 0]
@@ -684,7 +684,7 @@ class AnalyticDashboard(models.AbstractModel):
         # Top 5 vehicles with longest TB chu kỳ mỗi xe
         top_5_vehicles = vehicle_totals[:5]
         top_5_details = [
-            f"{v['vehicle'].license_plate or v['vehicle'].name}: {v['avg_cycle_per_vehicle']:.1f} phút (TB - Delivery: {v['delivery_time']:.1f}, Wait: {v['wait_time']:.1f})"
+            f"{v['vehicle'].ref or v['vehicle'].name}: {v['avg_cycle_per_vehicle']:.1f} phút (TB - Delivery: {v['delivery_time']:.1f}, Wait: {v['wait_time']:.1f})"
             for v in top_5_vehicles
         ]
         

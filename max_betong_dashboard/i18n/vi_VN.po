@@ -451,7 +451,7 @@ msgstr ""
 #: code:addons/max_betong_dashboard/static/src/js/dashboard.js:0
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "Loading"
 
 #. module: max_betong_dashboard
 #. odoo-python

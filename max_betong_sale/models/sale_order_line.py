@@ -93,13 +93,13 @@ class SaleOrderLine(models.Model):
                 and not line.display_type
         )
     
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_planned_pump_so(self):
-        for line in self:
-            if line.order_id.state == 'planned' and line.order_id.so_type == 'bom':
-                raise UserError(_(
-                    "You cannot delete a product line when the Pump Sales Order is in the Planned state."
-                ))
+    # @api.ondelete(at_uninstall=False)
+    # def _unlink_except_planned_pump_so(self):
+    #     for line in self:
+    #         if line.order_id.state == 'planned' and line.order_id.so_type == 'bom':
+    #             raise UserError(_(
+    #                 "You cannot delete a product line when the Pump Sales Order is in the Planned state."
+    #             ))
 
     # @api.model_create_multi
     # def create(self, vals_list):

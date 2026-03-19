@@ -150,7 +150,7 @@
 								('product_id', '=', product_id),
 								('delivery_address_id', '=', delivery_address_id)
 								 ]  or [('linked_group_workcenter_ids', '=', load_station_id), ('state', '=', 'draft')]" 
-								options="{'no_quick_create': True}"
+								options="{'no_create': True, 'no_create_edit': True}"
 								required="1"/>
 						<label for="product_qty" string="Quantity"/>
 						<div class="o_row">

@@ -588,7 +588,7 @@ msgstr "Thời gian Loaded"
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__loading
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Loading"
-msgstr "Đang tải"
+msgstr "Loading"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__loading_datetime
