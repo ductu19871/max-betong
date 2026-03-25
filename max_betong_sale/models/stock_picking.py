@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # stock_picking.py
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 import datetime
 import time
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -24,9 +24,14 @@ class StockPicking(models.Model):
         readonly=True
     )
     factory_out_time = fields.Datetime(
-        related="ticket_id.loaded_datetime",
         string='Factory out time',
-        store=True
+        tracking=True,
+        copy=False,
+    )
+    factory_out_time_manual = fields.Boolean(
+        string='Factory Out Time Manual',
+        default=False,
+        copy=False,
     )
     accumulated_qty = fields.Float(
         string='Accumulated Delivered Quantity',
@@ -60,7 +65,12 @@ class StockPicking(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
     ], compute='_compute_state_raw', string="Status", store=True)
-    
+
+    @api.onchange('ticket_id')
+    def _onchange_ticket_id_factory_out_time(self):
+        if self.ticket_id and not self.factory_out_time_manual:
+            self.factory_out_time = self.ticket_id.loaded_datetime
+
     @api.depends('state')
     def _compute_state_raw(self):
         for rec in self:
@@ -124,7 +134,45 @@ class StockPicking(models.Model):
         res = super().button_validate()
         self._compute_accumulated_qty()
         return res
-    
-    
-    
-    
+
+    def _sync_factory_out_time_from_ticket(self):
+        for picking in self.filtered(lambda p: p.ticket_id and not p.factory_out_time_manual):
+            new_value = picking.ticket_id.loaded_datetime or False
+            if picking.factory_out_time != new_value:
+                picking.with_context(skip_factory_out_time_manual=True).write({
+                    'factory_out_time': new_value,
+                })
+
+    def action_open_factory_out_time_wizard(self):
+        self.ensure_one()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Update Factory Out Time'),
+            'res_model': 'stock.picking.factory.out.time.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_picking_id': self.id,
+                'default_factory_out_time': self.factory_out_time,
+            }
+        }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if (
+                    vals.get('ticket_id')
+                    and not vals.get('factory_out_time')
+                    and not vals.get('factory_out_time_manual')
+            ):
+                ticket = self.env['mrp.production'].browse(vals['ticket_id'])
+                if ticket:
+                    vals['factory_out_time'] = ticket.loaded_datetime
+        return super(StockPicking, self).create(vals_list)
+
+    def write(self, vals):
+        res = super(StockPicking, self).write(vals)
+        if 'ticket_id' in vals:
+            self.filtered(lambda p: not p.factory_out_time_manual)._sync_factory_out_time_from_ticket()
+        return res
