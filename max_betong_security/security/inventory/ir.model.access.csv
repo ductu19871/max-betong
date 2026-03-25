@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_scrap_group_sys_stock_readonly,access_stock_scrap_group_sys_stock_readonlyreadonly,stock.model_stock_scrap,max_betong_security.group_sys_stock_readonly,1,0,0,0
+access_stock_quant_sys_readonly,stock.quant.sys.readonly,stock.model_stock_quant,group_sys_stock_readonly,1,0,0,0
+
+

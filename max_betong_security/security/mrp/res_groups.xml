@@ -1,0 +1,62 @@
+<odoo>
+    <data>
+
+          <record id="module_category_max_betong_base" model="ir.module.category">
+            <field name="name">ERP Bê Tông Base</field>
+            <field name="description">Phân quyền hệ thống ERP Bê Tông Base</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="group_see_menu_giao_hang_be_tong" model="res.groups">
+            <field name="name">group_see_menu_giao_hang_be_tong</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+        </record>
+
+        <record id="group_see_mrp_bom_readonly" model="res.groups">
+            <field name="name">group_see_mrp_bom_readonly</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+        </record>
+
+        <record id="group_see_mrp_bom_rw" model="res.groups">
+            <field name="name">group_see_mrp_bom_rw</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+        </record>
+        
+        <!-- <record id="group_addtional_fleet_vehicle_rw" model="res.groups">
+            <field name="name">group_addtional_fleet_vehicle_rw</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+        </record> -->
+
+       
+
+
+        <record id="group_sub_sys_concrete_pump_sale_order_readonly" model="res.groups">
+            <field name="name">group_sub_sys_concrete_pump_sale_order_readonly</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+        </record>
+
+
+        <record id="group_see_betong_ticket_readonly" model="res.groups">
+            <field name="name">group_see_betong_ticket_readonly</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+        </record>
+
+        <record id="group_see_dashboard_concrete_readonly" model="res.groups">
+            <field name="name">group_see_dashboard_concrete_readonly</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+            <field name="implied_ids" eval="[
+                (4, ref('group_see_betong_ticket_readonly')),
+            ]"/>
+        </record>
+
+        <record id="group_see_can_update_dashboard_vehicle" model="res.groups">
+            <field name="name">group_see_can_update_dashboard_vehicle</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+        </record>
+
+
+
+        
+     
+    </data>
+</odoo>

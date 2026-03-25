@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.workorder'
 
+
     def write(self, vals):
         res = super().write(vals)
         for wo in self:
@@ -15,6 +16,11 @@ class MrpWorkorder(models.Model):
                     production.action_loading()
         return res
 
+
+class Resusers(models.Model):
+    _inherit = 'res.users'
+
+    station_ids = fields.One2many('mrp.workcenter', 'responsible_id')
 class MrpWorkcenter(models.Model):
     _inherit = 'mrp.workcenter'
 

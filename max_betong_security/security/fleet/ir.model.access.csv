@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fleet_service_type_ro,fleet.service.type.ro,fleet.model_fleet_service_type,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_ro,fleet.vehicle.ro,fleet.model_fleet_vehicle,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_assignation_log_ro,fleet.vehicle.assignation.log.ro,fleet.model_fleet_vehicle_assignation_log,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_cost_report_ro,fleet.vehicle.cost.report.ro,fleet.model_fleet_vehicle_cost_report,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_log_contract_ro,fleet.vehicle.log.contract.ro,fleet.model_fleet_vehicle_log_contract,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_log_services_ro,fleet.vehicle.log.services.ro,fleet.model_fleet_vehicle_log_services,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_model_ro,fleet.vehicle.model.ro,fleet.model_fleet_vehicle_model,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_model_brand_ro,fleet.vehicle.model.brand.ro,fleet.model_fleet_vehicle_model_brand,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_model_category_ro,fleet.vehicle.model.category.ro,fleet.model_fleet_vehicle_model_category,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_odometer_ro,fleet.vehicle.odometer.ro,fleet.model_fleet_vehicle_odometer,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_state_ro,fleet.vehicle.state.ro,fleet.model_fleet_vehicle_state,group_sys_vehicle_readonly,1,0,0,0
+access_fleet_vehicle_tag_ro,fleet.vehicle.tag.ro,fleet.model_fleet_vehicle_tag,group_sys_vehicle_readonly,1,0,0,0

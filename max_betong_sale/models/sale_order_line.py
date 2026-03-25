@@ -101,22 +101,22 @@ class SaleOrderLine(models.Model):
                     "You cannot delete a product line when the Pump Sales Order is in the Planned state."
                 ))
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            order = self.env['sale.order'].browse(vals.get('order_id'))
-            if order.state == 'planned' and  order.so_type == 'bom' :
-                raise UserError(
-                    "SO Bơm đang ở trạng thái Planned, không được thêm sản phẩm."
-                )
-        return super().create(vals_list)
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     for vals in vals_list:
+    #         order = self.env['sale.order'].browse(vals.get('order_id'))
+    #         if order.state == 'planned' and  order.so_type == 'bom' :
+    #             raise UserError(
+    #                 "SO Bơm đang ở trạng thái Planned, không được thêm sản phẩm."
+    #             )
+    #     return super().create(vals_list)
     
-    def write(self, vals):
-        allowed_fields = {'product_uom_qty', 'qty_to_invoice'}
-        for line in self:
-            if line.order_id.state == 'planned' and  line.order_id.so_type == 'bom' :
-                if any(field not in allowed_fields for field in vals.keys()):
-                    raise UserError(
-                        "SO Bơm ở trạng thái Planned chỉ được thay đổi số lượng và qty_to_invoice."
-                    )
-        return super().write(vals)
+    # def write(self, vals):
+    #     allowed_fields = {'product_uom_qty', 'qty_to_invoice'}
+    #     for line in self:
+    #         if line.order_id.state == 'planned' and  line.order_id.so_type == 'bom' :
+    #             if any(field not in allowed_fields for field in vals.keys()):
+    #                 raise UserError(
+    #                     "SO Bơm ở trạng thái Planned chỉ được thay đổi số lượng và qty_to_invoice."
+    #                 )
+    #     return super().write(vals)

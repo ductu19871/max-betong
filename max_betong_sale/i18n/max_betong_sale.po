@@ -179,13 +179,17 @@ msgstr "Công ty"
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__concrete_ticket__state__completed
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__mrp_production__state_concrete__completed
 #: model:ir.model.fields.selection,name:max_betong_sale.selection__sale_order__state__done
-#: model:ir.model.fields.selection,name:max_betong_sale.selection__wizard_change_state__state_ticket__completed
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_form_view_betong
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.sale_order_search_view_betong
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_concrete_load_search
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_mrp_production_filter_inherit_betong
 msgid "Completed"
 msgstr "Đã hoàn tất"
+
+#. module: max_betong_sale
+#: model:ir.model.fields.selection,name:max_betong_sale.selection__wizard_change_state__state_ticket__completed
+msgid "Completed"
+msgstr "Completed"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_mrp_production__completed_state_tracking_datetime

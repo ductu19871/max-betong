@@ -369,6 +369,7 @@ class Production(models.Model):
                    'state_concrete':'leave'})
     
     def action_confirm(self):
+        self = self.sudo()
         res = super().action_confirm()
         self.write({'assigned_datetime':fields.Datetime.now()})
         self.load_id.filtered(lambda l: l.state != 'completed').action_set_completed()
@@ -522,7 +523,7 @@ class Production(models.Model):
             f'mrp.production.ticket.{date_str}'
         )
         if not seq:
-            self.env['ir.sequence'].create({
+            self.env['ir.sequence'].sudo().create({
                 'name': f'Ticket {date_str}',
                 'code': f'mrp.production.ticket.{date_str}',
                 'prefix': f'T{date_str}-',

@@ -1,0 +1,10 @@
+<odoo>
+    <record id="group_see_mrp_work_center_readonly" model="res.groups">
+        <field name="name">group_see_mrp_work_center_readonly</field>
+        <field name="category_id" ref="module_category_max_betong_base"/>
+    </record>
+    <record id="group_see_mrp_report_readonly" model="res.groups">
+        <field name="name">group_see_mrp_report_readonly</field>
+        <field name="category_id" ref="module_category_max_betong_base"/>
+    </record>
+</odoo>

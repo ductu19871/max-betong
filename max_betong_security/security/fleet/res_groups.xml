@@ -1,0 +1,9 @@
+<odoo>
+    <record id="group_sys_vehicle_readonly" model="res.groups">
+        <field name="name">group_sys_vehicle_readonly</field>
+        <field name="category_id" ref="module_category_max_betong_base"/>
+        <field name="implied_ids" eval="[
+            (5,0,0)
+        ]"/>
+    </record>
+</odoo>

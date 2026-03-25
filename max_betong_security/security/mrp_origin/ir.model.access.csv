@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_workcenter_readonly,mrp.workcenter.readonly,mrp.model_mrp_workcenter,max_betong_security.group_see_mrp_work_center_readonly,1,0,0,0
+

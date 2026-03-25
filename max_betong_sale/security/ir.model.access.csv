@@ -1,4 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_concrete_load_user,access_concrete_load_user,model_concrete_load,base.group_user,1,0,0,0
 access_concrete_load_manager,access_concrete_load_manager,model_concrete_load,max_betong_sale.group_betong_load_user,1,1,1,1
 access_wizard_confirm_fields,access_wizard_confirm_fields,model_wizard_confirm_fields,base.group_user,1,1,1,1

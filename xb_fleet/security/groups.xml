@@ -4,7 +4,8 @@
         <field name="name">Vehicle User</field>
         <field name="category_id" ref="base.module_category_human_resources_fleet"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-        <field name="menu_access" eval="[(4, ref('fleet.fleet_vehicle_menu')), (4, ref('fleet.fleet_vehicles')), (4, ref('fleet.menu_root')), (4, ref('fleet.fleet_vehicle_odometer_menu'))]"/>
+        <!-- <field name="menu_access" eval="[(4, ref('fleet.fleet_vehicle_menu')), (4, ref('fleet.fleet_vehicles')), (4, ref('fleet.menu_root')), (4, ref('fleet.fleet_vehicle_odometer_menu'))]"/> -->
+        <field name="menu_access" eval="[(5,0,0)]"/>
     </record>
 
     <record id="fleet.fleet_group_user" model="res.groups">

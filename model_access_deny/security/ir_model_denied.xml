@@ -1,0 +1,37 @@
+<odoo>
+    <record id="view_ir_model_denied_tree" model="ir.ui.view">
+        <field name="name">ir.model.denied.tree</field>
+        <field name="model">ir.model.denied</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="model_id"/>
+                <field name="group_id"/>
+                <field name="perm_read"/>
+                <field name="perm_write"/>
+                <field name="perm_create"/>
+                <field name="perm_unlink"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_ir_model_denied_form" model="ir.ui.view">
+        <field name="name">ir.model.denied.form</field>
+        <field name="model">ir.model.denied</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="model_id"/>
+                        <field name="group_id"/>
+                    </group>
+                    <group>
+                        <field name="perm_read"/>
+                        <field name="perm_write"/>
+                        <field name="perm_create"/>
+                        <field name="perm_unlink"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

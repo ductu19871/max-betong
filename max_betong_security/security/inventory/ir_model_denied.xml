@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    
+        <record id="deny_product_template_betong_ke_toan" model="ir.model.denied">
+            <field name="name">deny_sale_order_betong_ke_toan</field>
+            <field name="model_id" ref="sale.model_product_template"/>
+            <field name="group_id" ref="group_betong_ke_toan"/>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="active" eval="1"/>
+        </record>
+
+        <record id="deny_product_product_betong_ke_toan" model="ir.model.denied">
+            <field name="name">deny_sale_order_betong_ke_toan</field>
+            <field name="model_id" ref="sale.model_product_product"/>
+            <field name="group_id" ref="group_betong_ke_toan"/>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="active" eval="1"/>
+        </record>
+
+    </data>
+</odoo>

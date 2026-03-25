@@ -1,0 +1,90 @@
+<odoo>
+    <record id="purchase.menu_purchase_root" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+            (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+            (4, ref('group_sys_purchase_readonly')),
+            ]"/>
+    </record>
+    <!-- <record id="purchase.menu_procurement_management" model="ir.ui.menu">
+            <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>         
+        </record> --> 
+    <!-- 1. Đơn hàng -->
+    <record id="purchase.menu_purchase_form_action" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <record id="purchase.menu_purchase_rfq" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!-- 2 -->
+    <record id="purchase.menu_procurement_management_supplier_name" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!-- 3 -->
+    <record id="purchase.menu_procurement_partner_contact_form" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!-- 4 -->
+    <record id="purchase.product_product_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!-- 6 -->
+    <record id="purchase.purchase_report" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!--  -->
+    <record id="purchase.menu_purchase_config" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        ]"/>
+    </record>
+    <!-- 7 -->
+    <record id="purchase.menu_product_pricelist_action2_purchase" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!-- 9 -->
+    <record id="purchase.menu_product_attribute_action" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!-- 10 -->
+    <record id="purchase.menu_product_category_config_purchase" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sub_sys_purchase_product_vendor_readonly')),
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!-- 11 -->
+    <record id="purchase.menu_purchase_uom_form_action" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+                        (4, ref('group_sys_purchase_readonly')),
+                        ]"/>
+    </record>
+    <!--         
+        <record id="purchase.purchase_report" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6, 0, [ref('max_betong_security.group_betong_mua_hang'), ref('max_betong_security.group_betong_ke_toan'), ref('base.group_system'), ref('max_betong_security.group_betong_super_user'), ref('max_betong_security.group_betong_tong_giam_doc')])]" />
+        </record> -->
+</odoo>

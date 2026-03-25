@@ -24,7 +24,12 @@ class MrpBom(models.Model):
         check_company=True,
         tracking=True
     )
-    picking_type_id = fields.Many2one('stock.picking.type', compute='_compute_picking_type_id', store=True, readonly=False)
+    picking_type_id = fields.Many2one('stock.picking.type', compute='_compute_picking_type_id', 
+                                        inverse='_inverse_picking_type_id',
+                                        store=True)
+
+    def _inverse_picking_type_id(self):
+        pass
 
     @api.constrains('version', 'product_tmpl_id', 'workcenter_id')
     def _check_version_bom(self):
@@ -42,9 +47,10 @@ class MrpBom(models.Model):
             if mix_boms:
                 raise UserError(_('The Mix BoM product %(product)s is available.', product=bom.product_tmpl_id.display_name))
    
-    @api.depends('workcenter_id')
+    @api.depends('workcenter_id', )
     def _compute_picking_type_id(self):
-        self.picking_type_id = self.env['stock.picking.type'].search([('code','=','mrp_operation'), ('warehouse_id','=',self.workcenter_id.warehouse_id.id)], limit=0)
+        picking_type_id = self.env['stock.picking.type'].search([('code','=','mrp_operation'), ('warehouse_id','=',self.workcenter_id.warehouse_id.id)], limit=0)
+        self.picking_type_id = picking_type_id
 
     @api.depends('type')
     def _compute_workcenter_id(self):

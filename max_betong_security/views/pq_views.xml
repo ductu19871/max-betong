@@ -1,0 +1,32 @@
+<odoo>
+     <record id="view_picking_tree_readonly_dvkh" model="ir.ui.view">
+        <field name="name">view_picking_tree_readonly_dvkh</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="priority">1000</field>
+        <field name="mode">primary</field>
+        <field name="groups_id" eval="[(4, ref('max_betong_security.group_betong_dvkh'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="edit">false</attribute>
+                <attribute name="create">false</attribute>
+                <attribute name="delete">false</attribute>
+            </xpath>
+        </field>
+
+        
+    </record> 
+
+    <!-- <record id="view_picking_tree_readonly_dvkh" model="ir.ui.view">
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="groups">your_module.group_dvkh</attribute>
+                    <attribute name="create">false</attribute>
+                    <attribute name="edit">false</attribute>
+                    <attribute name="delete">false</attribute>
+                </xpath>
+            </field>
+        </record> -->
+</odoo>
