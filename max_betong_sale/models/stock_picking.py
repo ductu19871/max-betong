@@ -73,6 +73,9 @@ class StockPicking(models.Model):
             if picking.sale_id:
                 for line in picking.sale_id.order_line:
                     total += line.qty_delivered
+            # Get product quantity on Ticket DO
+            if picking.ticket_id and picking.ticket_id.product_qty > 0.0:
+                total += picking.ticket_id.product_qty
             picking.accumulated_qty = total
     
     @api.depends('sale_id.so_type')
