@@ -566,6 +566,12 @@ class Production(models.Model):
         if 'state' in vals:
             for record in self:
                 record.update_state_concrete()
+        if 'loaded_datetime' in vals:
+            pickings = self.env['stock.picking'].search([
+                ('ticket_id', 'in', self.ids),
+                ('factory_out_time_manual', '=', False),
+            ])
+            pickings._sync_factory_out_time_from_ticket()
         return res
     
     def update_state_concrete(self):

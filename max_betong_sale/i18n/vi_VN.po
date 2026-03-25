@@ -130,6 +130,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_stock_picking_factory_out_time_wizard_form
 msgid "Cancel"
 msgstr "Hủy"
 
@@ -288,6 +289,7 @@ msgstr "Cài đặt cấu hình"
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_change_state_form_ticket
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_wizard_confirm_fields_form_station_volumn
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_stock_picking_factory_out_time_wizard_form
 msgid "Confirm"
 msgstr "Xác nhận"
 
@@ -455,8 +457,14 @@ msgstr "ETA"
 
 #. module: max_betong_sale
 #: model:ir.model.fields,field_description:max_betong_sale.field_stock_picking__factory_out_time
+#: model:ir.model.fields,field_description:max_betong_sale.field_stock_picking_factory_out_time_wizard__factory_out_time
 msgid "Factory out time"
 msgstr "Giờ xuất xưởng"
+
+#. module: max_betong_sale
+#: model:ir.model.fields,field_description:max_betong_sale.field_stock_picking__factory_out_time_manual
+msgid "Factory Out Time Manual"
+msgstr "Giờ xuất xưởng (set Thủ công)"
 
 #. module: max_betong_sale
 #: model_terms:ir.ui.view,arch_db:max_betong_sale.view_partner_form_inherit_geolocation
@@ -1441,3 +1449,16 @@ msgid ""
 "You can only modify the commitment date when the Sales Order is in 'Planned'"
 " status."
 msgstr "Đơn bán hàng (SO) ở trạng thái 'Planned' chỉ cho phép thay đổi 'Ngày đặt hàng'"
+
+#. module: max_betong_sale
+#: code:addons/max_betong_sale/models/stock_picking.py:0
+#, python-format
+msgid "Update Factory Out Time"
+msgstr "Cập Nhật Giờ Xuất Xưởng"
+
+#. module: max_betong_sale
+#: model:ir.actions.act_window,name:max_betong_sale.action_open_factory_out_time_wizard
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_stock_picking_factory_out_time_wizard_form
+#: model_terms:ir.ui.view,arch_db:max_betong_sale.view_picking_form_inherit_ticket_info
+msgid "Update Factory Out Time"
+msgstr "Cập Nhật Giờ Xuất Xưởng"
