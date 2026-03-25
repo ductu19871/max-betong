@@ -237,7 +237,7 @@ class ConcreteDashboard(models.AbstractModel):
             data.append({
                 'id': v.id,
                 'name': v.name,
-                'license_plate': v.license_plate or v.name or '',
+                'license_plate': v.ref or v.name or '',
                 'station': v.station_id.name if v.station_id else '',
                 'station_id': v.station_id.id if v.station_id else False,
                 'state_concrete': state_concrete,
@@ -367,7 +367,7 @@ class ConcreteDashboard(models.AbstractModel):
                     if i > highest_passed_index:
                         highest_passed_index = i
                     break
-            
+            t = t.sudo()
             data.append({
                 'id': t.id,
                 'name': t.name,
@@ -550,6 +550,8 @@ class ConcreteDashboard(models.AbstractModel):
 
     @api.model
     def update_vehicle_station(self, vehicle_id, station_id):
+        if self.env.user.has_group('max_betong_security.group_see_can_update_dashboard_vehicle'):
+            self = self.sudo()
         vehicle = self.env['fleet.vehicle'].browse(vehicle_id)
         if not vehicle.exists():
             return {'success': False, 'error': _('Vehicle not found')}
@@ -562,6 +564,8 @@ class ConcreteDashboard(models.AbstractModel):
 
     @api.model
     def update_vehicle_state(self, vehicle_id, state_concrete):
+        if self.env.user.has_group('max_betong_security.group_see_can_update_dashboard_vehicle'):
+            self = self.sudo()
         vehicle = self.env['fleet.vehicle'].browse(vehicle_id)
         if not vehicle.exists():
             return {'success': False, 'error': _('Vehicle not found')}

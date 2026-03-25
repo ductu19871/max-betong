@@ -369,6 +369,7 @@ class Production(models.Model):
                    'state_concrete':'leave'})
     
     def action_confirm(self):
+        self = self.sudo()
         res = super().action_confirm()
         self.write({'assigned_datetime':fields.Datetime.now()})
         self.load_id.filtered(lambda l: l.state != 'completed').action_set_completed()
@@ -404,7 +405,9 @@ class Production(models.Model):
             'default_company_id': self.company_id.id or self.env.company.id,
             'default_ticket_on_hold_id': self.id,
             'default_ticket_on_hold_type': 'remix',
-            'default_product_id': self.product_id.id
+            'default_load_station_id': self.load_station_id.id,
+            'default_product_id': self.product_id.id,
+            'default_delivery_address_id': self.delivery_address_id.id,
         }
         action['views'] = [(self.env.ref('max_betong_sale.mrp_production_ticket_on_hold_wizard_view').id, 'form')]
         action['target'] = 'new'
@@ -520,7 +523,7 @@ class Production(models.Model):
             f'mrp.production.ticket.{date_str}'
         )
         if not seq:
-            self.env['ir.sequence'].create({
+            self.env['ir.sequence'].sudo().create({
                 'name': f'Ticket {date_str}',
                 'code': f'mrp.production.ticket.{date_str}',
                 'prefix': f'T{date_str}-',

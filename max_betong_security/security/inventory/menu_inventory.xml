@@ -1,0 +1,96 @@
+<odoo>
+    <record id="stock.menu_stock_root" model="ir.ui.menu">
+         <field name="groups_id" eval="[
+            (4, ref('group_see_menu_product_on_inventory')),
+            (4, ref('group_sys_stock_readonly')),
+            ]"/>
+    </record>
+
+    <record id="stock.menu_stock_warehouse_mgmt" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+        (4, ref('group_sys_stock_readonly')),
+        (4, ref('stock.group_stock_user')),
+        ]"/>
+    </record>
+
+    <!-- 1. Phiếu nhập kho -->
+    <record id="stock.in_picking" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('group_sys_stock_readonly'))]"/>
+    </record>
+
+    <!-- 2.Phiếu giao hàng -->
+    <record id="stock.out_picking" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('group_sys_stock_readonly'))]"/>
+    </record>
+
+    <!-- 3.Chuyển kho nội bộ -->
+    <record id="stock.int_picking" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('group_sys_stock_readonly'))]"/>
+    </record>
+
+    <!-- 5.Physical Inventory -->
+    <record id="stock.menu_action_inventory_tree" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('group_sys_stock_readonly'))]"/>
+    </record>
+
+    <!-- 7.Tiêu hủy -->
+    <record id="stock.menu_stock_scrap" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('group_sys_stock_readonly'))]"/>
+    </record>
+
+    <!-- 8. Sản phẩm -->
+    <record id="stock.menu_product_variant_config_stock" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+        (4, ref('group_see_menu_product_on_inventory')),
+        (4, ref('group_sys_stock_readonly')),
+        (4, ref('stock.group_stock_user')),
+        ]"/>
+    </record>
+
+    <record id="stock.product_product_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[
+            (4, ref('group_see_menu_product_on_inventory')),
+            (4, ref('group_sys_stock_readonly')),
+            ]"/>
+    </record>
+
+
+    <!-- <record id="stock.menu_stock_inventory_control" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [])]" />
+    </record> -->
+
+<!-- 
+    -->
+
+    <!-- <record id="stock.stock_picking_type_menu" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('stock.group_stock_user')])]" />
+    </record> -->
+
+
+    <!-- menu hoạt động -->
+    <!-- <record id="stock.menu_stock_warehouse_mgmt" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [
+
+             ])]" />
+    </record> -->
+    <!-- <record id="stock.menu_pickingtype" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_betong_mua_hang'), ref('group_betong_ke_toan'), ref('group_betong_tram'), ref('base.group_system'), ref('group_betong_super_user'), ref('group_betong_tong_giam_doc')])]" />
+    </record> -->
+
+    <!-- <record id="stock.menu_warehouse_report" model="ir.ui.menu">
+        <field name="groups_id" eval="[(6, 0, [ref('group_betong_mua_hang'), ref('group_betong_ke_toan'), ref('group_betong_tram'), ref('base.group_system'), ref('group_betong_super_user'), ref('group_betong_tong_giam_doc')])]" />
+    </record> -->
+    <!-- 13. tồn kho -->
+    <record id="stock.menu_product_stock" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('group_sys_stock_readonly'))]"/>
+    </record>
+
+    <!-- 15. Vị trí -->
+    <record id="stock.menu_valuation" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4, ref('group_sys_stock_readonly'))]"/>
+    </record>
+
+    <record model="ir.actions.server" id="stock.action_view_quants">
+        <field name="groups_id" eval="[(4, ref('group_sys_stock_readonly'))]"/>
+    </record>
+</odoo>

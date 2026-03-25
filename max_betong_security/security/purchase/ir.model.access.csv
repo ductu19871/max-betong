@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_report_viewer,purchase.report.viewer,purchase.model_purchase_report,max_betong_security.group_sub_sys_purchase_product_vendor_readonly,1,0,0,0
+access_purchase_order_sub_sys_readonly,purchase.order.readonly,purchase.model_purchase_order,group_sub_sys_purchase_product_vendor_readonly,1,0,0,0
+access_product_attribute_sub_readonly,product.attribute.readonly,product.model_product_attribute,group_sub_sys_purchase_product_vendor_readonly,1,0,0,0
+access_product_category_sub_readonly,product.category.readonly,product.model_product_category,group_sub_sys_purchase_product_vendor_readonly,1,0,0,0
+

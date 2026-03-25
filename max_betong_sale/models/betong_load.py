@@ -99,7 +99,7 @@ class ConcreteLoad(models.Model):
             f'concrete.load.{date_str}'
         )
         if not seq:
-            self.env['ir.sequence'].create({
+            self.env['ir.sequence'].sudo().create({
                 'name': f'Load {date_str}',
                 'code': f'concrete.load.{date_str}',
                 'prefix': f'L{date_str}-',
@@ -174,7 +174,7 @@ class ConcreteLoad(models.Model):
             raise UserError(_("Source location is not define."))
         if not picking_type.default_location_dest_id:
             raise UserError(_("Dest location is not define."))
-        picking = self.env['stock.picking'].create({
+        picking = self.env['stock.picking'].sudo().create({
             'picking_type_id': picking_type.id,
             'company_id': self.company_id.id,
             'location_id': picking_type.default_location_src_id.id,
@@ -205,7 +205,7 @@ class ConcreteLoad(models.Model):
         }
     
     def action_view_ticket(self):
-        action = self.env.ref('max_betong_sale.action_concrete_ticket').read()[0]
+        action = self.env.ref('max_betong_sale.action_concrete_ticket').sudo().read()[0]
         action['domain'] = [('id', 'in', self.production_ids.ids)]
         action['view_mode'] = 'tree,form'
         action['context'] = {}
