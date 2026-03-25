@@ -473,7 +473,7 @@ class SaleOrder(models.Model):
             if rec.state == 'planned' and  rec.so_type == 'bom' :
                 if any(field not in allowed_fields for field in vals.keys()):
                     raise UserError(
-                        "SO Bơm ở trạng thái Planned chỉ được thay đổi commitment_date"
+                        _("You can only modify the commitment date when the Sales Order is in 'Planned' status.")
                     )
         blocked = self.filtered(lambda r: r.state == 'done')
         if blocked:

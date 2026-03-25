@@ -1433,3 +1433,11 @@ msgstr "Trạm"
 msgid "Warehouse"
 msgstr "Kho hàng"
 
+#. module: max_betong_sale
+#. odoo-python
+#: code:addons/max_betong_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can only modify the commitment date when the Sales Order is in 'Planned'"
+" status."
+msgstr "Đơn bán hàng (SO) ở trạng thái 'Planned' chỉ cho phép thay đổi 'Ngày đặt hàng'"
