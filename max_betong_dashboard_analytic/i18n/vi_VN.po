@@ -77,7 +77,7 @@ msgstr "TG Sống Bê Tông"
 #: code:addons/max_betong_dashboard_analytic/static/src/components/return_volume_chart/index.xml:0
 #, python-format
 msgid "Concrete Returns"
-msgstr "Khối lượng trả về"
+msgstr "Khối Lượng Bê Tông Sự Cố"
 
 #. module: max_betong_dashboard_analytic
 #. odoo-javascript
