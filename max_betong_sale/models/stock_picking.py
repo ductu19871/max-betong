@@ -76,16 +76,16 @@ class StockPicking(models.Model):
         for rec in self:
             rec.state_raw = rec.state
 
-    @api.depends('sale_id','sale_id.order_line')
+    @api.depends('sale_id','sale_id.order_line','move_ids_without_package')
     def _compute_accumulated_qty(self):
         for picking in self:
             total = 0.0
             if picking.sale_id:
                 for line in picking.sale_id.order_line:
                     total += line.qty_delivered
-            # Get product quantity on Ticket DO
-            if picking.ticket_id and picking.ticket_id.product_qty > 0.0:
-                total += picking.ticket_id.product_qty
+            # Get product quantity on DO Lines
+            if picking.move_line_ids:
+                total += sum(picking.move_ids_without_package.mapped('product_uom_qty')) or 0.0
             picking.accumulated_qty = total
     
     @api.depends('sale_id.so_type')
