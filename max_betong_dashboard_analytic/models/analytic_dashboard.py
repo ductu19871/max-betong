@@ -289,6 +289,20 @@ class AnalyticDashboard(models.AbstractModel):
         _logger.debug(f'[AnalyticDashboard] KPI SO domain: {so_domain}')
         all_orders = self.env['sale.order'].search(so_domain)
 
+        # --- Tổng số lượng các Ticket đã hoàn thành (Completed) ---
+        ticket_domain = [
+            ('mo_type', '=', 'concrete'),
+            ('state_concrete', '=', 'completed'),
+            ('company_id', 'in', self._get_allowed_company_ids()),
+        ]
+
+        if date_range:
+            ticket_domain.append(('completed_state_tracking_datetime', '>=', date_range['from']))
+            ticket_domain.append(('completed_state_tracking_datetime', '<=', date_range['to']))
+
+        _logger.debug(f'[AnalyticDashboard] KPI Ticket domain: {ticket_domain}')
+        all_tickets = self.env['mrp.production'].search(ticket_domain)
+
         volume_delivered = 0.0
         volume_undelivered = 0.0
         for order in all_orders:
@@ -302,14 +316,17 @@ class AnalyticDashboard(models.AbstractModel):
             delivered_qty = sum(concrete_lines.mapped('qty_delivered')) if concrete_lines else 0.0
             remaining_qty = ordered_qty - delivered_qty
 
-            volume_delivered += delivered_qty
+            # volume_delivered += ordered_qty # replace 'delivered_qty'
             volume_undelivered += remaining_qty
 
-        volume_delivered = round(volume_delivered, 1)
-        volume_undelivered = round(volume_undelivered, 1)
+        # Lấy số lượng các ticket đã hoàn thành
+        ticket_product_qty = sum(all_tickets.mapped('product_qty')) if all_tickets else 0.0
 
-        # --- Undelivered orders KPI ---
-        # As requested: "đơn chưa giao" = tổng đơn - đơn đã hoàn tất.
+        volume_delivered += round(ticket_product_qty, 1)  # Khối lượng đã giao
+        volume_undelivered = round(volume_undelivered, 1) # Khối lượng chưa giao
+
+        # # --- Undelivered orders KPI ---
+        # # As requested: "đơn chưa giao" = tổng đơn - đơn đã hoàn tất.
         done_count = len(all_orders.filtered(lambda o: o.state == 'done'))
         undelivered_order_count = max(len(all_orders) - done_count, 0)
 
