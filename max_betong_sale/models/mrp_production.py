@@ -534,35 +534,54 @@ class Production(models.Model):
         return seq
 
     def write(self, vals):
+        if self.env.context.get('skip_state_concrete_hook'):
+            return super().write(vals)
+
+        old_states = {}
         if 'state_concrete' in vals:
-            old_states = {}
-            for record in self:
-                old_states[record.id] = record.state_concrete
+            old_states = {record.id: record.state_concrete for record in self}
+
         res = super().write(vals)
+
         if 'state_concrete' in vals:
+            incident_states = ('completed', 'dump', 'remix', 'swap')
+
             for record in self.filtered(lambda r: r.mo_type == 'concrete'):
+                old_state = old_states.get(record.id)
                 new_state = record.state_concrete
+
+                if old_state == new_state:
+                    continue
+
+                now = fields.Datetime.now()
+                update_vals = {}
+
+                # Cập nhật incident_datetime theo từng state
                 datetime_field = state_to_datetime_field.get(new_state)
                 if datetime_field and not getattr(record, datetime_field):
-                    record.write({
-                        datetime_field: fields.Datetime.now()
-                    })
+                    update_vals[datetime_field] = now
+
+                if new_state in incident_states:
+                    update_vals['incident_datetime'] = now
+
+                if new_state == 'on_hold':
+                    update_vals['is_loaded_to_on_onhold'] = old_state in ('loading', 'loaded')
+
+                if update_vals:
+                    record.with_context(skip_state_concrete_hook=True).write(update_vals)
+
                 if new_state in ('dump', 'remix', 'swap'):
                     record._cancel_related_delivery_orders()
-                if new_state in ('on_hold', 'completed', 'dump', 'remix', 'swap'):
-                    if not record.incident_datetime:
-                        record.write({
-                            'incident_datetime': fields.Datetime.now()
-                        })
-                    if new_state in ('on_hold',):
-                        old_state = old_states.get(record.id)
-                        if old_state in ('loading', 'loaded'):
-                           record.is_loaded_to_on_onhold = True
-                        else:
-                            record.is_loaded_to_on_onhold = False
+
         if 'state' in vals:
             for record in self:
                 record.update_state_concrete()
+        if 'loaded_datetime' in vals:
+            pickings = self.env['stock.picking'].search([
+                ('ticket_id', 'in', self.ids),
+                ('factory_out_time_manual', '=', False),
+            ])
+            pickings._sync_factory_out_time_from_ticket()
         return res
     
     def update_state_concrete(self):
