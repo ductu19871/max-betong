@@ -156,6 +156,8 @@
                 (4, ref('sales_team.group_sale_salesman_all_leads')),
                 (4, ref('max_betong_sale.group_betong_load_manager')),
 
+                (4, ref('group_see_dashboard_analytic')),
+
                 (4, ref('group_see_dashboard_concrete_readonly')),
 
                 (4, ref('group_see_menu_giao_hang_be_tong')),
@@ -188,6 +190,8 @@
                 (4, ref('group_see_betong_ticket_readonly')),
                 (4, ref('group_sub_sys_concrete_pump_sale_order_readonly')),
 
+                (4, ref('group_sales_restricted_concrete_bom')),
+
                 (4, ref('group_see_menu_giao_hang_be_tong')),
 
 
@@ -212,6 +216,8 @@
                 (4, ref('group_sub_sys_concrete_pump_sale_order_readonly')),
                 (4, ref('group_see_betong_ticket_readonly')),
                 (4, ref('group_see_dashboard_concrete_readonly')),
+
+                (4, ref('group_see_dashboard_analytic')),
 
                 (4, ref('group_see_menu_giao_hang_be_tong')),
 
@@ -244,6 +250,8 @@
                 (4, ref('group_sub_sys_concrete_pump_sale_order_readonly')),
                 (4, ref('group_see_betong_ticket_readonly')),
                 (4, ref('group_see_dashboard_concrete_readonly')),
+
+                (4, ref('group_see_dashboard_analytic')),
 
                 (4, ref('group_see_mrp_bom_readonly')),
 

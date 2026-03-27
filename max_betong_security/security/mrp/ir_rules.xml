@@ -38,5 +38,16 @@
             <field name="groups" eval="[(4, ref('group_betong_tram'))]"/>
         </record>
 
+        <record id="rule_sales_restricted_concrete_bom" model="ir.rule">
+            <field name="name">Read-only for Concrete and BOM types</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="groups" eval="[(4, ref('group_sales_restricted_concrete_bom'))]"/>
+            <field name="domain_force">[('so_type', 'not in', ['concrete', 'bom'])]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
     </data>
 </odoo>

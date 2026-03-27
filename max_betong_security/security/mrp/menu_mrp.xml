@@ -29,8 +29,7 @@
     <!-- 6 -->
     <record id="max_betong_dashboard_analytic.menu_concrete_analytic_dashboard" model="ir.ui.menu">
         <field name="groups_id" eval="[
-                ref('group_betong_dvkh'),
-                ref('group_betong_tong_giam_doc')
+                ref('group_see_dashboard_analytic'),
             ]"/>  
     </record>
     <!-- 7 giám sát gps -->

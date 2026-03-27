@@ -15,7 +15,7 @@
         </record>
 
 
-        <record id="deny_sale_order_betong_ke_toan" model="ir.model.denied">
+        <!-- <record id="deny_sale_order_betong_ke_toan" model="ir.model.denied">
             <field name="name">deny_sale_order_betong_ke_toan</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="group_id" ref="group_betong_ke_toan"/>
@@ -24,7 +24,7 @@
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
             <field name="active" eval="1"/>
-        </record>
+        </record> -->
 
     </data>
 </odoo>
