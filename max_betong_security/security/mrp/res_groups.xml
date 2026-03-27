@@ -66,7 +66,10 @@
         </record>
 
 
-        
+        <record id="group_restrict_customer_contact_management" model="res.groups">
+            <field name="name">group_restrict_customer_contact_management</field>
+            <field name="category_id" ref="module_category_max_betong_base"/>
+        </record>
      
     </data>
 </odoo>

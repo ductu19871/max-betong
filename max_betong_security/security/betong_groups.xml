@@ -192,6 +192,8 @@
 
                 (4, ref('group_sales_restricted_concrete_bom')),
 
+                (4, ref('group_restrict_customer_contact_management')),
+
                 (4, ref('group_see_menu_giao_hang_be_tong')),
 
 
