@@ -135,12 +135,12 @@ class SaleOrder(models.Model):
     bom_id = fields.Many2one('mrp.bom',string='Mix',compute="compute_bom",store =True)
     mix_note = fields.Text(string='Mix Note',compute="compute_bom",store =True)
 
-    @api.constrains('commitment_date')
-    def _check_commitment_date(self):
-        for so in self:
-            if so.so_type in ['concrete']:
-                if so.commitment_date and so.commitment_date < fields.Datetime.now():
-                    raise ValidationError(_('Commitment date cannot be in the past.'))
+    # @api.constrains('commitment_date')
+    # def _check_commitment_date(self):
+    #     for so in self:
+    #         if so.so_type in ['concrete']:
+    #             if so.commitment_date and so.commitment_date < fields.Datetime.now():
+    #                 raise ValidationError(_('Commitment date cannot be in the past.'))
     
     @api.depends('order_line','order_line.product_id')
     def compute_bom(self):
@@ -465,7 +465,6 @@ class SaleOrder(models.Model):
             'delivery_address_id': self.partner_shipping_id.id,
             'company_id':self.company_id.id,
         }
-
 
     def write(self, vals):
         allowed_fields = {'commitment_date', 'order_line', 'state', 'state_raw'}
