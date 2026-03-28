@@ -94,14 +94,6 @@
                <xpath expr="//field[@name='commitment_date']" position="attributes">
 	           		<attribute name="readonly">so_type in ['concrete', 'bom'] and state not in ['draft', 'sent', 'sale', 'planned']</attribute>
 	           </xpath>
-               <xpath expr="//field[@name='payment_term_id']" position="after">
-                   <field name="est_delivery_time_conc"
-                          invisible="so_type != 'concrete'"
-                          readonly="so_type == 'concrete' and state in ['dispatching', 'done']"/>
-                   <field name="est_delivery_time_bom"
-                          invisible="so_type != 'bom'"
-                          readonly="so_type == 'bom' and state == 'done'"/>
-	           </xpath>
                <xpath expr="//div[hasclass('o_row')]//field[@name='expected_date']/../../span[hasclass('text-muted')]" position="attributes">
 	           		<attribute name="invisible" add="so_type == 'concrete'" separator=" or "></attribute>
 	           </xpath>
