@@ -12,7 +12,6 @@
             </tree>
         </field>
     </record>
-
     <record id="view_payment_plan_form" model="ir.ui.view">
         <field name="name">payment.plan.form</field>
         <field name="model">deliverable.payment.plan</field>
@@ -26,24 +25,18 @@
                     <button name="action_confirm" type="object" string="Confirm"
                             class="btn-primary"
                             invisible="state != 'draft'"/>
-
                     <!-- <button name="action_done" type="object" string="Done"
                             class="btn-success"
                             invisible="state != 'confirm'"/> -->
-
                     <button name="action_cancel" type="object" string="Cancel"
                             class="btn-danger"
                             invisible="state not in ('draft','confirm')"/>
-
                     <button name="action_reset_draft" type="object" string="Reset to Draft"
                             class="btn-secondary"
                             invisible="state != 'cancel'"/>
-
-
                     <!-- STATUS BAR -->
                     <field name="state" widget="statusbar"
                         statusbar_visible="draft,confirm"/>
-
                 </header>
                 <sheet>
                     <group>
@@ -72,7 +65,6 @@
                                     <field name="name"/>
                                     <field name="from_date"/>
                                     <field name="to_date"/>
-
                                     <!-- PLAN -->
                                     <field name="plan_percentage"/>
                                     <field name="plan_amount"/>
@@ -80,7 +72,6 @@
                                     <field name="plan_accumulated_amount"/>
                                     <field name="plan_ipc_amount"/>
                                     <field name="plan_accumulated_ipc_amount"/>
-
                                     <!-- ACTUAL -->
                                     <field name="actual_percentage"/>
                                     <field name="actual_amount"/>
@@ -90,7 +81,6 @@
                                     <field name="actual_accumulated_ipc_amount"/>
                                     <field name="actual_paid_amount"/>
                                     <field name="actual_accumulated_paid_amount"/>
-
                                 </tree>
                             </field>
                         </page>
@@ -99,18 +89,52 @@
             </form>
         </field>
     </record>
-
     <menuitem id="menu_scurve_root" name="S-Curve"/>
     <!-- <menuitem id="menu_payment_plan" name="Payment Plan" parent="menu_scurve_root"/> -->
-
     <record id="action_payment_plan" model="ir.actions.act_window">
         <field name="name">Payment Plan</field>
         <field name="res_model">deliverable.payment.plan</field>
         <field name="view_mode">tree,form</field>
     </record>
-
+    <record id="view_payment_plan_line_graph" model="ir.ui.view">
+        <field name="name">payment.plan.line.graph</field>
+        <field name="model">deliverable.payment.plan.line</field>
+        <field name="arch" type="xml">
+            <graph string="S-Curve" type="line">
+                <field name="from_date" interval="month"/>
+                <field name="plan_accumulated_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="view_payment_plan_line_search" model="ir.ui.view">
+        <field name="name">payment.plan.line.search</field>
+        <field name="model">deliverable.payment.plan.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- Basic -->
+                <field name="plan_id"/>
+                <!-- Filters -->
+                <filter name="filter_customer" string="Customer" domain="[('plan_id.type','=','customer')]"/>
+                <filter name="filter_subcontract" string="Subcontract" domain="[('plan_id.type','=','subcontract')]"/>
+                <!-- Date -->
+                <!-- Group By -->
+                <group expand="0" string="Group By">
+                    <filter name="group_plan" string="Plan" context="{'group_by':'plan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_payment_plan_line" model="ir.actions.act_window">
+        <field name="name">Payment Plan Line</field>
+        <field name="res_model">deliverable.payment.plan.line</field>
+        <field name="view_mode">graph</field>
+    </record>
     <menuitem id="menu_payment_plan"
           name="Payment Plan"
           parent="menu_scurve_root"
           action="action_payment_plan"/>
+    <menuitem id="menu_payment_plan_line"
+          name="Payment Plan Line"
+          parent="menu_scurve_root"
+          action="action_payment_plan_line"/>
 </odoo>
