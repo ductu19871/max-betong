@@ -34,9 +34,13 @@ class FleetVehicle(models.Model):
 
     _sql_constraints = [
         (
-            'uniq_license_plate_ref',
-            'unique(license_plate, ref)',
-            'The license plate and reference number already exist.'
+            'uniq_license_plate',
+            'unique(license_plate)',
+            'The license plate already exists.'
+        ), (
+            'uniq_ref',
+            'unique(ref)',
+            'The reference number already exists.'
         ),
     ]
 

@@ -364,6 +364,11 @@ msgid "l/km"
 msgstr "l/km"
 
 #. module: xb_fleet
-#: model:ir.model.constraint,message:xb_fleet.constraint_fleet_vehicle_uniq_license_plate_ref
-msgid "The license plate and reference number already exist."
-msgstr "Biển số xe và số tham chiếu đã tồn tại."
+#: model:ir.model.constraint,message:xb_fleet.constraint_fleet_vehicle_uniq_license_plate
+msgid "The license plate already exists."
+msgstr "Biển số xe đã tồn tại."
+
+#. module: xb_fleet
+#: model:ir.model.constraint,message:xb_fleet.constraint_fleet_vehicle_uniq_ref
+msgid "The reference number already exists."
+msgstr "Số tham chiếu đã tồn tại."

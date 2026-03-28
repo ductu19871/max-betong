@@ -27,16 +27,19 @@
                                (
                                        so_type == 'concrete'
                                        and invoice_status == 'no'
-                                       and (
-                                               (not trial_mix and state == 'sale')
-                                               or
-                                               (trial_mix and state == 'done')
-                                       )
-                               ) or
-                               (so_type == 'bom' and invoice_status == 'no' and state == 'done') or
-                               (so_type == 'normal' and invoice_status == 'no' and state == 'sale')
+                                       and not trial_mix
+                                       and state == 'sale'
+                               ) or (
+                                       so_type == 'bom'
+                                       and invoice_status == 'no'
+                                       and state == 'done'
+                               ) or (
+                                       so_type == 'normal'
+                                       and invoice_status == 'no'
+                                       and state == 'sale'
+                               )
                        )
-                   </attribute>
+                    </attribute>
                </xpath>
                 <xpath expr="//button[@id='create_invoice']" position="attributes">
                    <attribute name="invisible">
@@ -44,14 +47,17 @@
                                (
                                        so_type == 'concrete'
                                        and invoice_status == 'to invoice'
-                                       and (
-                                               (not trial_mix and state == 'sale')
-                                               or
-                                               (trial_mix and state == 'done')
-                                       )
-                               ) or
-                               (so_type == 'bom' and invoice_status == 'to invoice' and state == 'done') or
-                               (so_type == 'normal' and invoice_status == 'to invoice' and state == 'sale')
+                                       and not trial_mix
+                                       and state == 'sale'
+                               ) or (
+                                       so_type == 'bom'
+                                       and invoice_status == 'to invoice'
+                                       and state == 'done'
+                               ) or (
+                                       so_type == 'normal'
+                                       and invoice_status == 'to invoice'
+                                       and state == 'sale'
+                               )
                        )
                    </attribute>
                 </xpath>
