@@ -22,8 +22,23 @@
 	           		<attribute name="invisible">so_type in ['concrete','bom']</attribute>
 	           </xpath>
 	           <xpath expr="//button[@id='create_invoice_percentage']" position="attributes">
-	           		<attribute name="invisible">so_type == 'concrete' or invoice_status != 'no' or state != 'sale'</attribute>
-	           </xpath>
+                   <attribute name="invisible">
+                       not (
+                               (so_type == 'concrete' and invoice_status == 'no' and state == 'sale') or
+                               (so_type == 'bom' and invoice_status == 'no' and state == 'done') or
+                               (so_type == 'normal' and invoice_status == 'no' and state == 'sale')
+                       )
+                   </attribute>
+               </xpath>
+                <xpath expr="//button[@id='create_invoice']" position="attributes">
+                   <attribute name="invisible">
+                       not (
+                               (so_type == 'concrete' and invoice_status == 'to invoice' and state == 'sale') or
+                               (so_type == 'bom' and invoice_status == 'to invoice' and state == 'done') or
+                               (so_type == 'normal' and invoice_status == 'to invoice' and state == 'sale')
+                       )
+                   </attribute>
+                </xpath>
 	           <xpath expr="//field[@name='state']" position="after">
                    <field name="state_raw" widget="statusbar" statusbar_visible="draft,sent,sale,planned,done"
 	           			invisible="so_type != 'bom'"/>
@@ -62,6 +77,14 @@
 	           </xpath>
                <xpath expr="//field[@name='commitment_date']" position="attributes">
 	           		<attribute name="readonly">so_type in ['concrete', 'bom'] and state not in ['draft', 'sent', 'sale', 'planned']</attribute>
+	           </xpath>
+               <xpath expr="//field[@name='payment_term_id']" position="after">
+                   <field name="est_delivery_time_conc"
+                          invisible="so_type != 'concrete'"
+                          readonly="so_type == 'concrete' and state in ['dispatching', 'done']"/>
+                   <field name="est_delivery_time_bom"
+                          invisible="so_type != 'bom'"
+                          readonly="so_type == 'bom' and state == 'done'"/>
 	           </xpath>
                <xpath expr="//div[hasclass('o_row')]//field[@name='expected_date']/../../span[hasclass('text-muted')]" position="attributes">
 	           		<attribute name="invisible" add="so_type == 'concrete'" separator=" or "></attribute>
