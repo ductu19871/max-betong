@@ -305,11 +305,11 @@ class SaleOrder(models.Model):
                 if so.volume_unallocated != 0:
                     order_waiting.append(_('- The %s order has not been allocated or the allocation is insufficient.') % so.display_name)
                     continue
-                # if any(not mo.production_ids for mo in so.load_ids):
-                #     order_waiting.append(_('- The %s order still has loads without any assigned tickets.') % so.display_name)
-                #     continue
-                # if any(mo.state_concrete not in ['completed', 'remix', 'cancel'] for mo in so.load_ids.production_ids):
-                #     order_waiting.append(_('- The %s order has tickets that are not yet completed.') % so.display_name)
+                if any(not mo.production_ids for mo in so.load_ids):
+                    order_waiting.append(_('- The %s order still has loads without any assigned tickets.') % so.display_name)
+                    continue
+                if any(mo.state_concrete not in ['completed', 'remix', 'cancel'] for mo in so.load_ids.production_ids):
+                    order_waiting.append(_('- The %s order has tickets that are not yet completed.') % so.display_name)
         if order_waiting:
             raise UserError('\n'.join(order_waiting))
         self.write({'state':'done'})
