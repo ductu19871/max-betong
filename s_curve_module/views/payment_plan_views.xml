@@ -19,7 +19,7 @@
             <form>
                 <header>
                     <button name="action_generate_lines" type="object" string="Generate" class="btn-primary" invisible="state!='draft'"/>
-                    <button name="action_generate_sample" type="object" string="Generate Sample"
+                    <button name="action_generate_sample" type="object" string="Generate Sample" groups="base.group_no_one"
         class="btn-secondary" invisible="state!='draft'"/>
                     <!-- BUTTONS -->
                     <button name="action_confirm" type="object" string="Confirm"
@@ -49,8 +49,8 @@
                             <field name="time_range_type"/>
                         </group>
                         <group>
-                            <field name="customer_contract_id" domain="[('contract_project_id', '=', project_id)]" invisible="type!='customer'"/>
-                            <field name="subcontractor_contract_id" domain="[('contract_project_id', '=', project_id)]" invisible="type!='subcontract'"/>
+                            <field name="customer_contract_id" required="type == 'customer'" domain="[('is_customer_contract', '=', True), ('contract_project_id', '=', project_id)]" invisible="type != 'customer'"/>
+                            <field name="subcontractor_contract_id" required="type == 'subcontract'" domain="[('is_sub_contract', '=', True), ('contract_project_id', '=', project_id)]" invisible="type != 'subcontract'"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="total_project_amount" readonly="1"/>
                             <field name="currency_id" />
