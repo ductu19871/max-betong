@@ -362,3 +362,13 @@ msgstr "l/giờ"
 #: model:ir.model.fields.selection,name:xb_fleet.selection__fleet_vehicle__fuel_limit_type__km
 msgid "l/km"
 msgstr "l/km"
+
+#. module: xb_fleet
+#: model:ir.model.constraint,message:xb_fleet.constraint_fleet_vehicle_uniq_license_plate
+msgid "The license plate already exists."
+msgstr "Biển số xe đã tồn tại."
+
+#. module: xb_fleet
+#: model:ir.model.constraint,message:xb_fleet.constraint_fleet_vehicle_uniq_ref
+msgid "The reference number already exists."
+msgstr "Số tham chiếu đã tồn tại."
