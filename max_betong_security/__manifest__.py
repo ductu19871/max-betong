@@ -16,7 +16,8 @@
         'max_betong_sale',
         'max_betong_fleet',
         'max_betong_product',
-        'model_access_deny'
+        'model_access_deny',
+        'ipc_interim_payment_certificates_odoo'
     ],
     'data': [
         # 'security/mrp/tech_res_groups.xml',

@@ -8,6 +8,9 @@ access_cp_sale_opt,cp.sale.opt,sale_management.model_sale_order_option,max_beton
 access_cp_stock_pick,cp.stock.pick,stock.model_stock_picking,max_betong_security.group_sub_sys_concrete_pump_sale_order_readonly,1,0,0,0
 access_cp_stock_move,cp.stock.move,stock.model_stock_move,max_betong_security.group_sub_sys_concrete_pump_sale_order_readonly,1,0,0,0
 access_cp_sale_blanket,cp.sale.blanket,sale_blanket_order.model_sale_blanket_order,max_betong_security.group_sub_sys_concrete_pump_sale_order_readonly,1,0,0,0
+access_purchase_order_line_readonly,purchase.order.line.readonly,purchase.model_purchase_order_line,group_sub_sys_concrete_pump_sale_order_readonly,1,0,0,0
+access_construction_ipc_sub_sys_concrete_readonly,construction.ipc.readonly,ipc_interim_payment_certificates_odoo.model_construction_ipc,group_sub_sys_concrete_pump_sale_order_readonly,1,0,0,0
+
 
 access_bt_ticket_mrp_prod,bt.ticket.mrp.prod,mrp.model_mrp_production,max_betong_security.group_see_betong_ticket_readonly,1,0,0,0
 access_bt_ticket_mrp_work,bt.ticket.mrp.work,mrp.model_mrp_workorder,max_betong_security.group_see_betong_ticket_readonly,1,0,0,0
@@ -16,7 +19,6 @@ access_bt_ticket_stock_pick,bt.ticket.stock.pick,stock.model_stock_picking,max_b
 access_bt_ticket_stock_move,bt.ticket.stock.move,stock.model_stock_move,max_betong_security.group_see_betong_ticket_readonly,1,0,0,0
 access_bt_ticket_stock_scrap,bt.ticket.stock.scrap,stock.model_stock_scrap,max_betong_security.group_see_betong_ticket_readonly,1,0,0,0
 access_bt_ticket_mrp_bom,bt.ticket.mrp.bom,mrp.model_mrp_bom,max_betong_security.group_see_betong_ticket_readonly,1,0,0,0
-
 access_db_fleet_veh,db.fleet.veh,fleet.model_fleet_vehicle,max_betong_security.group_see_dashboard_concrete_readonly,1,0,0,0
 access_db_fleet_mod,db.fleet.mod,fleet.model_fleet_vehicle_model,max_betong_security.group_see_dashboard_concrete_readonly,1,0,0,0
 access_db_mrp_wc,db.mrp.wc,mrp.model_mrp_workcenter,max_betong_security.group_see_dashboard_concrete_readonly,1,0,0,0
