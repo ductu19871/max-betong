@@ -22,8 +22,45 @@
 	           		<attribute name="invisible">so_type in ['concrete','bom']</attribute>
 	           </xpath>
 	           <xpath expr="//button[@id='create_invoice_percentage']" position="attributes">
-	           		<attribute name="invisible">so_type == 'concrete' or invoice_status != 'no' or state != 'sale'</attribute>
-	           </xpath>
+                   <attribute name="invisible">
+                       not (
+                               (
+                                       so_type == 'concrete'
+                                       and invoice_status == 'no'
+                                       and not trial_mix
+                                       and state == 'sale'
+                               ) or (
+                                       so_type == 'bom'
+                                       and invoice_status == 'no'
+                                       and state == 'done'
+                               ) or (
+                                       so_type == 'normal'
+                                       and invoice_status == 'no'
+                                       and state == 'sale'
+                               )
+                       )
+                    </attribute>
+               </xpath>
+                <xpath expr="//button[@id='create_invoice']" position="attributes">
+                   <attribute name="invisible">
+                       not (
+                               (
+                                       so_type == 'concrete'
+                                       and invoice_status == 'to invoice'
+                                       and not trial_mix
+                                       and state == 'sale'
+                               ) or (
+                                       so_type == 'bom'
+                                       and invoice_status == 'to invoice'
+                                       and state == 'done'
+                               ) or (
+                                       so_type == 'normal'
+                                       and invoice_status == 'to invoice'
+                                       and state == 'sale'
+                               )
+                       )
+                   </attribute>
+                </xpath>
 	           <xpath expr="//field[@name='state']" position="after">
                    <field name="state_raw" widget="statusbar" statusbar_visible="draft,sent,sale,planned,done"
 	           			invisible="so_type != 'bom'"/>

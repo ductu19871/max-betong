@@ -32,6 +32,18 @@ class FleetVehicle(models.Model):
         [("blocked", "Error"), ("none", "None")], string="Error", default="none", tracking=True
     )
 
+    _sql_constraints = [
+        (
+            'uniq_license_plate',
+            'unique(license_plate)',
+            'The license plate already exists.'
+        ), (
+            'uniq_ref',
+            'unique(ref)',
+            'The reference number already exists.'
+        ),
+    ]
+
     def action_error(self):
         self.update({"error_select": "blocked"})
 
