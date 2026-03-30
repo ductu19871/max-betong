@@ -32,6 +32,7 @@
         'views/report_trip_per_truck_report.xml',
         'views/report_concrete_lifetime_report.xml',
         'wizard/change_production_qty_views.xml',
+        'wizard/stock_picking_factory_out_time_wizard_views.xml',
         #menu
         'views/menu_views.xml',
         #security
