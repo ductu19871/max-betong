@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # stock_picking.py
-from odoo import models, fields, api
+from odoo import models, fields, api,_
 import datetime
 import time
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -24,14 +24,32 @@ class StockPicking(models.Model):
         readonly=True
     )
     factory_out_time = fields.Datetime(
-        related="ticket_id.loaded_datetime",
         string='Factory out time',
-        store=True
+        tracking=True,
+        copy=False,
+    )
+    factory_out_time_manual = fields.Boolean(
+        string='Factory Out Time Manual',
+        default=False,
+        copy=False,
+    )
+    accumulated_qty_snapshot = fields.Float(
+        string='Accumulated Qty Snapshot',
+        copy=False,
+        readonly=True,
+    )
+
+    accumulated_qty_frozen = fields.Boolean(
+        string='Accumulated Qty Frozen',
+        copy=False,
+        readonly=True,
+        default=False,
     )
     accumulated_qty = fields.Float(
         string='Accumulated Delivered Quantity',
         compute='_compute_accumulated_qty',
         store =True,
+        copy=False,
         help='The accumulated delivered quantity is the total quantity that has been delivered for the related Sales Order (SO) up to the current time.'
     )
     workcenter_id = fields.Many2one(
@@ -60,20 +78,43 @@ class StockPicking(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled'),
     ], compute='_compute_state_raw', string="Status", store=True)
-    
+
+    @api.onchange('ticket_id')
+    def _onchange_ticket_id_factory_out_time(self):
+        if self.ticket_id and not self.factory_out_time_manual:
+            self.factory_out_time = self.ticket_id.loaded_datetime
+
     @api.depends('state')
     def _compute_state_raw(self):
         for rec in self:
             rec.state_raw = rec.state
 
-    @api.depends('sale_id','sale_id.order_line')
+    def _get_live_accumulated_qty(self):
+        self.ensure_one()
+
+        delivered_qty = 0.0
+        if self.sale_id:
+            delivered_qty = sum(self.sale_id.order_line.mapped('qty_delivered'))
+
+        demand_qty = sum(self.move_ids_without_package.mapped('product_uom_qty'))
+
+        return delivered_qty + demand_qty
+
+    @api.depends(
+        'state',
+        'accumulated_qty_snapshot',
+        'accumulated_qty_frozen',
+        'sale_id',
+        'sale_id.order_line.qty_delivered',
+        'move_ids_without_package',
+        'move_ids_without_package.product_uom_qty',
+    )
     def _compute_accumulated_qty(self):
         for picking in self:
-            total = 0.0
-            if picking.sale_id:
-                for line in picking.sale_id.order_line:
-                    total += line.qty_delivered
-            picking.accumulated_qty = total
+            if picking.state == 'done' and picking.accumulated_qty_frozen:
+                picking.accumulated_qty = picking.accumulated_qty_snapshot
+            else:
+                picking.accumulated_qty = picking._get_live_accumulated_qty()
     
     @api.depends('sale_id.so_type')
     def _compute_do_type(self):
@@ -121,7 +162,54 @@ class StockPicking(models.Model):
         res = super().button_validate()
         self._compute_accumulated_qty()
         return res
-    
-    
-    
-    
+
+    def _sync_factory_out_time_from_ticket(self):
+        for picking in self.filtered(lambda p: p.ticket_id and not p.factory_out_time_manual):
+            new_value = picking.ticket_id.loaded_datetime or False
+            if picking.factory_out_time != new_value:
+                picking.with_context(skip_factory_out_time_manual=True).write({
+                    'factory_out_time': new_value,
+                })
+
+    def action_open_factory_out_time_wizard(self):
+        self.ensure_one()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Update Factory Out Time'),
+            'res_model': 'stock.picking.factory.out.time.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_picking_id': self.id,
+                'default_factory_out_time': self.factory_out_time,
+            }
+        }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if (
+                    vals.get('ticket_id')
+                    and not vals.get('factory_out_time')
+                    and not vals.get('factory_out_time_manual')
+            ):
+                ticket = self.env['mrp.production'].browse(vals['ticket_id'])
+                if ticket:
+                    vals['factory_out_time'] = ticket.loaded_datetime
+        return super(StockPicking, self).create(vals_list)
+
+    def write(self, vals):
+        if vals.get('state') == 'done' and not self.env.context.get('skip_accumulated_qty_freeze'):
+            for picking in self.filtered(lambda p: p.state != 'done' and not p.accumulated_qty_frozen):
+                freeze_value = picking._get_live_accumulated_qty()
+
+                super(StockPicking, picking.with_context(skip_accumulated_qty_freeze=True)).write({
+                    'accumulated_qty_snapshot': freeze_value,
+                    'accumulated_qty_frozen': True,
+                })
+
+        res = super(StockPicking, self).write(vals)
+        if 'ticket_id' in vals:
+            self.filtered(lambda p: not p.factory_out_time_manual)._sync_factory_out_time_from_ticket()
+        return res

@@ -7,7 +7,13 @@
             <xpath expr="//form/header/field[@name='state']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            
+            <xpath expr="//form/header/button[@name='action_cancel']" position="after">
+                <button name="action_open_factory_out_time_wizard"
+                        type="object"
+                        string="Update Factory Out Time"
+                        class="oe_highlight"
+                        invisible="state != 'assigned'"/>
+            </xpath>
             <xpath expr="(//form/header/field[@name='state'])[2]" position="after">
                 <field name="state_raw" widget="statusbar" invisible="picking_type_code != 'incoming'" statusbar_visible="draft,assigned,done" readonly="1"/>
                 <field name="state_raw" widget="statusbar" invisible="picking_type_code == 'incoming'" statusbar_visible="draft,confirmed,assigned,done" readonly="1"/>
@@ -25,13 +31,16 @@
                 <field name="driver_id" invisible="do_type !='concrete'"/>
            </xpath>
            <xpath expr="//field[@name='date_deadline']" position="after">
-            	<field name="factory_out_time" invisible="do_type !='concrete'"/>
+               <field name="factory_out_time" readonly="1" invisible="do_type !='concrete'"/>
+               <field name="factory_out_time_manual" invisible="1"/>
            </xpath>
            <xpath expr="//field[@name='origin']" position="after">
-           		<label for="accumulated_qty" invisible="do_type !='concrete'"/>
-				<div name="accumulated_qty" invisible="do_type !='concrete'">
-					<field name="accumulated_qty" class="oe_inline"/><strong> m3</strong>
-				</div>
+               <field name="accumulated_qty_snapshot" invisible="1"/>
+               <field name="accumulated_qty_frozen" invisible="1"/>
+               <label for="accumulated_qty" invisible="do_type !='concrete'"/>
+               <div name="accumulated_qty" invisible="do_type !='concrete'">
+                   <field name="accumulated_qty" class="oe_inline"/><strong> m3</strong>
+               </div>
            </xpath>
         </field>
     </record>

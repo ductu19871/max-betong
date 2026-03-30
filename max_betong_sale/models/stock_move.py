@@ -28,3 +28,12 @@ class StockMove(models.Model):
                 raise ValidationError(_(
                     "You cannot change the product or quantity of a component line %s of ticket on hold as it would impact the ticket on hold production" % line.product_id.display_name
                 ))
+
+    @api.onchange('product_uom_qty')
+    def _onchange_product_uom_qty_update_accumulated_qty(self):
+        for move in self:
+            picking = move.picking_id
+            if not picking or picking.state == 'done':
+                continue
+
+            picking.accumulated_qty = picking._get_live_accumulated_qty()
