@@ -48,7 +48,7 @@
                             <field name="project_id"/>
                             <field name="from_date"/>
                             <field name="to_date"/>
-                            <field name="time_range_type"/>
+                            <field name="s_curve_mode" force_save="1"/>
                         </group>
                         <group>
                             <field name="customer_contract_id" required="type == 'customer'" domain="[('is_customer_contract', '=', True), ('contract_project_id', '=', project_id)]" invisible="type != 'customer'"/>
@@ -135,14 +135,27 @@
     </record>
 
        
-    <menuitem id="menu_contruction_partner" name="Partner" parent="odoo_job_costing_management.menu_job_managmt"/>
+    <menuitem id="menu_contruction_partner" 
+        name="Partner"
+        parent="odoo_job_costing_management.menu_job_managmt"
+        action="max_betong_output_dashboard.action_output_dashboard"
+         />
+    
+    <menuitem id="menu_payment_plan_dasboard"
+        name="Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế"
+        parent="menu_contruction_partner"
+        action="max_betong_output_dashboard.action_output_dashboard"
+        sequence="10"
+          />
 
     <menuitem id="menu_payment_plan"
           name="Payment Plan"
           parent="menu_contruction_partner"
-          action="action_payment_plan"/>
-    <menuitem id="menu_payment_plan_line"
+          action="action_payment_plan"
+          sequence="20"
+          />
+    <!-- <menuitem id="menu_payment_plan_line"
           name="Payment Plan Line"
           parent="menu_contruction_partner"
-          action="action_payment_plan_line"/>
+          action="action_payment_plan_line"/> -->
 </odoo>

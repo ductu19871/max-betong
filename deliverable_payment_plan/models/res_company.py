@@ -4,10 +4,9 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     s_curve_mode = fields.Selection([
-        ('monthly', 'Monthly'),
-        ('weekly', 'Weekly'),
-        ('none', 'None')
-    ], default='none')
+        ('month', 'Month'),
+        ('week', 'Week'),
+    ], default='month')
 
     chart_amount_unit = fields.Selection([
         ('vnd', 'VND'),

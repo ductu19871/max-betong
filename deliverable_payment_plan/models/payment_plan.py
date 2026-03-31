@@ -46,10 +46,14 @@ class DeliverablePaymentPlan(models.Model):
         store=True,
         currency_field="currency_id"
     )
-    time_range_type = fields.Selection([
+    s_curve_mode = fields.Selection([
         ('month', 'Month'),
         ('week', 'Week')
-    ], default='month', required=True)
+    ], default= lambda self: self.env.company.s_curve_mode, readonly=1)
+
+    # def _compute_s_curve_mode(self):
+    #     for r in self:
+    #         r.s_curve_mode = self.env.company.s_curve_mode
 
     @api.depends("type","customer_contract_id.partner_id","subcontractor_contract_id.partner_id")
     def _compute_partner(self):
@@ -78,7 +82,7 @@ class DeliverablePaymentPlan(models.Model):
             lines = []
             current = rec.from_date
 
-            if rec.time_range_type == 'month':
+            if rec.s_curve_mode == 'month':
                 while current <= rec.to_date:
                     start = current.replace(day=1)
                     end = (start + relativedelta(months=1)) - timedelta(days=1)
