@@ -1,0 +1,33 @@
+.max-betong-dashboard-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.max-betong-dashboard-container .card {
+    border-radius: 12px;
+}
+
+.max-betong-dashboard-container .dashboard-header h2 {
+    color: #2c3e50;
+    font-size: 24px;
+}
+
+.max-betong-dashboard-container .form-label {
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.max-betong-dashboard-container table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.max-betong-dashboard-container th, .max-betong-dashboard-container td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.border-3 {
+    border-top-width: 3px !important;
+}

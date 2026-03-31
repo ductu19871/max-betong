@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_output_dashboard" model="ir.actions.client">
+        <field name="name">Báo cáo sản lượng kế hoạch &amp; thực tế</field>
+        <field name="tag">max_betong_output_dashboard_action</field>
+    </record>
+
+    <!-- Thêm menu vào một menu chính nào đó, ví dụ sales -->
+    <menuitem id="menu_output_dashboard"
+              name="Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế"
+              action="action_output_dashboard"
+              sequence="10"/>
+</odoo>
