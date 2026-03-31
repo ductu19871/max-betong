@@ -94,6 +94,10 @@ export class OutputDashboard extends Component {
              this.chartInstance.update();
         }
     }
+
+    getDomain() {
+        return []
+    }
 }
 
 OutputDashboard.template = "max_betong_output_dashboard.Dashboard";

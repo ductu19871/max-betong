@@ -22,31 +22,43 @@
                             <Many2XAutocomplete
                                 resModel="'res.partner'"
                                 update="(records) => this.onFilterUpdate('investor_id', records)"
-                                value="state.filters.investor_id"
+                                value="''"
+                                activeActions="{}"
+                                getDomain.bind="getDomain"
+                                noSearchMore="true"
                             />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label text-muted small">Dự án</label>
                             <Many2XAutocomplete
-                                resModel="'project.project'"
-                                update="(records) => this.onFilterUpdate('project_id', records)"
-                                value="state.filters.project_id"
+                                resModel="'res.partner'"
+                                update="(records) => this.onFilterUpdate('investor_id', records)"
+                                value="''"
+                                activeActions="{}"
+                                getDomain.bind="getDomain"
+                                noSearchMore="true"
                             />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label text-muted small">Nhà thầu</label>
                             <Many2XAutocomplete
                                 resModel="'res.partner'"
-                                update="(records) => this.onFilterUpdate('contractor_id', records)"
-                                value="state.filters.contractor_id"
+                                update="(records) => this.onFilterUpdate('investor_id', records)"
+                                value="''"
+                                activeActions="{}"
+                                getDomain.bind="getDomain"
+                                noSearchMore="true"
                             />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label text-muted small">Hợp đồng</label>
                             <Many2XAutocomplete
-                                resModel="'sale.order'"
-                                update="(records) => this.onFilterUpdate('contract_id', records)"
-                                value="state.filters.contract_id"
+                                resModel="'res.partner'"
+                                update="(records) => this.onFilterUpdate('investor_id', records)"
+                                value="''"
+                                activeActions="{}"
+                                getDomain.bind="getDomain"
+                                noSearchMore="true"
                             />
                         </div>
                     </div>
