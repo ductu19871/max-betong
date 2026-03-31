@@ -1,0 +1,322 @@
+from odoo import models, fields, api
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    task_deliverable_ids = fields.One2many('project.progress.report', 'sale_order_id')
+
+
+
+class DeliverablePaymentPlan(models.Model):
+    _name = "deliverable.payment.plan"
+    name = fields.Char(required=True)
+    type = fields.Selection([
+        ('customer', 'Customer Contract'),
+        ('subcontract', 'Subcontractor Contract')
+    ], required=True)
+
+    from_date = fields.Date(required=True)
+    to_date = fields.Date(required=True)
+
+    customer_contract_id = fields.Many2one("sale.order")
+    subcontractor_contract_id = fields.Many2one("purchase.order")
+    partner_id = fields.Many2one("res.partner", compute="_compute_partner", store=True)
+    project_id = fields.Many2one("project.project", required=True)
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency",
+        required=True,
+        default=lambda self: self.env.company.currency_id.id
+    )
+
+    line_ids = fields.One2many("deliverable.payment.plan.line", "plan_id")
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirm', 'Confirm'),
+        ('cancel', 'Cancel'),
+    ], default='draft')
+
+    total_project_amount = fields.Monetary(
+        string="Total Project Amount",
+        compute="_compute_total_project_amount",
+        store=True,
+        currency_field="currency_id"
+    )
+    time_range_type = fields.Selection([
+        ('month', 'Month'),
+        ('week', 'Week')
+    ], default='month', required=True)
+
+    @api.depends("type","customer_contract_id.partner_id","subcontractor_contract_id.partner_id")
+    def _compute_partner(self):
+        for rec in self:
+            rec.partner_id = rec.customer_contract_id.partner_id if rec.type=='customer' else rec.subcontractor_contract_id.partner_id
+
+    @api.depends("type", "customer_contract_id.amount_total", "subcontractor_contract_id.amount_total")
+    def _compute_total_project_amount(self):
+        for rec in self:
+            if rec.type == 'customer' and rec.customer_contract_id:
+                rec.total_project_amount = rec.customer_contract_id.amount_total
+                rec.currency_id = rec.customer_contract_id.currency_id
+            elif rec.type == 'subcontract' and rec.subcontractor_contract_id:
+                rec.total_project_amount = rec.subcontractor_contract_id.amount_total
+                rec.currency_id = rec.subcontractor_contract_id.currency_id
+            else:
+                rec.total_project_amount = 0.0
+
+    def action_generate_lines(self):
+        for rec in self:
+            if rec.line_ids:
+                raise UserError("Lines already exist")
+            if not rec.from_date or not rec.to_date:
+                raise UserError("Missing date")
+
+            lines = []
+            current = rec.from_date
+
+            if rec.time_range_type == 'month':
+                while current <= rec.to_date:
+                    start = current.replace(day=1)
+                    end = (start + relativedelta(months=1)) - timedelta(days=1)
+                    if end > rec.to_date:
+                        end = rec.to_date
+
+                    lines.append((0,0,{'name': start.strftime("T%m/%Y"), 'from_date': start, 'to_date': end, 'currency_id': rec.currency_id.id}))
+                    current = start + relativedelta(months=1)
+
+            else:
+                current = current - timedelta(days=current.weekday())
+
+                while current <= rec.to_date:
+                    start = current
+                    end = start + timedelta(days=6)
+                    if end > rec.to_date:
+                        end = rec.to_date
+
+                    lines.append((0,0,{'name': start.strftime("W%W/%Y"), 'from_date': start, 'to_date': end, 'currency_id': rec.currency_id.id}))
+                    current = start + timedelta(days=7)
+
+            rec.line_ids = lines
+
+    def action_generate_sample(self):
+        for rec in self:
+            if not rec.line_ids:
+                raise UserError("Generate lines first")
+
+            total = rec.total_project_amount or 0.0
+            if not total:
+                raise UserError("Missing total project amount")
+
+            lines = rec.line_ids.sorted(key=lambda l: l.from_date or fields.Date.today())
+            n = len(lines)
+            if not n:
+                return
+
+            # S-curve đơn giản (bell shape)
+            weights = [(i+1)*(n-i) for i in range(n)]
+            s = sum(weights) or 1.0
+
+            for i, l in enumerate(lines):
+                pct = weights[i] * 100.0 / s
+                amt = total * pct / 100.0
+                l.plan_percentage = pct
+                l.plan_amount = amt
+                l.plan_ipc_amount = amt * 0.8
+
+    def action_confirm(self):
+        for rec in self:
+            rec.state = 'confirm'
+
+    def action_done(self):
+        for rec in self:
+            rec.state = 'done'
+
+    def action_cancel(self):
+        for rec in self:
+            rec.state = 'cancel'
+
+    def action_reset_draft(self):
+        for rec in self:
+            rec.state = 'draft'
+
+    def action_unlink_lines(self):
+        for rec in self:
+            rec.line_ids.unlink()
+
+tong_so_lan_goi = 0 
+
+class DeliverablePaymentPlanLine(models.Model):
+    _name = "deliverable.payment.plan.line"
+    _description = "Deliverable Payment Plan Line"
+    _order = "from_date"
+
+    name = fields.Char(string="Name", compute="_compute_name", store=True)
+    plan_id = fields.Many2one("deliverable.payment.plan", string="Plan", required=True, ondelete="cascade")
+    currency_id = fields.Many2one(
+        "res.currency",
+        related="plan_id.currency_id",
+        store=True,
+        readonly=True
+    )
+
+    from_date = fields.Date(string="From Date", required=True)
+    to_date = fields.Date(string="To Date", required=True)
+
+    plan_percentage = fields.Float(string="Plan %", compute="_compute_plan", inverse="_inverse_plan", store=True)
+    plan_amount = fields.Monetary(string="Plan Amount", compute="_compute_plan", inverse="_inverse_plan", store=True)
+    plan_percentage_accumulated = fields.Float(string="Plan % Accumulated", compute="_compute_plan_acc", store=True)
+    plan_accumulated_amount = fields.Monetary(string="Plan Accumulated Amount", compute="_compute_plan_acc", store=True)
+    plan_ipc_amount = fields.Monetary(string="Plan IPC Amount")
+    plan_accumulated_ipc_amount = fields.Monetary(string="Plan Accumulated IPC Amount", compute="_compute_plan_acc", store=True)
+
+    actual_percentage = fields.Float(string="Actual %", compute="_compute_actual", store=True)
+    actual_amount = fields.Monetary(string="Actual Amount", compute="_compute_actual", store=True)
+    actual_percentage_accumulated = fields.Float(string="Actual % Accumulated", compute="_compute_actual", store=True)
+    actual_accumulated_amount = fields.Monetary(string="Actual Accumulated Amount", compute="_compute_actual", store=True)
+    actual_paid_amount = fields.Monetary(string="Actual Paid Amount", compute="_compute_actual", store=True)
+    actual_ipc_amount = fields.Monetary(string="Actual IPC Amount", compute="_compute_actual", store=True)
+    actual_accumulated_ipc_amount = fields.Monetary(string="Actual Accumulated IPC Amount", compute="_compute_actual", store=True)
+    actual_accumulated_paid_amount = fields.Monetary(string="Actual Accumulated Paid Amount", compute="_compute_actual", store=True)
+
+    currency_id = fields.Many2one("res.currency", string="Currency", required=True, default=lambda self: self.env.company.currency_id.id)
+
+    @api.depends("plan_percentage","plan_amount","plan_id.total_project_amount")
+    def _compute_plan(self):
+        for rec in self:
+            total = rec.plan_id.total_project_amount or 0.0
+            if total:
+                if rec.plan_percentage and not rec.plan_amount:
+                    rec.plan_amount = total * rec.plan_percentage / 100
+                elif rec.plan_amount and not rec.plan_percentage:
+                    rec.plan_percentage = (rec.plan_amount / total) * 100
+
+    def _inverse_plan(self):
+        for rec in self:
+            total = rec.plan_id.total_project_amount or 0.0
+            if total:
+                if rec.plan_percentage:
+                    rec.plan_amount = total * rec.plan_percentage / 100
+                elif rec.plan_amount:
+                    rec.plan_percentage = (rec.plan_amount / total) * 100
+
+
+    @api.depends(
+    "plan_amount","plan_percentage","plan_ipc_amount",
+    "plan_id.line_ids.plan_amount",
+    "plan_id.line_ids.plan_percentage",
+    "plan_id.line_ids.plan_ipc_amount"
+    )
+    def _compute_plan_acc(self):
+        for rec in self:
+            prev = rec.plan_id.line_ids.filtered(lambda l: l.from_date < rec.from_date)
+
+            rec.plan_accumulated_amount = sum(prev.mapped("plan_amount")) + (rec.plan_amount or 0.0)
+            rec.plan_percentage_accumulated = sum(prev.mapped("plan_percentage")) + (rec.plan_percentage or 0.0)
+            rec.plan_accumulated_ipc_amount = sum(prev.mapped("plan_ipc_amount")) + (rec.plan_ipc_amount or 0.0)
+
+    @api.depends("from_date")
+    def _compute_name(self):
+        for rec in self:
+            rec.name = rec.from_date.strftime("T%m/%y") if rec.from_date else False
+
+
+    @api.depends('plan_id.type',
+                 "plan_id.customer_contract_id.order_line.complete_qty",
+                 "plan_id.subcontractor_contract_id.order_line.complete_qty",
+                 "plan_id.customer_contract_id.ipc_ids.total_amount",
+                 "plan_id.customer_contract_id.ipc_ids.custom_status",
+                 "plan_id.customer_contract_id.ipc_ids.date",
+                 "plan_id.subcontractor_contract_id.ipc_ids.total_amount",
+                 "plan_id.subcontractor_contract_id.ipc_ids.custom_status",
+                 "plan_id.subcontractor_contract_id.ipc_ids.date",
+
+                 "plan_id.customer_contract_id.invoice_ids.amount_residual",
+                 "plan_id.customer_contract_id.invoice_ids.state",
+                 "plan_id.subcontractor_contract_id.invoice_ids.amount_residual",
+                 "plan_id.subcontractor_contract_id.invoice_ids.state",
+ 
+                 )
+    def _compute_actual(self):
+        for rec in self:
+            global tong_so_lan_goi
+            tong_so_lan_goi += 1
+            print ('**tong_so_lan_goi**', tong_so_lan_goi)
+            from_date = rec.from_date
+            to_date = rec.to_date
+            total_amt = rec.plan_id.total_project_amount or 0.0
+            
+            # --- 1. KHỞI TẠO GIÁ TRỊ ---
+            actual_amount = 0.0
+            actual_ipc_amount = 0.0
+
+            # --- 2. TÍNH SẢN LƯỢNG THỰC TẾ (ACTUAL AMOUNT) ---
+            # Dựa trên Task Deliverables của SO hoặc PO
+            contract = False
+            plan_type = rec.plan_id.type
+            if plan_type == 'customer':
+                contract = rec.plan_id.customer_contract_id
+            elif plan_type == 'subcontract':
+                contract = rec.plan_id.subcontractor_contract_id
+
+            if contract:
+                for line in contract.order_line:
+                    # Lọc các hạng mục công việc đã approved trong kỳ
+                    deliverables = line.task_deliverable_ids.filtered(
+                        lambda x: x.status == 'approved' and 
+                                  x.progress_report_id.week_start_date and
+                                  from_date <= x.progress_report_id.week_start_date <= to_date
+                    )
+                    qty_in_period = sum(deliverables.mapped('completed_qty'))
+                    
+                    # Tránh lỗi chia cho 0
+                    total_qty = line.product_uom_qty if plan_type == 'customer' else line.product_qty
+                    if total_qty > 0:
+                        actual_amount += (qty_in_period / total_qty) * line.price_total
+
+            # --- 3. TÍNH NGHIỆM THU IPC THỰC TẾ (ACTUAL IPC AMOUNT) ---
+            # Dựa trên bảng construction_ipc JOIN ipc_stage (is_approved = True)
+            ipc_domain = [
+                ('date', '>=', from_date),
+                ('date', '<=', to_date),
+                ('custom_status.is_approved', '=', True)
+            ]
+            
+            if plan_type == 'customer' and rec.plan_id.customer_contract_id:
+                ipc_domain.append(('sale_order_id', '=', rec.plan_id.customer_contract_id.id))
+            elif plan_type == 'subcontract' and rec.plan_id.subcontractor_contract_id:
+                ipc_domain.append(('purchase_order_id', '=', rec.plan_id.subcontractor_contract_id.id))
+            
+            # Tìm các bản ghi IPC thỏa điều kiện
+            ipcs = self.env['construction.ipc'].search(ipc_domain)
+            
+            # Tính tổng từ các dòng construction_ipc_line (trường total_amount)
+            # Dùng line_ids.total_amount để đảm bảo lấy đúng giá trị chi tiết từng dòng
+            # actual_ipc_amount = sum(ipcs.mapped('total_amount'))
+            actual_ipc_amount = 0.0
+            for ipc_line in ipcs.boq_line_ids:
+                line = ipc_line.sale_order_line_id if plan_type == 'customer' else ipc_line.purchase_order_line_id
+                actual_ipc_amount +=  ipc_line.quantity/line.product_uom_qty*line.price_total
+            
+            # Gán giá trị thực tế trong kỳ
+            rec.actual_amount = actual_amount
+            rec.actual_ipc_amount = actual_ipc_amount
+            rec.actual_paid_amount = sum(contract.invoice_ids.filtered(lambda x : x.state =='posted' and from_date <= x.invoice_date <= to_date ).mapped(lambda invoice: invoice.amount_total - invoice.amount_residual))
+            # Tính % thực tế trong kỳ
+            rec.actual_percentage = (actual_amount / total_amt * 100) if total_amt > 0 else 0.0
+
+            # --- 4. TÍNH LŨY KẾ (ACCUMULATED) ---
+            # Lọc các dòng trước đó trong cùng một kế hoạch (plan_id)
+            prev_lines = rec.plan_id.line_ids.filtered(lambda l: l.from_date < rec.from_date)
+            
+            # Lũy kế = (Tổng các dòng trước) + (Dòng hiện tại)
+            
+            rec.actual_accumulated_amount = sum(prev_lines.mapped('actual_amount')) + actual_amount
+            rec.actual_accumulated_ipc_amount = sum(prev_lines.mapped('actual_ipc_amount')) + actual_ipc_amount
+            rec.actual_accumulated_paid_amount = sum(prev_lines.mapped('actual_paid_amount')) + rec.actual_paid_amount
+
+            # % Lũy kế thực tế (Dùng để vẽ đường cong S-Curve)
+            rec.actual_percentage_accumulated = (rec.actual_accumulated_amount / total_amt * 100) if total_amt > 0 else 0.0          
