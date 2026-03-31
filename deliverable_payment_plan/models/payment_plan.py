@@ -3,13 +3,70 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+# class SaleOrder(models.Model):
+#     _inherit = 'sale.order'
 
-    task_deliverable_ids = fields.One2many('project.progress.report', 'sale_order_id')
+#     task_deliverable_ids = fields.One2many('project.progress.report', 'sale_order_id')
 
 
+class OrderLineStockMixin(models.AbstractModel):
+    _name = 'order.line.stock.mixin'
+    _description = 'Mixin to calculate delivered qty in period via stock moves'
 
+    def get_delivered_in_period(self, from_date, to_date):
+        """
+        Hàm dùng chung để tính số lượng thực tế dịch chuyển trong kỳ,
+        có trừ đi hàng trả (Returns).
+        """
+        self.ensure_one()
+        
+        # 1. Xác định field liên kết và hướng kho tùy theo model
+        if self._name == 'sale.order.line':
+            line_field = 'sale_line_id'
+            # Bán hàng: Xuất (Internal -> Customer) là [+], Nhập trả (Customer -> Internal) là [-]
+            out_usage, in_usage = 'internal', 'customer'
+        else:
+            line_field = 'purchase_line_id'
+            # Mua hàng: Nhập (Supplier -> Internal) là [+], Trả NCC (Internal -> Supplier) là [-]
+            out_usage, in_usage = 'supplier', 'internal'
+
+        # 2. Tìm các Stock Moves đã hoàn thành trong khoảng thời gian
+        domain = [
+            (line_field, '=', self.id),
+            ('state', '=', 'done'),
+            ('date', '>=', from_date),
+            ('date', '<=', to_date),
+        ]
+        moves = self.env['stock.move'].search(domain)
+
+        total_qty = 0.0
+        for move in moves:
+            # Quy đổi số lượng move về đơn vị tính của Order Line
+            qty = move.product_uom._compute_quantity(move.product_qty, self.product_uom)
+            
+            # 3. Logic cộng trừ dựa trên hướng kho
+            # Trường hợp Thuận (Giao hàng/Nhận hàng)
+            if move.location_id.usage == out_usage and move.location_dest_id.usage == in_usage:
+                total_qty += qty
+            # Trường hợp Nghịch (Trả hàng)
+            elif move.location_id.usage == in_usage and move.location_dest_id.usage == out_usage:
+                total_qty -= qty
+
+        return total_qty
+
+    def get_ordered_qty(self):
+        """Hàm bổ trợ lấy số lượng đặt hàng đúng theo model"""
+        self.ensure_one()
+        return self.product_uom_qty if self._name == 'sale.order.line' else self.product_qty
+    
+class SaleOrderLine(models.Model):
+    _name = 'sale.order.line'
+    _inherit = ['sale.order.line', 'order.line.stock.mixin']
+
+class PurchaseOrderLine(models.Model):
+    _name = 'purchase.order.line'
+    _inherit = ['purchase.order.line', 'order.line.stock.mixin']
+     
 class DeliverablePaymentPlan(models.Model):
     _name = "deliverable.payment.plan"
     name = fields.Char(required=True)
@@ -231,6 +288,10 @@ class DeliverablePaymentPlanLine(models.Model):
     @api.depends('plan_id.type',
                  "plan_id.customer_contract_id.order_line.complete_qty",
                  "plan_id.subcontractor_contract_id.order_line.complete_qty",
+
+                 'plan_id.customer_contract_id.order_line.qty_delivered', # Dùng trường chuẩn của Odoo hoặc Mixin
+                 'plan_id.subcontractor_contract_id.order_line.qty_received',
+
                  "plan_id.customer_contract_id.ipc_ids.total_amount",
                  "plan_id.customer_contract_id.ipc_ids.custom_status",
                  "plan_id.customer_contract_id.ipc_ids.date",
@@ -275,6 +336,9 @@ class DeliverablePaymentPlanLine(models.Model):
                                   from_date <= x.progress_report_id.week_start_date <= to_date
                     )
                     qty_in_period = sum(deliverables.mapped('completed_qty'))
+                    if not qty_in_period:
+                        qty_in_period = line.get_delivered_in_period(from_date, to_date)
+
                     
                     # Tránh lỗi chia cho 0
                     total_qty = line.product_uom_qty if plan_type == 'customer' else line.product_qty
@@ -308,7 +372,7 @@ class DeliverablePaymentPlanLine(models.Model):
             # Gán giá trị thực tế trong kỳ
             rec.actual_amount = actual_amount
             rec.actual_ipc_amount = actual_ipc_amount
-            rec.actual_paid_amount = sum(contract.invoice_ids.filtered(lambda x : x.state =='posted' and from_date <= x.invoice_date <= to_date ).mapped(lambda invoice: invoice.amount_total - invoice.amount_residual))
+            rec.actual_paid_amount = sum(contract.invoice_ids.filtered(lambda x : x.state =='posted' and from_date <= x.date <= to_date ).mapped(lambda invoice: invoice.amount_total - invoice.amount_residual))
             # Tính % thực tế trong kỳ
             rec.actual_percentage = (actual_amount / total_amt * 100) if total_amt > 0 else 0.0
 
