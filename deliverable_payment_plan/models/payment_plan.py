@@ -36,6 +36,7 @@ class OrderLineStockMixin(models.AbstractModel):
             ('state', '=', 'done'),
             ('date', '>=', from_date),
             ('date', '<=', to_date),
+            ('origin_returned_move_id', '=', False)
         ]
         moves = self.env['stock.move'].search(domain)
 
@@ -43,14 +44,15 @@ class OrderLineStockMixin(models.AbstractModel):
         for move in moves:
             # Quy đổi số lượng move về đơn vị tính của Order Line
             qty = move.product_uom._compute_quantity(move.product_qty, self.product_uom)
-            
+            return_qty = sum(move.returned_move_ids.filtered(lambda move: move.state == 'done').mapped('product_qty'))
+            total_qty = qty - return_qty
             # 3. Logic cộng trừ dựa trên hướng kho
             # Trường hợp Thuận (Giao hàng/Nhận hàng)
-            if move.location_id.usage == out_usage and move.location_dest_id.usage == in_usage:
-                total_qty += qty
-            # Trường hợp Nghịch (Trả hàng)
-            elif move.location_id.usage == in_usage and move.location_dest_id.usage == out_usage:
-                total_qty -= qty
+            # if move.location_id.usage == out_usage and move.location_dest_id.usage == in_usage:
+            #     total_qty += qty
+            # # Trường hợp Nghịch (Trả hàng)
+            # elif move.location_id.usage == in_usage and move.location_dest_id.usage == out_usage:
+            #     total_qty -= qty
 
         return total_qty
 
@@ -337,9 +339,8 @@ class DeliverablePaymentPlanLine(models.Model):
                     )
                     qty_in_period = sum(deliverables.mapped('completed_qty'))
                     if not qty_in_period:
-                        qty_in_period = line.get_delivered_in_period(from_date, to_date)
-
-                    
+                        raw_qty_in_period = line.get_delivered_in_period(from_date, to_date)
+                        qty_in_period = line.product_id.uom_id._compute_quantity(raw_qty_in_period, line.product_uom)
                     # Tránh lỗi chia cho 0
                     total_qty = line.product_uom_qty if plan_type == 'customer' else line.product_qty
                     if total_qty > 0:
