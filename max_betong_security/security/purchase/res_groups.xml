@@ -7,7 +7,7 @@
 
 
     <record id="group_sys_purchase_readonly" model="res.groups">
-        <field name="name">Purchase Viewer 1</field>
+        <field name="name">group_sys_purchase_readonly</field>
         <field name="category_id" ref="module_category_max_betong_base"/>
     </record>
 </odoo>
