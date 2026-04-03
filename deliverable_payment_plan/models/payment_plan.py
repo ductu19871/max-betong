@@ -201,13 +201,18 @@ class DeliverablePaymentPlan(models.Model):
                 l.plan_amount = amt
                 l.plan_ipc_amount = amt * 0.8
 
-    def get_contract(self):
-        self.ensure_one()
-        if self.type == 'customer':
-            return self.customer_contract_id
-        elif self.type == 'subcontract':
-            return self.subcontractor_contract_id
-        return False
+    def get_contracts(self):
+        res = None
+        for r in self:
+            if r.type == 'customer':
+                if res == None:
+                    res = self.env['sale.order']
+                res |= r.customer_contract_id
+            elif r.type == 'subcontract':
+                if res == None:
+                    res = self.env['purchase.order']
+                res |= r.subcontractor_contract_id
+        return res
     
 
     def action_confirm(self):

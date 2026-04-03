@@ -8,39 +8,56 @@ class OutputDashboard(models.AbstractModel):
     def flat_res_by_key(res, key):
         return [i[key] for i in res]
     
+    # @staticmethod
+    # def get_last_res_by_key(res, key):
+    #     return res[-1][key]
+    
     @staticmethod
-    def get_last_res_by_key(res, key):
-        return res[-1][key]
+    def get_last_res_by_key(el, key):
+        return el[key]
+    
+    @staticmethod
+    def get_el_by_to_day(res):
+        for el in res:
+            str_today = str(fields.Date.today())
+            if el['__range']['from_date']['from'] <= str_today < el['__range']['from_date']['to']:
+                return el
 
     @api.model
     def get_dashboard_data(self, filters=None):
         """Mock data for the dashboard."""
         plans = self.env["deliverable.payment.plan"].search([('type', '=', 'customer')])
         res = self.env["deliverable.payment.plan.line"].read_group(
-            domain=[('plan_id', 'in', plans.ids[:1])],
+            domain=[('plan_id', 'in', plans.ids)],
             fields=['from_date', 'plan_accumulated_amount', 'actual_accumulated_amount', 'plan_accumulated_ipc_amount', 'actual_accumulated_ipc_amount', 'actual_accumulated_paid_amount',
-                    'actual_percentage', 'actual_amount', 'actual_percentage_accumulated',  'actual_paid_amount'],  # Fields to retrieve or aggregate
-            groupby=['from_date']            # The field to group by
+                    'actual_percentage', 'actual_amount', 'actual_percentage_accumulated',  'actual_paid_amount',
+                    'plan_percentage_accumulated'
+                    ],  # Fields to retrieve or aggregate
+            groupby=['from_date', 'to_date']            # The field to group by
         )
-        plan = plans[:1]
-        contract = plan.get_contract()
-        start = contract.contract_start_date.strftime('%d/%m/%Y') if contract and contract.contract_start_date else ''
-        end = contract.contract_end_date.strftime('%d/%m/%Y') if contract and contract.contract_end_date else ''
+        # plan = plans[-1:]
+        contracts = plans.get_contracts()
+        start = min(contracts.mapped('contract_start_date'), default=0)
+        start = start.strftime('%d/%m/%Y') if start else ''
+        end = max(contracts.mapped('contract_end_date'), default=0)
+        end = end.strftime('%d/%m/%Y') if end else ''
+        el = self.get_el_by_to_day(res)
+        delayed_value = el['plan_accumulated_amount'] - el['actual_accumulated_amount'] # chậm tiến độ
         return {
             'contract_info': {
-                'value': plan.total_project_amount, #contract.amount_total,#plan.total_project_amount,
-                'name': plan.get_contract().contract_ref_no,
+                'value': sum(plans.mapped('total_project_amount')), #contract.amount_total,#plan.total_project_amount,
+                'name': ', '.join(str(i) for i in contracts.mapped('contract_ref_no')),
                 'time': f'{start} - {end}',
-                'plan_percent': '73.0%',
-                'actual_percent': self.get_last_res_by_key(res, 'actual_percentage'),
-                'delayed_value': '10.0 Tỷ đồng',
+                'plan_percent': el['plan_percentage_accumulated'],
+                'actual_percent': self.get_last_res_by_key(el, 'actual_percentage'),
+                'delayed_value': delayed_value,
                 'delayed_payment': '-4.5 Tỷ đồng'
             },
             'summary': {
                 'plan_vol': '73.0 Tỷ đồng',
-                'actual_vol': self.get_last_res_by_key(res, 'actual_accumulated_amount'),
-                'plan_pay': self.get_last_res_by_key(res, 'plan_accumulated_ipc_amount'),
-                'actual_pay': self.get_last_res_by_key(res, 'actual_accumulated_paid_amount'),
+                'actual_vol': self.get_last_res_by_key(el, 'actual_accumulated_amount'),
+                'plan_pay': self.get_last_res_by_key(el, 'plan_accumulated_ipc_amount'),
+                'actual_pay': self.get_last_res_by_key(el, 'actual_accumulated_paid_amount'),
             },
             'table_columns': [
                 'Chỉ tiêu', *self.flat_res_by_key(res, 'from_date')
