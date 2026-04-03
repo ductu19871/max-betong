@@ -45,7 +45,7 @@ class OrderLineStockMixin(models.AbstractModel):
             # Quy đổi số lượng move về đơn vị tính của Order Line
             qty = move.product_uom._compute_quantity(move.product_qty, self.product_uom)
             return_qty = sum(move.returned_move_ids.filtered(lambda move: move.state == 'done').mapped('product_qty'))
-            total_qty = qty - return_qty
+            total_qty = total_qty + qty - return_qty
             # 3. Logic cộng trừ dựa trên hướng kho
             # Trường hợp Thuận (Giao hàng/Nhận hàng)
             # if move.location_id.usage == out_usage and move.location_dest_id.usage == in_usage:
@@ -86,8 +86,8 @@ class DeliverablePaymentPlan(models.Model):
     currency_id = fields.Many2one(
         "res.currency",
         string="Currency",
-        required=True,
-        default=lambda self: self.env.company.currency_id.id
+        compute="_compute_total_project_amount",
+        store=True,
     )
 
     line_ids = fields.One2many("deliverable.payment.plan.line", "plan_id")
@@ -109,22 +109,38 @@ class DeliverablePaymentPlan(models.Model):
         ('week', 'Week')
     ], default= lambda self: self.env.company.s_curve_mode, readonly=1)
 
+    @api.onchange("customer_contract_id", 'subcontractor_contract_id')
+    def _onchange_contract(self):
+        for rec in self:
+            contract = rec.get_contract()
+            if contract:
+                rec.from_date = contract.contract_start_date
+                rec.to_date =  contract.contract_end_date
+
+
     @api.depends("type","customer_contract_id.partner_id","subcontractor_contract_id.partner_id")
     def _compute_partner(self):
         for rec in self:
-            rec.partner_id = rec.customer_contract_id.partner_id if rec.type=='customer' else rec.subcontractor_contract_id.partner_id
+            contract = rec.get_contract()
+            if contract:
+                rec.partner_id = contract.partner_id
 
     @api.depends("type", "customer_contract_id.amount_total", "subcontractor_contract_id.amount_total")
     def _compute_total_project_amount(self):
         for rec in self:
-            if rec.type == 'customer' and rec.customer_contract_id:
-                rec.total_project_amount = rec.customer_contract_id.amount_total
-                rec.currency_id = rec.customer_contract_id.currency_id
-            elif rec.type == 'subcontract' and rec.subcontractor_contract_id:
-                rec.total_project_amount = rec.subcontractor_contract_id.amount_total
-                rec.currency_id = rec.subcontractor_contract_id.currency_id
-            else:
-                rec.total_project_amount = 0.0
+            contract = rec.get_contract()
+            if contract:
+                rec.total_project_amount = contract.amount_total
+                rec.currency_id = contract.currency_id
+
+            # if rec.type == 'customer' and rec.customer_contract_id:
+            #     rec.total_project_amount = rec.customer_contract_id.amount_total
+            #     rec.currency_id = rec.customer_contract_id.currency_id
+            # elif rec.type == 'subcontract' and rec.subcontractor_contract_id:
+            #     rec.total_project_amount = rec.subcontractor_contract_id.amount_total
+            #     rec.currency_id = rec.subcontractor_contract_id.currency_id
+            # else:
+            #     rec.total_project_amount = 0.0
 
     def action_generate_lines(self):
         for rec in self:
@@ -184,6 +200,15 @@ class DeliverablePaymentPlan(models.Model):
                 l.plan_percentage = pct
                 l.plan_amount = amt
                 l.plan_ipc_amount = amt * 0.8
+
+    def get_contract(self):
+        self.ensure_one()
+        if self.type == 'customer':
+            return self.customer_contract_id
+        elif self.type == 'subcontract':
+            return self.subcontractor_contract_id
+        return False
+    
 
     def action_confirm(self):
         for rec in self:
