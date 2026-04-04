@@ -25,10 +25,12 @@ class OrderLineStockMixin(models.AbstractModel):
             line_field = 'sale_line_id'
             # Bán hàng: Xuất (Internal -> Customer) là [+], Nhập trả (Customer -> Internal) là [-]
             # out_usage, in_usage = 'internal', 'customer'
+            expend_domain = [('location_dest_id.usage', '=', 'customer')]
         else:
             line_field = 'purchase_line_id'
             # Mua hàng: Nhập (Supplier -> Internal) là [+], Trả NCC (Internal -> Supplier) là [-]
             # out_usage, in_usage = 'supplier', 'internal'
+            expend_domain = [('location_id.usage','=', 'supplier')]
 
         # 2. Tìm các Stock Moves đã hoàn thành trong khoảng thời gian
         domain = [
@@ -36,23 +38,30 @@ class OrderLineStockMixin(models.AbstractModel):
             ('state', '=', 'done'),
             ('date', '>=', from_date),
             ('date', '<=', to_date),
-            ('origin_returned_move_id', '=', False)
-        ]
+            # ('origin_returned_move_id', '=', False)
+        ] + expend_domain
         moves = self.env['stock.move'].search(domain)
-
         total_qty = 0.0
         for move in moves:
-            # Quy đổi số lượng move về đơn vị tính của Order Line
-            qty = move.product_uom._compute_quantity(move.product_qty, self.product_uom)
-            return_qty = sum(move.returned_move_ids.filtered(lambda move: move.state == 'done').mapped('product_qty'))
-            total_qty = total_qty + qty - return_qty
-            # 3. Logic cộng trừ dựa trên hướng kho
-            # Trường hợp Thuận (Giao hàng/Nhận hàng)
-            # if move.location_id.usage == out_usage and move.location_dest_id.usage == in_usage:
-            #     total_qty += qty
-            # # Trường hợp Nghịch (Trả hàng)
-            # elif move.location_id.usage == in_usage and move.location_dest_id.usage == out_usage:
-            #     total_qty -= qty
+            # 1. Quy đổi số lượng THỰC XUẤT của move về đơn vị của Order Line
+            # move.quantity dùng chính move.product_uom nên compute này là chuẩn xác
+            qty = move.product_uom._compute_quantity(
+                move.quantity, 
+                self.product_uom, 
+                rounding_method='HALF-UP'
+            )
+            
+            # 2. Quy đổi số lượng THỰC TRẢ của các move trả hàng về đơn vị của Order Line
+            return_qty = 0.0
+            for re_move in move.returned_move_ids.filtered(lambda m: m.state == 'done'):
+                return_qty += re_move.product_uom._compute_quantity(
+                    re_move.quantity, 
+                    self.product_uom, 
+                    rounding_method='HALF-UP'
+                )
+            
+            # 3. Cộng dồn vào tổng
+            total_qty += (qty - return_qty)
         return total_qty
 
     def get_ordered_qty(self):
