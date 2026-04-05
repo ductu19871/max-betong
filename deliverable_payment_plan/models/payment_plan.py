@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
@@ -122,6 +122,21 @@ class PurchaseOrderLine(models.Model):
      
 class DeliverablePaymentPlan(models.Model):
     _name = "deliverable.payment.plan"
+
+    _sql_constraints = [
+        (
+            'customer_contract_unique', 
+            'unique(customer_contract_id, s_curve_mode)', 
+            _('This customer contract has already been assigned to another S-Curve record!')
+        ),
+        (
+            'subcontractor_contract_unique', 
+            'unique(subcontractor_contract_id, s_curve_mode)', 
+            _('This subcontractor contract has already been assigned to another S-Curve record!')
+        ),
+]
+
+
     name = fields.Char(required=True)
     type = fields.Selection([
         ('customer', 'Customer Contract'),
@@ -159,7 +174,7 @@ class DeliverablePaymentPlan(models.Model):
     s_curve_mode = fields.Selection([
         ('month', 'Month'),
         ('week', 'Week')
-    ], default= lambda self: self.env.company.s_curve_mode, readonly=1)
+    ], default= lambda self: self.env.company.s_curve_mode or 'month', readonly=1)
 
     @api.onchange("customer_contract_id", 'subcontractor_contract_id')
     def _onchange_contract(self):

@@ -67,25 +67,86 @@ class OutputDashboard(models.AbstractModel):
         return f"{converted_val:,.{precision}f} {label}"
     
 
+    # @staticmethod
+    # def get_el_by_today(plan_lines_groups, s_curve_mode):
+    #     for el in plan_lines_groups:
+    #         str_today = str(fields.Date.today())
+    #         # if el['__range']['from_date']['from'] <= str_today:
+    #         #     return el
+    #         # if el['__range']['from_date:day']['from'] <= str_today < el['__range']['from_date:day']['to']:
+    #         #     return el
+    #         if el['__range']['from_date:day']['from'] <= str_today < el['__range']['to_date:day']['from']:
+    #             return el
+    #         # if el['__range']['from_date:%s'%s_curve_mode]['from'] <= str_today :
+    #         #     return el
+
     @staticmethod
-    def get_el_by_today(plan_lines_groups):
-        for el in plan_lines_groups:
-            str_today = str(fields.Date.today())
-            if el['__range']['from_date']['from'] <= str_today < el['__range']['from_date']['to']:
+    def get_el_by_today(plan_lines_groups, key_group):
+        # 1. Sắp xếp danh sách từ cũ đến mới dựa trên ngày bắt đầu (from)
+        # Ép kiểu về chuỗi rỗng nếu None để tránh lỗi khi so sánh (sort)
+        sorted_groups = sorted(
+            plan_lines_groups, 
+            key=lambda x: x.get('__range', {}).get('from_date:day', {}).get('from') or '',
+            reverse=True
+
+        )
+
+        # 2. Lấy ngày hôm nay (YYYY-MM-DD)
+        str_today = str(fields.Date.today())
+        
+        # 3. Duyệt qua danh sách đã sắp xếp, gặp cái đầu tiên thỏa là return ngay
+        for el in sorted_groups:
+            # Lấy range của from_date và to_date với hậu tố :day
+            range_from = el.get('__range', {}).get(f'from_date{key_group}', {})
+            # range_to = el.get('__range', {}).get('to_date:day', {})
+            
+            # Logic: Ngày bắt đầu của nhóm này <= Hôm nay < Ngày bắt đầu của nhóm kế tiếp
+            if range_from.get('from') <= str_today:
                 return el
+        
+        return None
+    
 
     @api.model
     def get_dashboard_data(self, filters=None):
         """Mock data for the dashboard."""
         chart_amount_unit = self.env.company.chart_amount_unit or 'billion'
-        plans = self.env["deliverable.payment.plan"].search([('type', '=', 'customer')])
+        s_curve_mode = self.env.company.s_curve_mode or 'month'
+        type_ = 'customer'
+        customer_partner_id = None
+        project_id = None
+        subcontractor_partner_id = None
+        contract_ids = None
+        # plan_domain = [('state', '=', 'confirm'), ('type', '=', type_), ('s_curve_mode', '=', s_curve_mode)]
+        plan_domain = [('type', '=', type_), ('s_curve_mode', '=', s_curve_mode)]
+        if contract_ids:
+            if type_ == 'customer' :
+                plan_domain += [('customer_contract_id', 'in',  contract_ids)]
+            else:
+                plan_domain += [('subcontractor_contract_id', 'in',  contract_ids)]
+        else:
+            if project_id:
+                plan_domain += [('project_id', '=', project_id)]
+            if customer_partner_id and  type_ == 'customer':
+                plan_domain += [('partner_id', '=', customer_partner_id)]
+            elif subcontractor_partner_id:
+                plan_domain += [('partner_id', '=', subcontractor_partner_id)]
+
+        plans = self.env["deliverable.payment.plan"].search(plan_domain)
+        
+        if s_curve_mode == 'week':
+            groupby = ['from_date:week']
+        else:
+            groupby = ['from_date:month']
+        key_group = ':day'
         plan_lines_groups = self.env["deliverable.payment.plan.line"].read_group(
             domain=[('plan_id', 'in', plans.ids)],
             fields=['from_date', 'plan_accumulated_amount', 'actual_accumulated_amount', 'plan_accumulated_ipc_amount', 'actual_accumulated_ipc_amount', 'actual_accumulated_paid_amount',
                     'actual_percentage', 'actual_amount', 'actual_percentage_accumulated',  'actual_paid_amount',
                     'plan_percentage_accumulated'
                     ],  # Fields to retrieve or aggregate
-            groupby=['from_date', 'to_date']            # The field to group by
+            groupby=[f'from_date{key_group}', f'to_date{key_group}']            # The field to group by
+            # groupby=groupby          # The field to group by
         )
         # plan = plans[-1:]
         contracts = plans.get_contracts()
@@ -93,7 +154,7 @@ class OutputDashboard(models.AbstractModel):
         start = start.strftime('%d/%m/%Y') if start else ''
         end = max(contracts.mapped('contract_end_date'), default=0)
         end = end.strftime('%d/%m/%Y') if end else ''
-        today_el = self.get_el_by_today(plan_lines_groups)
+        today_el = self.get_el_by_today(plan_lines_groups, key_group)
         delayed_value = today_el['plan_accumulated_amount'] - today_el['actual_accumulated_amount'] # chậm tiến độ
         delayed_payment = today_el['plan_accumulated_ipc_amount'] - today_el['actual_accumulated_ipc_amount']
         return {
@@ -113,7 +174,7 @@ class OutputDashboard(models.AbstractModel):
                 'actual_pay': self.get_value_el_by_key(today_el, 'actual_accumulated_paid_amount', chart_amount_unit),
             },
             'table_columns': [
-                'Chỉ tiêu', *self.flat_plan_lines_groups_by_key(plan_lines_groups, 'from_date', is_not_number=True)
+                'Chỉ tiêu', *self.flat_plan_lines_groups_by_key(plan_lines_groups, f'from_date{key_group}', is_not_number=True)
             ],
             # 'table_data': [
             #     ['Tỷ lệ % SL', '5%', '8%', '10%', '12%', '10%', '8%', '9%', '11%'],
@@ -132,7 +193,7 @@ class OutputDashboard(models.AbstractModel):
                 ['Lũy kế thanh toán', *self.flat_plan_lines_groups_by_key(plan_lines_groups, 'actual_accumulated_paid_amount', chart_amount_unit)]
             ],
             'chart': {
-                'labels': self.flat_plan_lines_groups_by_key(plan_lines_groups, 'from_date', is_not_number=True),
+                'labels': self.flat_plan_lines_groups_by_key(plan_lines_groups, f'from_date{key_group}', is_not_number=True),
                 'datasets': [
                     {'label': '1. Sản lượng kế hoạch', 'data':  self.flat_plan_lines_groups_by_key(plan_lines_groups, 'plan_accumulated_amount', chart_amount_unit), 'borderColor': '#2196f3', 'backgroundColor': '#2196f3', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#2196f3', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
                     {'label': '2. Sản lượng thực tế', 'data': self.flat_plan_lines_groups_by_key(plan_lines_groups, 'actual_accumulated_amount', chart_amount_unit), 'borderColor': '#4caf50', 'backgroundColor': '#4caf50', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#4caf50', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
