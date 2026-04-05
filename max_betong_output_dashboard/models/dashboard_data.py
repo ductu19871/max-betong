@@ -13,7 +13,7 @@ class OutputDashboard(models.AbstractModel):
     # #     return plan_lines_groups[-1][key]
     
     @staticmethod
-    def flat_plan_lines_groups_by_key(plan_lines_groups, key, chart_amount_unit=None, precision=2, is_not_number=False):
+    def flat_plan_lines_groups_by_key(plan_lines_groups, key, chart_amount_unit=None, precision=None, is_not_number=False):
         """
         Lấy giá trị từ list mapping. 
         - Nếu không có unit: Trả về giá trị gốc (không làm tròn).
@@ -25,13 +25,14 @@ class OutputDashboard(models.AbstractModel):
 
         # Trường hợp 2: Có unit -> Xử lý tính toán
         unit_map = {
-            'vnd': 1,
-            'million': 1_000_000,
-            'billion': 1_000_000_000
+            'vnd': (1, 0),
+            'million': (1_000_000, 0),
+            'billion': (1_000_000_000, 2)
         }
-        
-        divisor = unit_map.get(chart_amount_unit, chart_amount_unit) or 1
-        
+        PERCENT_FORMAT = (1, 2)
+        divisor, default_precision = unit_map.get(chart_amount_unit, chart_amount_unit) or PERCENT_FORMAT
+        if precision==None:
+            precision = default_precision
         # Ép kiểu float, chia đơn vị và làm tròn
         return [round(float(i.get(key) or 0) / divisor, precision) for i in plan_lines_groups]
     
@@ -43,26 +44,27 @@ class OutputDashboard(models.AbstractModel):
     
 
     @staticmethod
-    def convert_val_to_string(val, chart_amount_unit):
+    def convert_val_to_string(val, chart_amount_unit, precision=None):
         # 1. Lấy giá trị gốc (mặc định là 0 nếu không có key)
         if not chart_amount_unit:
-            return  f"{val:,.2f}"
+            if precision==None:
+                precision=2
+            return f"{val:,.{precision}f}"
         # 2. Định nghĩa bảng quy đổi và nhãn hiển thị
         # Hệ số chia và Tên đơn vị tương ứng
         unit_map = {
-            'vnd': (1, 'đồng'),
-            'million': (1_000_000, 'triệu đồng'),
-            'billion': (1_000_000_000, 'tỷ đồng')
+            'vnd': (1, 'đồng', 0),
+            'million': (1_000_000, 'triệu đồng', 0),
+            'billion': (1_000_000_000, 'tỷ đồng', 2)
         }
     
         # 3. Lấy cấu hình dựa trên chart_amount_unit, mặc định là 'billion'
-        divisor, label = unit_map.get(chart_amount_unit, unit_map['billion'])
-        
+        divisor, label, default_precision = unit_map.get(chart_amount_unit, unit_map['billion'])
+        if precision==None:
+                precision=default_precision
         # 4. Tính toán giá trị đã quy đổi
         converted_val = val / divisor
-        
-        # 5. Trả về chuỗi đã format (làm tròn 2 chữ số thập phân cho đẹp)
-        return f"{converted_val:,.2f} {label}"
+        return f"{converted_val:,.{precision}f} {label}"
     
 
     @staticmethod
@@ -75,7 +77,7 @@ class OutputDashboard(models.AbstractModel):
     @api.model
     def get_dashboard_data(self, filters=None):
         """Mock data for the dashboard."""
-        chart_amount_unit = self.env.company.chart_amount_unit
+        chart_amount_unit = self.env.company.chart_amount_unit or 'billion'
         plans = self.env["deliverable.payment.plan"].search([('type', '=', 'customer')])
         plan_lines_groups = self.env["deliverable.payment.plan.line"].read_group(
             domain=[('plan_id', 'in', plans.ids)],
@@ -105,7 +107,7 @@ class OutputDashboard(models.AbstractModel):
                 'delayed_payment': self.convert_val_to_string(delayed_payment, chart_amount_unit) 
             },
             'summary': {
-                'plan_vol': self.get_value_el_by_key(plan_lines_groups[-1], 'plan_accumulated_amount', chart_amount_unit),
+                'plan_vol': self.get_value_el_by_key(today_el, 'plan_accumulated_amount', chart_amount_unit),
                 'actual_vol': self.get_value_el_by_key(today_el, 'actual_accumulated_amount', chart_amount_unit),
                 'plan_pay': self.get_value_el_by_key(today_el, 'plan_accumulated_ipc_amount', chart_amount_unit),
                 'actual_pay': self.get_value_el_by_key(today_el, 'actual_accumulated_paid_amount', chart_amount_unit),
