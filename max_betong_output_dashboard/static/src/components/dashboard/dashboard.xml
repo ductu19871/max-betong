@@ -34,7 +34,7 @@
                             <Many2XAutocomplete
                                 resModel="'project.project'"
                                 update="(records) => this.onFilterUpdate('project_id', records)"
-                                value="''"
+                                value="state.filters.project_id"
                                 fieldString="'name'"
                                 activeActions="{}"
                                 getDomain.bind="getDomain"
