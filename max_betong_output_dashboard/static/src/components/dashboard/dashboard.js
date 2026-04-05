@@ -12,10 +12,10 @@ export class OutputDashboard extends Component {
         
         this.state = useState({
             filters: {
-                investor_id: [],
+                customer_partner_id: [],
                 project_id: [],
-                contractor_id: [],
-                contract_id: []
+                subcontractor_partner_id: [],
+                customer_contract_ids: []
             },
             data: null,
             loading: true,
@@ -40,10 +40,10 @@ export class OutputDashboard extends Component {
         this.state.loading = true;
         try {
             const queryFilters = {
-                investor_id: this.state.filters.investor_id.length ? this.state.filters.investor_id[0].id : false,
+                customer_partner_id: this.state.filters.customer_partner_id.length ? this.state.filters.customer_partner_id[0].id : false,
                 project_id: this.state.filters.project_id.length ? this.state.filters.project_id[0].id : false,
-                contractor_id: this.state.filters.contractor_id.length ? this.state.filters.contractor_id[0].id : false,
-                contract_id: this.state.filters.contract_id.length ? this.state.filters.contract_id[0].id : false,
+                subcontractor_partner_id: this.state.filters.subcontractor_partner_id.length ? this.state.filters.subcontractor_partner_id[0].id : false,
+                customer_contract_ids: this.state.filters.customer_contract_ids.length ? this.state.filters.customer_contract_ids[0].id : false,
             };
             this.state.data = await this.orm.call("max_betong.output.dashboard", "get_dashboard_data", [], {
                 filters: queryFilters

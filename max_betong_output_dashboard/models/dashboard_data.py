@@ -88,6 +88,8 @@ class OutputDashboard(models.AbstractModel):
         customer_partner_id = None
         project_id = None
         subcontractor_partner_id = None
+        customer_contract_ids = None
+        subcontractor_contract_ids = None
         contract_ids = None
 
         return type_, customer_partner_id, project_id, subcontractor_partner_id, contract_ids

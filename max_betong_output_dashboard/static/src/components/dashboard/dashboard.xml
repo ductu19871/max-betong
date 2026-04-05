@@ -21,7 +21,7 @@
                             <label class="form-label text-muted small">Chủ đầu tư</label>
                             <Many2XAutocomplete
                                 resModel="'res.partner'"
-                                update="(records) => this.onFilterUpdate('investor_id', records)"
+                                update="(records) => this.onFilterUpdate('customer_partner_id', records)"
                                 value="''"
                                 fieldString="'name'"
                                 activeActions="{}"
@@ -32,8 +32,8 @@
                         <div class="col-md-3">
                             <label class="form-label text-muted small">Dự án</label>
                             <Many2XAutocomplete
-                                resModel="'res.partner'"
-                                update="(records) => this.onFilterUpdate('investor_id', records)"
+                                resModel="'project.project'"
+                                update="(records) => this.onFilterUpdate('project_id', records)"
                                 value="''"
                                 fieldString="'name'"
                                 activeActions="{}"
@@ -45,7 +45,7 @@
                             <label class="form-label text-muted small">Nhà thầu</label>
                             <Many2XAutocomplete
                                 resModel="'res.partner'"
-                                update="(records) => this.onFilterUpdate('investor_id', records)"
+                                update="(records) => this.onFilterUpdate('subcontractor_partner_id', records)"
                                 value="''"
                                 fieldString="'name'"
                                 activeActions="{}"
@@ -56,8 +56,8 @@
                         <div class="col-md-3">
                             <label class="form-label text-muted small">Hợp đồng</label>
                             <Many2XAutocomplete
-                                resModel="'res.partner'"
-                                update="(records) => this.onFilterUpdate('investor_id', records)"
+                                resModel="'sale.order'"
+                                update="(records) => this.onFilterUpdate('customer_contract_ids', records)"
                                 value="''"
                                 fieldString="'name'"
                                 activeActions="{}"
