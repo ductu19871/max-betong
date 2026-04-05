@@ -22,7 +22,7 @@
                             <Many2XAutocomplete
                                 resModel="'res.partner'"
                                 update="(records) => this.onFilterUpdate('customer_partner_id', records)"
-                                value="''"
+                                value="state.filters.customer_partner_id"
                                 fieldString="'name'"
                                 activeActions="{}"
                                 getDomain.bind="getDomain"
@@ -37,7 +37,7 @@
                                 value="state.filters.project_id"
                                 fieldString="'name'"
                                 activeActions="{}"
-                                getDomain.bind="getDomain"
+                                getDomain="() => this.getDomain('project_id')"   
                                 noSearchMore="true"
                             />
                         </div>
@@ -46,7 +46,7 @@
                             <Many2XAutocomplete
                                 resModel="'res.partner'"
                                 update="(records) => this.onFilterUpdate('subcontractor_partner_id', records)"
-                                value="''"
+                                value="state.filters.subcontractor_partner_id"
                                 fieldString="'name'"
                                 activeActions="{}"
                                 getDomain.bind="getDomain"
@@ -58,10 +58,23 @@
                             <Many2XAutocomplete
                                 resModel="'sale.order'"
                                 update="(records) => this.onFilterUpdate('customer_contract_ids', records)"
-                                value="''"
+                                value="state.filters.customer_contract_ids"
                                 fieldString="'name'"
                                 activeActions="{}"
-                                getDomain.bind="getDomain"
+                                getDomain="() => this.getDomain('customer_contract_ids')"   
+                                noSearchMore="true"
+                            />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label text-muted small">Hợp đồng BB'</label>
+                            <Many2XAutocomplete
+                                resModel="'purchase.order'"
+                                update="(records) => this.onFilterUpdate('subcontractor_contract_ids', records)"
+                                value="state.filters.subcontractor_contract_ids"
+                                fieldString="'name'"
+                                activeActions="{}"
+                                getDomain="() => this.getDomain('subcontractor_contract_ids')"   
                                 noSearchMore="true"
                             />
                         </div>

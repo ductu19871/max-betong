@@ -88,13 +88,16 @@ class OutputDashboard(models.AbstractModel):
         project_id = filters['project_id']
         subcontractor_partner_id =  filters['subcontractor_partner_id']
         customer_contract_ids = filters['customer_contract_ids']
-        subcontractor_contract_ids = None
-        contract_ids = customer_contract_ids or subcontractor_contract_ids
+        subcontractor_contract_ids = filters['subcontractor_contract_ids']
+        contract_ids = None
+        if customer_contract_ids:
+            contract_ids = customer_contract_ids
+        if subcontractor_contract_ids:
+            type_ = 'subcontract'
+            contract_ids = subcontractor_contract_ids
         if isinstance(contract_ids, int):
             contract_ids = (contract_ids, )
         return type_, customer_partner_id, project_id, subcontractor_partner_id, contract_ids
-
-
 
     @api.model
     def get_dashboard_data(self, filters=None):
@@ -106,6 +109,7 @@ class OutputDashboard(models.AbstractModel):
             self.get_values_filters(filters)
         
         plan_domain = [('type', '=', type_), ('s_curve_mode', '=', s_curve_mode)]
+        is_demo = False
         if contract_ids:
             if type_ == 'customer' :
                 plan_domain += [('customer_contract_id', 'in',  contract_ids)]
@@ -119,6 +123,8 @@ class OutputDashboard(models.AbstractModel):
                     plan_domain += [('partner_id', '=', customer_partner_id)]
                 elif subcontractor_partner_id:
                     plan_domain += [('partner_id', '=', subcontractor_partner_id)]
+                else:
+                    is_demo = True
 
         plans = self.env["deliverable.payment.plan"].search(plan_domain)
         

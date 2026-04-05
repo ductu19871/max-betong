@@ -15,7 +15,8 @@ export class OutputDashboard extends Component {
                 customer_partner_id: "", // Đổi từ [] thành ""
                 project_id: "",          // Đổi từ [] thành ""
                 subcontractor_partner_id: "",
-                customer_contract_ids: ""
+                customer_contract_ids: "",
+                subcontractor_contract_ids: ""
             },
             // Tạo thêm một biến để lưu ID thực tế phục vụ query server
             selected_ids: {
@@ -23,6 +24,7 @@ export class OutputDashboard extends Component {
                 project_id: false,
                 subcontractor_partner_id: false,
                 customer_contract_ids: false,
+                subcontractor_contract_ids: false,
             },
             data: null,
             loading: true,
@@ -51,6 +53,7 @@ export class OutputDashboard extends Component {
                 project_id: this.state.selected_ids.project_id,
                 subcontractor_partner_id: this.state.selected_ids.subcontractor_partner_id,
                 customer_contract_ids: this.state.selected_ids.customer_contract_ids,
+                subcontractor_contract_ids: this.state.selected_ids.subcontractor_contract_ids,
             };
             this.state.data = await this.orm.call("max_betong.output.dashboard", "get_dashboard_data", [], {
                 filters: queryFilters
@@ -71,7 +74,7 @@ export class OutputDashboard extends Component {
             this.state.filters[field] = "";
             this.state.selected_ids[field] = false;
         }
-        if (field === 'customer_contract_ids') {
+        if (['customer_contract_ids', 'subcontractor_contract_ids'].includes(field)) {
             this.loadData();
         }
     }
@@ -134,6 +137,19 @@ export class OutputDashboard extends Component {
             }
             return domain;
         }
+
+        if (field === 'subcontractor_contract_ids') {
+            const domain = [];
+            domain.push(['is_sub_contract', '=', true]);
+            if (selected_ids.subcontractor_partner_id) {
+                domain.push(['partner_id', '=', selected_ids.subcontractor_partner_id]);
+            }
+            if (selected_ids.project_id) {
+                domain.push(['contract_project_id', '=', selected_ids.project_id]);
+            }
+            return domain;
+        }
+
     
         return [];
     }
