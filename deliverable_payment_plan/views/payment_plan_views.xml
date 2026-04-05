@@ -148,6 +148,15 @@
         sequence="10"
           />
 
+    <menuitem 
+        id="menu_output_dashboard_subcontract"
+        name="Dashboard Nhà thầu phụ"
+        action="max_betong_output_dashboard.action_output_dashboard_subcontract"
+        parent="menu_contruction_partner"
+
+    />
+    
+
     <menuitem id="menu_payment_plan"
           name="Payment Plan"
           parent="menu_contruction_partner"

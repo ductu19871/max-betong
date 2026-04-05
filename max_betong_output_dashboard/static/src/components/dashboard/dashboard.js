@@ -7,9 +7,19 @@ import { loadJS } from "@web/core/assets";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class OutputDashboard extends Component {
+    static props = {
+        action: { type: Object, optional: true },
+        "*": true,   // 👈 accept all props (wildcard)
+    };
     setup() {
         this.orm = useService("orm");
         
+        const action = this.props.action || {};
+        const ctx = action.context || {};
+
+        this.type_ = ctx.type_ || 'customer';  // 👈 mặc định
+        this.context = this.props?.action?.context || {};
+
         this.state = useState({
             filters: {
                 customer_partner_id: "", // Đổi từ [] thành ""
@@ -54,6 +64,7 @@ export class OutputDashboard extends Component {
                 subcontractor_partner_id: this.state.selected_ids.subcontractor_partner_id,
                 customer_contract_ids: this.state.selected_ids.customer_contract_ids,
                 subcontractor_contract_ids: this.state.selected_ids.subcontractor_contract_ids,
+                type_: this.type_,   // 👈 thêm vào
             };
             this.state.data = await this.orm.call("max_betong.output.dashboard", "get_dashboard_data", [], {
                 filters: queryFilters

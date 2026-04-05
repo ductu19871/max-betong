@@ -83,7 +83,8 @@ class OutputDashboard(models.AbstractModel):
     
 
     def get_values_filters(self, filters):
-        type_ = 'customer'
+        # type_ = 'customer'
+        type_ = filters['type_']
         customer_partner_id = filters['customer_partner_id']
         project_id = filters['project_id']
         subcontractor_partner_id =  filters['subcontractor_partner_id']
@@ -97,6 +98,7 @@ class OutputDashboard(models.AbstractModel):
             contract_ids = subcontractor_contract_ids
         if isinstance(contract_ids, int):
             contract_ids = (contract_ids, )
+        print ('*type_, customer_partner_id, project_id, subcontractor_partner_id, contract_ids', type_, customer_partner_id, project_id, subcontractor_partner_id, contract_ids)
         return type_, customer_partner_id, project_id, subcontractor_partner_id, contract_ids
 
     @api.model
