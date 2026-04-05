@@ -13,56 +13,99 @@ class OrderLineStockMixin(models.AbstractModel):
     _name = 'order.line.stock.mixin'
     _description = 'Mixin to calculate delivered qty in period via stock moves'
 
+    # def get_delivered_in_period(self, from_date, to_date):
+    #     """
+    #     Hàm dùng chung để tính số lượng thực tế dịch chuyển trong kỳ,
+    #     có trừ đi hàng trả (Returns).
+    #     """
+    #     self.ensure_one()
+        
+    #     # 1. Xác định field liên kết và hướng kho tùy theo model
+    #     if self._name == 'sale.order.line':
+    #         line_field = 'sale_line_id'
+    #         # Bán hàng: Xuất (Internal -> Customer) là [+], Nhập trả (Customer -> Internal) là [-]
+    #         # out_usage, in_usage = 'internal', 'customer'
+    #         expend_domain = [('location_dest_id.usage', '=', 'customer')]
+    #     else:
+    #         line_field = 'purchase_line_id'
+    #         # Mua hàng: Nhập (Supplier -> Internal) là [+], Trả NCC (Internal -> Supplier) là [-]
+    #         # out_usage, in_usage = 'supplier', 'internal'
+    #         expend_domain = [('location_id.usage','=', 'supplier')]
+
+    #     # 2. Tìm các Stock Moves đã hoàn thành trong khoảng thời gian
+    #     domain = [
+    #         (line_field, '=', self.id),
+    #         ('state', '=', 'done'),
+    #         ('date', '>=', from_date),
+    #         ('date', '<=', to_date),
+    #         # ('origin_returned_move_id', '=', False)
+    #     ] + expend_domain
+    #     moves = self.env['stock.move'].search(domain)
+    #     total_qty = 0.0
+    #     for move in moves:
+    #         # 1. Quy đổi số lượng THỰC XUẤT của move về đơn vị của Order Line
+    #         # move.quantity dùng chính move.product_uom nên compute này là chuẩn xác
+    #         qty = move.product_uom._compute_quantity(
+    #             move.quantity, 
+    #             self.product_uom, 
+    #             rounding_method='HALF-UP'
+    #         )
+            
+    #         # 2. Quy đổi số lượng THỰC TRẢ của các move trả hàng về đơn vị của Order Line
+    #         return_qty = 0.0
+    #         for re_move in move.returned_move_ids.filtered(lambda m: m.state == 'done'):
+    #             return_qty += re_move.product_uom._compute_quantity(
+    #                 re_move.quantity, 
+    #                 self.product_uom, 
+    #                 rounding_method='HALF-UP'
+    #             )
+            
+    #         # 3. Cộng dồn vào tổng
+    #         total_qty += (qty - return_qty)
+    #     return total_qty
+
     def get_delivered_in_period(self, from_date, to_date):
-        """
-        Hàm dùng chung để tính số lượng thực tế dịch chuyển trong kỳ,
-        có trừ đi hàng trả (Returns).
-        """
         self.ensure_one()
         
-        # 1. Xác định field liên kết và hướng kho tùy theo model
-        if self._name == 'sale.order.line':
-            line_field = 'sale_line_id'
-            # Bán hàng: Xuất (Internal -> Customer) là [+], Nhập trả (Customer -> Internal) là [-]
-            # out_usage, in_usage = 'internal', 'customer'
-            expend_domain = [('location_dest_id.usage', '=', 'customer')]
-        else:
-            line_field = 'purchase_line_id'
-            # Mua hàng: Nhập (Supplier -> Internal) là [+], Trả NCC (Internal -> Supplier) là [-]
-            # out_usage, in_usage = 'supplier', 'internal'
-            expend_domain = [('location_id.usage','=', 'supplier')]
-
-        # 2. Tìm các Stock Moves đã hoàn thành trong khoảng thời gian
+        # 1. Xác định field liên kết
+        line_field = 'sale_line_id' if self._name == 'sale.order.line' else 'purchase_line_id'
+        
+        # 2. Tìm TẤT CẢ các moves liên quan đến line này đã hoàn thành trong kỳ
+        # Không phân biệt là move gốc hay move trả hàng
         domain = [
             (line_field, '=', self.id),
             ('state', '=', 'done'),
             ('date', '>=', from_date),
             ('date', '<=', to_date),
-            # ('origin_returned_move_id', '=', False)
-        ] + expend_domain
+        ]
         moves = self.env['stock.move'].search(domain)
+        
         total_qty = 0.0
+        
+        # 3. Định nghĩa hướng kho để cộng/trừ
+        # Sale: Internal -> Customer (+), Customer -> Internal (-)
+        # Purchase: Vendor -> Internal (+), Internal -> Vendor (-)
         for move in moves:
-            # 1. Quy đổi số lượng THỰC XUẤT của move về đơn vị của Order Line
-            # move.quantity dùng chính move.product_uom nên compute này là chuẩn xác
+            # Quy đổi số lượng về UoM của Order Line
             qty = move.product_uom._compute_quantity(
                 move.quantity, 
                 self.product_uom, 
                 rounding_method='HALF-UP'
             )
             
-            # 2. Quy đổi số lượng THỰC TRẢ của các move trả hàng về đơn vị của Order Line
-            return_qty = 0.0
-            for re_move in move.returned_move_ids.filtered(lambda m: m.state == 'done'):
-                return_qty += re_move.product_uom._compute_quantity(
-                    re_move.quantity, 
-                    self.product_uom, 
-                    rounding_method='HALF-UP'
-                )
-            
-            # 3. Cộng dồn vào tổng
-            total_qty += (qty - return_qty)
+            if self._name == 'sale.order.line':
+                if move.location_dest_id.usage == 'customer':
+                    total_qty += qty  # Xuất đi
+                elif move.location_id.usage == 'customer':
+                    total_qty -= qty  # Trả về
+            else: # purchase.order.line
+                if move.location_id.usage == 'supplier':
+                    total_qty += qty  # Nhập vào
+                elif move.location_dest_id.usage == 'supplier':
+                    total_qty -= qty  # Trả NCC
+                    
         return total_qty
+
 
     def get_ordered_qty(self):
         """Hàm bổ trợ lấy số lượng đặt hàng đúng theo model"""
@@ -121,7 +164,7 @@ class DeliverablePaymentPlan(models.Model):
     @api.onchange("customer_contract_id", 'subcontractor_contract_id')
     def _onchange_contract(self):
         for rec in self:
-            contract = rec.get_contract()
+            contract = rec.get_contracts()
             if contract:
                 rec.from_date = contract.contract_start_date
                 rec.to_date =  contract.contract_end_date
@@ -130,14 +173,14 @@ class DeliverablePaymentPlan(models.Model):
     @api.depends("type","customer_contract_id.partner_id","subcontractor_contract_id.partner_id")
     def _compute_partner(self):
         for rec in self:
-            contract = rec.get_contract()
+            contract = rec.get_contracts()
             if contract:
                 rec.partner_id = contract.partner_id
 
     @api.depends("type", "customer_contract_id.amount_total", "subcontractor_contract_id.amount_total")
     def _compute_total_project_amount(self):
         for rec in self:
-            contract = rec.get_contract()
+            contract = rec.get_contracts()
             if contract:
                 rec.total_project_amount = contract.amount_total
                 rec.currency_id = contract.currency_id
