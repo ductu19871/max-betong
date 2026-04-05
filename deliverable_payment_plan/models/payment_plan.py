@@ -307,9 +307,9 @@ class DeliverablePaymentPlanLine(models.Model):
     to_date = fields.Date(string="To Date", required=True)
     currency_id = fields.Many2one("res.currency", string="Currency", required=True, default=lambda self: self.env.company.currency_id.id)
 
-    plan_percentage = fields.Float(string="Plan %", compute="_compute_plan", inverse="_inverse_plan", store=True)
+    plan_percentage = fields.Float(string="Plan %", compute="_compute_plan", inverse="_inverse_plan", store=True, group_operator="avg")
     plan_amount = fields.Monetary(string="Plan Amount", compute="_compute_plan", inverse="_inverse_plan", store=True)
-    plan_percentage_accumulated = fields.Float(string="Plan % Accumulated", compute="_compute_plan_acc", store=True)
+    plan_percentage_accumulated = fields.Float(string="Plan % Accumulated", compute="_compute_plan_acc", store=True, group_operator="avg")
     plan_accumulated_amount = fields.Monetary(string="Plan Accumulated Amount", compute="_compute_plan_acc", store=True)
     plan_ipc_amount = fields.Monetary(string="Plan IPC Amount")
     plan_accumulated_ipc_amount = fields.Monetary(string="Plan Accumulated IPC Amount", compute="_compute_plan_acc", store=True)
@@ -318,11 +318,11 @@ class DeliverablePaymentPlanLine(models.Model):
     actual_amount = fields.Monetary(
         string="Actual Amount", compute="_compute_actual_amount", store=True)
     actual_percentage = fields.Float(
-        string="Actual %", compute="_compute_actual_amount", store=True)
+        string="Actual %", compute="_compute_actual_amount", store=True, group_operator="avg")
     actual_accumulated_amount = fields.Monetary(
         string="Actual Accumulated Amount", compute="_compute_actual_amount", store=True)
     actual_percentage_accumulated = fields.Float(
-        string="Actual % Accumulated", compute="_compute_actual_amount", store=True)
+        string="Actual % Accumulated", compute="_compute_actual_amount", store=True, group_operator="avg")
 
     # Nhóm 2: Nghiệm thu (IPC)
     actual_ipc_amount = fields.Monetary(

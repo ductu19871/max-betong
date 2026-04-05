@@ -12,10 +12,35 @@ class OutputDashboard(models.AbstractModel):
     # def get_last_res_by_key(res, key):
     #     return res[-1][key]
     
-    @staticmethod
-    def get_last_res_by_key(el, key):
-        return el[key]
+    # @staticmethod
+    def get_last_res_by_key(self, el, key, chart_amount_unit):
+        # 1. Lấy giá trị gốc (mặc định là 0 nếu không có key)
+        val = el.get(key, 0)
+        return self.convert_val_to_string(val, chart_amount_unit)
     
+    @staticmethod
+    def convert_val_to_string(val, chart_amount_unit):
+        # 1. Lấy giá trị gốc (mặc định là 0 nếu không có key)
+        if not chart_amount_unit:
+            return  f"{val:,.2f}"
+        # 2. Định nghĩa bảng quy đổi và nhãn hiển thị
+        # Hệ số chia và Tên đơn vị tương ứng
+        unit_map = {
+            'vnd': (1, 'đồng'),
+            'million': (1_000_000, 'triệu đồng'),
+            'billion': (1_000_000_000, 'tỷ đồng')
+        }
+    
+        # 3. Lấy cấu hình dựa trên chart_amount_unit, mặc định là 'billion'
+        divisor, label = unit_map.get(chart_amount_unit, unit_map['billion'])
+        
+        # 4. Tính toán giá trị đã quy đổi
+        converted_val = val / divisor
+        
+        # 5. Trả về chuỗi đã format (làm tròn 2 chữ số thập phân cho đẹp)
+        return f"{converted_val:,.2f} {label}"
+    
+
     @staticmethod
     def get_el_by_to_day(res):
         for el in res:
@@ -26,6 +51,7 @@ class OutputDashboard(models.AbstractModel):
     @api.model
     def get_dashboard_data(self, filters=None):
         """Mock data for the dashboard."""
+        chart_amount_unit = self.env.company.chart_amount_unit
         plans = self.env["deliverable.payment.plan"].search([('type', '=', 'customer')])
         res = self.env["deliverable.payment.plan.line"].read_group(
             domain=[('plan_id', 'in', plans.ids)],
@@ -43,21 +69,22 @@ class OutputDashboard(models.AbstractModel):
         end = end.strftime('%d/%m/%Y') if end else ''
         el = self.get_el_by_to_day(res)
         delayed_value = el['plan_accumulated_amount'] - el['actual_accumulated_amount'] # chậm tiến độ
+        delayed_payment = el['plan_accumulated_ipc_amount'] - el['actual_accumulated_ipc_amount']
         return {
             'contract_info': {
-                'value': sum(plans.mapped('total_project_amount')), #contract.amount_total,#plan.total_project_amount,
+                'value': self.convert_val_to_string(sum(plans.mapped('total_project_amount')), chart_amount_unit), #contract.amount_total,#plan.total_project_amount,
                 'name': ', '.join(str(i) for i in contracts.mapped('contract_ref_no')),
                 'time': f'{start} - {end}',
-                'plan_percent': el['plan_percentage_accumulated'],
-                'actual_percent': self.get_last_res_by_key(el, 'actual_percentage'),
-                'delayed_value': delayed_value,
-                'delayed_payment': '-4.5 Tỷ đồng'
+                'plan_percent': self.get_last_res_by_key(el, 'plan_percentage_accumulated', None),#el['plan_percentage_accumulated'],
+                'actual_percent': self.get_last_res_by_key(el, 'actual_percentage', None),
+                'delayed_value': self.convert_val_to_string(delayed_value, chart_amount_unit),
+                'delayed_payment': self.convert_val_to_string(delayed_payment, chart_amount_unit) 
             },
             'summary': {
-                'plan_vol': '73.0 Tỷ đồng',
-                'actual_vol': self.get_last_res_by_key(el, 'actual_accumulated_amount'),
-                'plan_pay': self.get_last_res_by_key(el, 'plan_accumulated_ipc_amount'),
-                'actual_pay': self.get_last_res_by_key(el, 'actual_accumulated_paid_amount'),
+                'plan_vol': self.get_last_res_by_key(res[-1], 'plan_accumulated_amount', chart_amount_unit),
+                'actual_vol': self.get_last_res_by_key(el, 'actual_accumulated_amount', chart_amount_unit),
+                'plan_pay': self.get_last_res_by_key(el, 'plan_accumulated_ipc_amount', chart_amount_unit),
+                'actual_pay': self.get_last_res_by_key(el, 'actual_accumulated_paid_amount', chart_amount_unit),
             },
             'table_columns': [
                 'Chỉ tiêu', *self.flat_res_by_key(res, 'from_date')
