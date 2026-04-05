@@ -129,6 +129,7 @@ export class OutputDashboard extends Component {
         if (field === 'customer_contract_ids') {
             const domain = [];
             domain.push(['is_customer_contract', '=', true]);
+            domain.push(['deliverable_plan_ids', '!=', false]);
             if (selected_ids.customer_partner_id) {
                 domain.push(['partner_id', '=', selected_ids.customer_partner_id]);
             }
@@ -141,6 +142,7 @@ export class OutputDashboard extends Component {
         if (field === 'subcontractor_contract_ids') {
             const domain = [];
             domain.push(['is_sub_contract', '=', true]);
+            domain.push(['deliverable_plan_ids', '!=', false]);
             if (selected_ids.subcontractor_partner_id) {
                 domain.push(['partner_id', '=', selected_ids.subcontractor_partner_id]);
             }

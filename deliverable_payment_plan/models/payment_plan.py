@@ -119,7 +119,24 @@ class SaleOrderLine(models.Model):
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
     _inherit = ['purchase.order.line', 'order.line.stock.mixin']
-     
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    deliverable_plan_ids = fields.One2many(
+        "deliverable.payment.plan",
+        "customer_contract_id",
+        string="S-Curve Plans"
+    )
+
+class PurchaseOrder(models.Model):
+    _inherit = "purchase.order"
+
+    deliverable_plan_ids = fields.One2many(
+        "deliverable.payment.plan",
+        "subcontractor_contract_id",
+        string="S-Curve Plans"
+    )
+
 class DeliverablePaymentPlan(models.Model):
     _name = "deliverable.payment.plan"
 
