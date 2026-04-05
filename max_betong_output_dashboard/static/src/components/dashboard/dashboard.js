@@ -71,7 +71,9 @@ export class OutputDashboard extends Component {
             this.state.filters[field] = "";
             this.state.selected_ids[field] = false;
         }
-        this.loadData();
+        if (field === 'customer_contract_ids') {
+            this.loadData();
+        }
     }
 
     renderChart() {
@@ -110,8 +112,30 @@ export class OutputDashboard extends Component {
         }
     }
 
-    getDomain() {
-        return []
+    getDomain(field) {
+        const { selected_ids } = this.state;
+    
+        // 1. Nếu đang chọn Project: Lọc theo Khách hàng (Partner)
+        if (field === 'project_id') {
+            if (selected_ids.customer_partner_id) {
+                return [['partner_id', '=', selected_ids.customer_partner_id]];
+            }
+        }
+    
+        // 2. Nếu đang chọn Contract: Lọc theo cả Project và Partner
+        if (field === 'customer_contract_ids') {
+            const domain = [];
+            domain.push(['is_customer_contract', '=', true]);
+            if (selected_ids.customer_partner_id) {
+                domain.push(['partner_id', '=', selected_ids.customer_partner_id]);
+            }
+            if (selected_ids.project_id) {
+                domain.push(['contract_project_id', '=', selected_ids.project_id]);
+            }
+            return domain;
+        }
+    
+        return [];
     }
 }
 
