@@ -133,7 +133,7 @@ class DeliverablePaymentPlan(models.Model):
 
     customer_contract_id = fields.Many2one("sale.order")
     subcontractor_contract_id = fields.Many2one("purchase.order")
-    partner_id = fields.Many2one("res.partner", compute="_compute_partner", store=True)
+    partner_id = fields.Many2one("res.partner", compute="_compute_partner", store=True, required=True)
     project_id = fields.Many2one("project.project", required=True)
     currency_id = fields.Many2one(
         "res.currency",

@@ -56,8 +56,8 @@
                                 domain="[('is_sub_contract', '=', True), ('contract_project_id', '=', project_id)]" 
                                 invisible="type != 'subcontract'"
                                 context="{'form_view_ref': 'xb_job_costing_management.view_subcontractor_contract_form'}"/>
-                            <field name="partner_id" readonly="1"/>
-                            <field name="total_project_amount" readonly="1"/>
+                            <field name="partner_id" force_save="1"/>
+                            <field name="total_project_amount"/>
                             <field name="currency_id" />
                         </group>
                     </group>
