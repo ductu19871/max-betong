@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { loadJS } from "@web/core/assets";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Many2ManyTags } from  "@web/views/fields/relational_utils";;
+
 export class OutputDashboard extends Component {
     setup() {
         this.orm = useService("orm");
@@ -13,7 +13,7 @@ export class OutputDashboard extends Component {
         this.state = useState({
             filters: {
                 customer_partner_id: "", // Đổi từ [] thành ""
-                project_id: [],          // Đổi từ [] thành ""
+                project_id: "",          // Đổi từ [] thành ""
                 subcontractor_partner_id: "",
                 customer_contract_ids: ""
             },
@@ -48,7 +48,7 @@ export class OutputDashboard extends Component {
         try {
             const queryFilters = {
                 customer_partner_id: this.state.selected_ids.customer_partner_id,
-                project_id: this.state.filters.project_id.map(r => r.id),
+                project_id: this.state.selected_ids.project_id,
                 subcontractor_partner_id: this.state.selected_ids.subcontractor_partner_id,
                 customer_contract_ids: this.state.selected_ids.customer_contract_ids,
             };
@@ -62,10 +62,15 @@ export class OutputDashboard extends Component {
     }
 
     onFilterUpdate(field, records) {
-        this.state.filters[field] = records.map(r => ({
-            id: r.id,
-            display_name: r.display_name || r.name,
-        }));
+        if (records && records.length > 0) {
+            // Gán display_name (String) để Many2XAutocomplete không báo lỗi
+            this.state.filters[field] = records[0].display_name;
+            // Lưu ID để load data
+            this.state.selected_ids[field] = records[0].id;
+        } else {
+            this.state.filters[field] = "";
+            this.state.selected_ids[field] = false;
+        }
         this.loadData();
     }
 
@@ -111,6 +116,6 @@ export class OutputDashboard extends Component {
 }
 
 OutputDashboard.template = "max_betong_output_dashboard.Dashboard";
-// OutputDashboard.components = { Many2XAutocomplete };
-OutputDashboard.components = { Many2XAutocomplete, Many2ManyTags };
+OutputDashboard.components = { Many2XAutocomplete };
+
 registry.category("actions").add("max_betong_output_dashboard_action", OutputDashboard);

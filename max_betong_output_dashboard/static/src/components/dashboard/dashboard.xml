@@ -31,11 +31,14 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label text-muted small">Dự án</label>
-                            <Many2ManyTags
+                            <Many2XAutocomplete
                                 resModel="'project.project'"
-                                value="state.filters.project_id"
                                 update="(records) => this.onFilterUpdate('project_id', records)"
+                                value="''"
                                 fieldString="'name'"
+                                activeActions="{}"
+                                getDomain.bind="getDomain"
+                                noSearchMore="true"
                             />
                         </div>
                         <div class="col-md-3">
