@@ -13,18 +13,27 @@ class OutputDashboard(models.AbstractModel):
     # #     return res[-1][key]
     
     @staticmethod
-    def flat_res_by_key(res, key, chart_amount_unit=None, round=2):
-        if not chart_amount_unit:
-            return [i[key] for i in res]
+    def flat_res_by_key(res, key, chart_amount_unit=None, precision=2, is_not_number=False):
+        """
+        Lấy giá trị từ list mapping. 
+        - Nếu không có unit: Trả về giá trị gốc (không làm tròn).
+        - Nếu có unit: Quy đổi đơn vị và làm tròn theo precision.
+        """
+        # Trường hợp 1: Không có unit -> Trả về nguyên bản từ kết quả query
+        if is_not_number:
+            return [i.get(key) for i in res]
+
+        # Trường hợp 2: Có unit -> Xử lý tính toán
         unit_map = {
             'vnd': 1,
             'million': 1_000_000,
             'billion': 1_000_000_000
         }
+        
         divisor = unit_map.get(chart_amount_unit, chart_amount_unit) or 1
         
-        # Thêm hàm round(..., 2) ở đây
-        return [round(float(i.get(key) or 0) / divisor, 2) for i in res]
+        # Ép kiểu float, chia đơn vị và làm tròn
+        return [round(float(i.get(key) or 0) / divisor, precision) for i in res]
     
     # @staticmethod
     def get_last_res_by_key(self, el, key, chart_amount_unit):
@@ -102,7 +111,7 @@ class OutputDashboard(models.AbstractModel):
                 'actual_pay': self.get_last_res_by_key(el, 'actual_accumulated_paid_amount', chart_amount_unit),
             },
             'table_columns': [
-                'Chỉ tiêu', *self.flat_res_by_key(res, 'from_date')
+                'Chỉ tiêu', *self.flat_res_by_key(res, 'from_date', is_not_number=True)
             ],
             # 'table_data': [
             #     ['Tỷ lệ % SL', '5%', '8%', '10%', '12%', '10%', '8%', '9%', '11%'],
@@ -121,7 +130,7 @@ class OutputDashboard(models.AbstractModel):
                 ['Lũy kế thanh toán', *self.flat_res_by_key(res, 'actual_accumulated_paid_amount', chart_amount_unit)]
             ],
             'chart': {
-                'labels': self.flat_res_by_key(res, 'from_date'),
+                'labels': self.flat_res_by_key(res, 'from_date', is_not_number=True),
                 'datasets': [
                     {'label': '1. Sản lượng kế hoạch', 'data':  self.flat_res_by_key(res, 'plan_accumulated_amount', chart_amount_unit), 'borderColor': '#2196f3', 'backgroundColor': '#2196f3', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#2196f3', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
                     {'label': '2. Sản lượng thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_amount', chart_amount_unit), 'borderColor': '#4caf50', 'backgroundColor': '#4caf50', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#4caf50', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
