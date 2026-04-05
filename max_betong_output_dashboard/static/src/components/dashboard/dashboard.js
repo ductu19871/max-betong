@@ -48,11 +48,14 @@ export class OutputDashboard extends Component {
             await this.loadData();
         });
 
-        useEffect(() => {
-            if (this.state.data && this.chartRef.el) {
-                this.renderChart();
-            }
-        });
+        useEffect(
+            () => {
+                if (this.state.data?.chart && this.chartRef.el) {
+                    this.renderChart();
+                }
+            },
+            () => [this.state.data?.chart]   // 👈 dependency
+        );
     }
 
     async loadData() {

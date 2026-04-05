@@ -5,10 +5,13 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="s_curve_mode"/>
                 <field name="project_id"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="type"/>
                 <field name="state"/>
+                <field name="customer_contract_id"/>
+                <field name="subcontractor_contract_id"/>
             </tree>
         </field>
     </record>
