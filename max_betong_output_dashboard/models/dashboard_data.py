@@ -86,7 +86,7 @@ class OutputDashboard(models.AbstractModel):
         # Ép kiểu về chuỗi rỗng nếu None để tránh lỗi khi so sánh (sort)
         sorted_groups = sorted(
             plan_lines_groups, 
-            key=lambda x: x.get('__range', {}).get('from_date:day', {}).get('from') or '',
+            key=lambda x: x.get('__range', {}).get(f'from_date{key_group}', {}).get('from') or '',
             reverse=True
 
         )
@@ -139,6 +139,7 @@ class OutputDashboard(models.AbstractModel):
         else:
             groupby = ['from_date:month']
         key_group = ':day'
+        key_group = f':{s_curve_mode}'
         plan_lines_groups = self.env["deliverable.payment.plan.line"].read_group(
             domain=[('plan_id', 'in', plans.ids)],
             fields=['from_date', 'plan_accumulated_amount', 'actual_accumulated_amount', 'plan_accumulated_ipc_amount', 'actual_accumulated_ipc_amount', 'actual_accumulated_paid_amount',
