@@ -4,13 +4,27 @@ class OutputDashboard(models.AbstractModel):
     _name = 'max_betong.output.dashboard'
     _description = 'Dashboard Báo Cáo Sản Lượng'
 
-    @staticmethod
-    def flat_res_by_key(res, key):
-        return [i[key] for i in res]
-    
     # @staticmethod
-    # def get_last_res_by_key(res, key):
-    #     return res[-1][key]
+    # def flat_res_by_key(res, key, chart_amount_unit):
+    #     return [i[key] for i in res]
+    
+    # # @staticmethod
+    # # def get_last_res_by_key(res, key):
+    # #     return res[-1][key]
+    
+    @staticmethod
+    def flat_res_by_key(res, key, chart_amount_unit=None, round=2):
+        if not chart_amount_unit:
+            return [i[key] for i in res]
+        unit_map = {
+            'vnd': 1,
+            'million': 1_000_000,
+            'billion': 1_000_000_000
+        }
+        divisor = unit_map.get(chart_amount_unit, chart_amount_unit) or 1
+        
+        # Thêm hàm round(..., 2) ở đây
+        return [round(float(i.get(key) or 0) / divisor, 2) for i in res]
     
     # @staticmethod
     def get_last_res_by_key(self, el, key, chart_amount_unit):
@@ -18,6 +32,7 @@ class OutputDashboard(models.AbstractModel):
         val = el.get(key, 0)
         return self.convert_val_to_string(val, chart_amount_unit)
     
+
     @staticmethod
     def convert_val_to_string(val, chart_amount_unit):
         # 1. Lấy giá trị gốc (mặc định là 0 nếu không có key)
@@ -99,20 +114,20 @@ class OutputDashboard(models.AbstractModel):
             # ],
             'table_data': [
                 ['Tỷ lệ % SL',  *self.flat_res_by_key(res, 'actual_percentage')],
-                ['Giá trị SL', *self.flat_res_by_key(res, 'actual_amount')],
+                ['Giá trị SL', *self.flat_res_by_key(res, 'actual_amount', chart_amount_unit)],
                 ['% Lũy kế SL', *self.flat_res_by_key(res, 'actual_percentage_accumulated')],
-                ['Giá trị lũy kế SL', *self.flat_res_by_key(res, 'actual_accumulated_amount')],
-                ['Giá trị thanh toán', *self.flat_res_by_key(res, 'actual_paid_amount')],
-                ['Lũy kế thanh toán', *self.flat_res_by_key(res, 'actual_accumulated_paid_amount')]
+                ['Giá trị lũy kế SL', *self.flat_res_by_key(res, 'actual_accumulated_amount', chart_amount_unit)],
+                ['Giá trị thanh toán', *self.flat_res_by_key(res, 'actual_paid_amount', chart_amount_unit)],
+                ['Lũy kế thanh toán', *self.flat_res_by_key(res, 'actual_accumulated_paid_amount', chart_amount_unit)]
             ],
             'chart': {
                 'labels': self.flat_res_by_key(res, 'from_date'),
                 'datasets': [
-                    {'label': '1. Sản lượng kế hoạch', 'data':  self.flat_res_by_key(res, 'plan_accumulated_amount'), 'borderColor': '#2196f3', 'backgroundColor': '#2196f3', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#2196f3', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
-                    {'label': '2. Sản lượng thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_amount'), 'borderColor': '#4caf50', 'backgroundColor': '#4caf50', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#4caf50', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
-                    {'label': '3. Giá trị nghiệm thu kế hoạch', 'data': self.flat_res_by_key(res, 'plan_accumulated_ipc_amount'), 'borderColor': '#ff9800', 'backgroundColor': '#ff9800', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#ff9800', 'pointRadius': 4, 'borderDash': [5, 5], 'tension': 0.1, 'fill': False},
-                    {'label': '4. Giá trị nghiệm thu thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_ipc_amount'), 'borderColor': '#9c27b0', 'backgroundColor': '#9c27b0', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#9c27b0', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
-                    {'label': '5. Thanh toán thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_paid_amount'), 'borderColor': '#f44336', 'backgroundColor': '#f44336', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#f44336', 'pointRadius': 4, 'tension': 0.1, 'fill': False}
+                    {'label': '1. Sản lượng kế hoạch', 'data':  self.flat_res_by_key(res, 'plan_accumulated_amount', chart_amount_unit), 'borderColor': '#2196f3', 'backgroundColor': '#2196f3', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#2196f3', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
+                    {'label': '2. Sản lượng thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_amount', chart_amount_unit), 'borderColor': '#4caf50', 'backgroundColor': '#4caf50', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#4caf50', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
+                    {'label': '3. Giá trị nghiệm thu kế hoạch', 'data': self.flat_res_by_key(res, 'plan_accumulated_ipc_amount', chart_amount_unit), 'borderColor': '#ff9800', 'backgroundColor': '#ff9800', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#ff9800', 'pointRadius': 4, 'borderDash': [5, 5], 'tension': 0.1, 'fill': False},
+                    {'label': '4. Giá trị nghiệm thu thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_ipc_amount', chart_amount_unit), 'borderColor': '#9c27b0', 'backgroundColor': '#9c27b0', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#9c27b0', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
+                    {'label': '5. Thanh toán thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_paid_amount', chart_amount_unit), 'borderColor': '#f44336', 'backgroundColor': '#f44336', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#f44336', 'pointRadius': 4, 'tension': 0.1, 'fill': False}
                 ]
             }
         }
