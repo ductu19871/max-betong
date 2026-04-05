@@ -9,7 +9,7 @@ class OutputDashboard(models.AbstractModel):
     #     return [i[key] for i in plan_lines_groups]
     
     # # @staticmethod
-    # # def get_value_plan_line_group_by_key(plan_lines_groups, key):
+    # # def get_value_el_by_key(plan_lines_groups, key):
     # #     return plan_lines_groups[-1][key]
     
     @staticmethod
@@ -36,7 +36,7 @@ class OutputDashboard(models.AbstractModel):
         return [round(float(i.get(key) or 0) / divisor, precision) for i in plan_lines_groups]
     
     # @staticmethod
-    def get_value_plan_line_group_by_key(self, el, key, chart_amount_unit):
+    def get_value_el_by_key(self, el, key, chart_amount_unit):
         # 1. Lấy giá trị gốc (mặc định là 0 nếu không có key)
         val = el.get(key, 0)
         return self.convert_val_to_string(val, chart_amount_unit)
@@ -91,24 +91,24 @@ class OutputDashboard(models.AbstractModel):
         start = start.strftime('%d/%m/%Y') if start else ''
         end = max(contracts.mapped('contract_end_date'), default=0)
         end = end.strftime('%d/%m/%Y') if end else ''
-        el = self.get_el_by_today(plan_lines_groups)
-        delayed_value = el['plan_accumulated_amount'] - el['actual_accumulated_amount'] # chậm tiến độ
-        delayed_payment = el['plan_accumulated_ipc_amount'] - el['actual_accumulated_ipc_amount']
+        today_el = self.get_el_by_today(plan_lines_groups)
+        delayed_value = today_el['plan_accumulated_amount'] - today_el['actual_accumulated_amount'] # chậm tiến độ
+        delayed_payment = today_el['plan_accumulated_ipc_amount'] - today_el['actual_accumulated_ipc_amount']
         return {
             'contract_info': {
                 'value': self.convert_val_to_string(sum(plans.mapped('total_project_amount')), chart_amount_unit), #contract.amount_total,#plan.total_project_amount,
                 'name': ', '.join(str(i) for i in contracts.mapped('contract_ref_no')),
                 'time': f'{start} - {end}',
-                'plan_percent': self.get_value_plan_line_group_by_key(el, 'plan_percentage_accumulated', None),#el['plan_percentage_accumulated'],
-                'actual_percent': self.get_value_plan_line_group_by_key(el, 'actual_percentage', None),
+                'plan_percent': self.get_value_el_by_key(today_el, 'plan_percentage_accumulated', None),#today_el['plan_percentage_accumulated'],
+                'actual_percent': self.get_value_el_by_key(today_el, 'actual_percentage', None),
                 'delayed_value': self.convert_val_to_string(delayed_value, chart_amount_unit),
                 'delayed_payment': self.convert_val_to_string(delayed_payment, chart_amount_unit) 
             },
             'summary': {
-                'plan_vol': self.get_value_plan_line_group_by_key(plan_lines_groups[-1], 'plan_accumulated_amount', chart_amount_unit),
-                'actual_vol': self.get_value_plan_line_group_by_key(el, 'actual_accumulated_amount', chart_amount_unit),
-                'plan_pay': self.get_value_plan_line_group_by_key(el, 'plan_accumulated_ipc_amount', chart_amount_unit),
-                'actual_pay': self.get_value_plan_line_group_by_key(el, 'actual_accumulated_paid_amount', chart_amount_unit),
+                'plan_vol': self.get_value_el_by_key(plan_lines_groups[-1], 'plan_accumulated_amount', chart_amount_unit),
+                'actual_vol': self.get_value_el_by_key(today_el, 'actual_accumulated_amount', chart_amount_unit),
+                'plan_pay': self.get_value_el_by_key(today_el, 'plan_accumulated_ipc_amount', chart_amount_unit),
+                'actual_pay': self.get_value_el_by_key(today_el, 'actual_accumulated_paid_amount', chart_amount_unit),
             },
             'table_columns': [
                 'Chỉ tiêu', *self.flat_plan_lines_groups_by_key(plan_lines_groups, 'from_date', is_not_number=True)
