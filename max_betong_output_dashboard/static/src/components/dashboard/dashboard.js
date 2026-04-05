@@ -12,10 +12,17 @@ export class OutputDashboard extends Component {
         
         this.state = useState({
             filters: {
-                customer_partner_id: [],
-                project_id: [],
-                subcontractor_partner_id: [],
-                customer_contract_ids: []
+                customer_partner_id: "", // Đổi từ [] thành ""
+                project_id: "",          // Đổi từ [] thành ""
+                subcontractor_partner_id: "",
+                customer_contract_ids: ""
+            },
+            // Tạo thêm một biến để lưu ID thực tế phục vụ query server
+            selected_ids: {
+                customer_partner_id: false,
+                project_id: false,
+                subcontractor_partner_id: false,
+                customer_contract_ids: false,
             },
             data: null,
             loading: true,
@@ -40,10 +47,10 @@ export class OutputDashboard extends Component {
         this.state.loading = true;
         try {
             const queryFilters = {
-                customer_partner_id: this.state.filters.customer_partner_id.length ? this.state.filters.customer_partner_id[0].id : false,
-                project_id: this.state.filters.project_id.length ? this.state.filters.project_id[0].id : false,
-                subcontractor_partner_id: this.state.filters.subcontractor_partner_id.length ? this.state.filters.subcontractor_partner_id[0].id : false,
-                customer_contract_ids: this.state.filters.customer_contract_ids.length ? this.state.filters.customer_contract_ids[0].id : false,
+                customer_partner_id: this.state.selected_ids.customer_partner_id,
+                project_id: this.state.selected_ids.project_id,
+                subcontractor_partner_id: this.state.selected_ids.subcontractor_partner_id,
+                customer_contract_ids: this.state.selected_ids.customer_contract_ids,
             };
             this.state.data = await this.orm.call("max_betong.output.dashboard", "get_dashboard_data", [], {
                 filters: queryFilters
@@ -55,7 +62,15 @@ export class OutputDashboard extends Component {
     }
 
     onFilterUpdate(field, records) {
-        this.state.filters[field] = records;
+        if (records && records.length > 0) {
+            // Gán display_name (String) để Many2XAutocomplete không báo lỗi
+            this.state.filters[field] = records[0].display_name;
+            // Lưu ID để load data
+            this.state.selected_ids[field] = records[0].id;
+        } else {
+            this.state.filters[field] = "";
+            this.state.selected_ids[field] = false;
+        }
         this.loadData();
     }
 
