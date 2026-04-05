@@ -83,7 +83,6 @@ class OutputDashboard(models.AbstractModel):
     
 
     def get_values_filters(self, filters):
-        {'customer_partner_id': False, 'project_id': False, 'subcontractor_partner_id': False, 'customer_contract_ids': 63}
         type_ = 'customer'
         customer_partner_id = filters['customer_partner_id']
         project_id = filters['project_id']
