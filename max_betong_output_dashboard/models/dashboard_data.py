@@ -82,16 +82,17 @@ class OutputDashboard(models.AbstractModel):
         return None
     
 
-    def get_values_filters(self):
-
+    def get_values_filters(self, filters):
+        {'customer_partner_id': False, 'project_id': False, 'subcontractor_partner_id': False, 'customer_contract_ids': 63}
         type_ = 'customer'
-        customer_partner_id = None
-        project_id = None
-        subcontractor_partner_id = None
-        customer_contract_ids = None
+        customer_partner_id = filters['customer_partner_id']
+        project_id = filters['project_id']
+        subcontractor_partner_id =  filters['subcontractor_partner_id']
+        customer_contract_ids = filters['customer_contract_ids']
         subcontractor_contract_ids = None
-        contract_ids = None
-
+        contract_ids = customer_contract_ids or subcontractor_contract_ids
+        if isinstance(contract_ids, int):
+            contract_ids = (contract_ids, )
         return type_, customer_partner_id, project_id, subcontractor_partner_id, contract_ids
 
 
@@ -103,7 +104,7 @@ class OutputDashboard(models.AbstractModel):
         s_curve_mode = self.env.company.s_curve_mode or 'month'
 
         type_, customer_partner_id, project_id, subcontractor_partner_id, contract_ids = \
-            self.get_values_filters()
+            self.get_values_filters(filters)
         
         plan_domain = [('type', '=', type_), ('s_curve_mode', '=', s_curve_mode)]
         if contract_ids:
@@ -114,10 +115,11 @@ class OutputDashboard(models.AbstractModel):
         else:
             if project_id:
                 plan_domain += [('project_id', '=', project_id)]
-            if customer_partner_id and  type_ == 'customer':
-                plan_domain += [('partner_id', '=', customer_partner_id)]
-            elif subcontractor_partner_id:
-                plan_domain += [('partner_id', '=', subcontractor_partner_id)]
+            else:
+                if customer_partner_id and  type_ == 'customer':
+                    plan_domain += [('partner_id', '=', customer_partner_id)]
+                elif subcontractor_partner_id:
+                    plan_domain += [('partner_id', '=', subcontractor_partner_id)]
 
         plans = self.env["deliverable.payment.plan"].search(plan_domain)
         
