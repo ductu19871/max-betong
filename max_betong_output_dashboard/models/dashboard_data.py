@@ -5,15 +5,15 @@ class OutputDashboard(models.AbstractModel):
     _description = 'Dashboard Báo Cáo Sản Lượng'
 
     # @staticmethod
-    # def flat_res_by_key(res, key, chart_amount_unit):
-    #     return [i[key] for i in res]
+    # def flat_res_by_key(plan_lines_groups, key, chart_amount_unit):
+    #     return [i[key] for i in plan_lines_groups]
     
     # # @staticmethod
-    # # def get_last_res_by_key(res, key):
-    # #     return res[-1][key]
+    # # def get_last_res_by_key(plan_lines_groups, key):
+    # #     return plan_lines_groups[-1][key]
     
     @staticmethod
-    def flat_res_by_key(res, key, chart_amount_unit=None, precision=2, is_not_number=False):
+    def flat_res_by_key(plan_lines_groups, key, chart_amount_unit=None, precision=2, is_not_number=False):
         """
         Lấy giá trị từ list mapping. 
         - Nếu không có unit: Trả về giá trị gốc (không làm tròn).
@@ -21,7 +21,7 @@ class OutputDashboard(models.AbstractModel):
         """
         # Trường hợp 1: Không có unit -> Trả về nguyên bản từ kết quả query
         if is_not_number:
-            return [i.get(key) for i in res]
+            return [i.get(key) for i in plan_lines_groups]
 
         # Trường hợp 2: Có unit -> Xử lý tính toán
         unit_map = {
@@ -33,7 +33,7 @@ class OutputDashboard(models.AbstractModel):
         divisor = unit_map.get(chart_amount_unit, chart_amount_unit) or 1
         
         # Ép kiểu float, chia đơn vị và làm tròn
-        return [round(float(i.get(key) or 0) / divisor, precision) for i in res]
+        return [round(float(i.get(key) or 0) / divisor, precision) for i in plan_lines_groups]
     
     # @staticmethod
     def get_last_res_by_key(self, el, key, chart_amount_unit):
@@ -66,8 +66,8 @@ class OutputDashboard(models.AbstractModel):
     
 
     @staticmethod
-    def get_el_by_to_day(res):
-        for el in res:
+    def get_el_by_to_day(plan_lines_groups):
+        for el in plan_lines_groups:
             str_today = str(fields.Date.today())
             if el['__range']['from_date']['from'] <= str_today < el['__range']['from_date']['to']:
                 return el
@@ -77,7 +77,7 @@ class OutputDashboard(models.AbstractModel):
         """Mock data for the dashboard."""
         chart_amount_unit = self.env.company.chart_amount_unit
         plans = self.env["deliverable.payment.plan"].search([('type', '=', 'customer')])
-        res = self.env["deliverable.payment.plan.line"].read_group(
+        plan_lines_groups = self.env["deliverable.payment.plan.line"].read_group(
             domain=[('plan_id', 'in', plans.ids)],
             fields=['from_date', 'plan_accumulated_amount', 'actual_accumulated_amount', 'plan_accumulated_ipc_amount', 'actual_accumulated_ipc_amount', 'actual_accumulated_paid_amount',
                     'actual_percentage', 'actual_amount', 'actual_percentage_accumulated',  'actual_paid_amount',
@@ -91,7 +91,7 @@ class OutputDashboard(models.AbstractModel):
         start = start.strftime('%d/%m/%Y') if start else ''
         end = max(contracts.mapped('contract_end_date'), default=0)
         end = end.strftime('%d/%m/%Y') if end else ''
-        el = self.get_el_by_to_day(res)
+        el = self.get_el_by_to_day(plan_lines_groups)
         delayed_value = el['plan_accumulated_amount'] - el['actual_accumulated_amount'] # chậm tiến độ
         delayed_payment = el['plan_accumulated_ipc_amount'] - el['actual_accumulated_ipc_amount']
         return {
@@ -105,13 +105,13 @@ class OutputDashboard(models.AbstractModel):
                 'delayed_payment': self.convert_val_to_string(delayed_payment, chart_amount_unit) 
             },
             'summary': {
-                'plan_vol': self.get_last_res_by_key(res[-1], 'plan_accumulated_amount', chart_amount_unit),
+                'plan_vol': self.get_last_res_by_key(plan_lines_groups[-1], 'plan_accumulated_amount', chart_amount_unit),
                 'actual_vol': self.get_last_res_by_key(el, 'actual_accumulated_amount', chart_amount_unit),
                 'plan_pay': self.get_last_res_by_key(el, 'plan_accumulated_ipc_amount', chart_amount_unit),
                 'actual_pay': self.get_last_res_by_key(el, 'actual_accumulated_paid_amount', chart_amount_unit),
             },
             'table_columns': [
-                'Chỉ tiêu', *self.flat_res_by_key(res, 'from_date', is_not_number=True)
+                'Chỉ tiêu', *self.flat_res_by_key(plan_lines_groups, 'from_date', is_not_number=True)
             ],
             # 'table_data': [
             #     ['Tỷ lệ % SL', '5%', '8%', '10%', '12%', '10%', '8%', '9%', '11%'],
@@ -122,21 +122,21 @@ class OutputDashboard(models.AbstractModel):
             #     ['Lũy kế thanh toán', '3.0', '10.0', '15.0', '23.0', '29.0', '33.0', '40.0', '49.0']
             # ],
             'table_data': [
-                ['Tỷ lệ % SL',  *self.flat_res_by_key(res, 'actual_percentage')],
-                ['Giá trị SL', *self.flat_res_by_key(res, 'actual_amount', chart_amount_unit)],
-                ['% Lũy kế SL', *self.flat_res_by_key(res, 'actual_percentage_accumulated')],
-                ['Giá trị lũy kế SL', *self.flat_res_by_key(res, 'actual_accumulated_amount', chart_amount_unit)],
-                ['Giá trị thanh toán', *self.flat_res_by_key(res, 'actual_paid_amount', chart_amount_unit)],
-                ['Lũy kế thanh toán', *self.flat_res_by_key(res, 'actual_accumulated_paid_amount', chart_amount_unit)]
+                ['Tỷ lệ % SL',  *self.flat_res_by_key(plan_lines_groups, 'actual_percentage')],
+                ['Giá trị SL', *self.flat_res_by_key(plan_lines_groups, 'actual_amount', chart_amount_unit)],
+                ['% Lũy kế SL', *self.flat_res_by_key(plan_lines_groups, 'actual_percentage_accumulated')],
+                ['Giá trị lũy kế SL', *self.flat_res_by_key(plan_lines_groups, 'actual_accumulated_amount', chart_amount_unit)],
+                ['Giá trị thanh toán', *self.flat_res_by_key(plan_lines_groups, 'actual_paid_amount', chart_amount_unit)],
+                ['Lũy kế thanh toán', *self.flat_res_by_key(plan_lines_groups, 'actual_accumulated_paid_amount', chart_amount_unit)]
             ],
             'chart': {
-                'labels': self.flat_res_by_key(res, 'from_date', is_not_number=True),
+                'labels': self.flat_res_by_key(plan_lines_groups, 'from_date', is_not_number=True),
                 'datasets': [
-                    {'label': '1. Sản lượng kế hoạch', 'data':  self.flat_res_by_key(res, 'plan_accumulated_amount', chart_amount_unit), 'borderColor': '#2196f3', 'backgroundColor': '#2196f3', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#2196f3', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
-                    {'label': '2. Sản lượng thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_amount', chart_amount_unit), 'borderColor': '#4caf50', 'backgroundColor': '#4caf50', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#4caf50', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
-                    {'label': '3. Giá trị nghiệm thu kế hoạch', 'data': self.flat_res_by_key(res, 'plan_accumulated_ipc_amount', chart_amount_unit), 'borderColor': '#ff9800', 'backgroundColor': '#ff9800', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#ff9800', 'pointRadius': 4, 'borderDash': [5, 5], 'tension': 0.1, 'fill': False},
-                    {'label': '4. Giá trị nghiệm thu thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_ipc_amount', chart_amount_unit), 'borderColor': '#9c27b0', 'backgroundColor': '#9c27b0', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#9c27b0', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
-                    {'label': '5. Thanh toán thực tế', 'data': self.flat_res_by_key(res, 'actual_accumulated_paid_amount', chart_amount_unit), 'borderColor': '#f44336', 'backgroundColor': '#f44336', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#f44336', 'pointRadius': 4, 'tension': 0.1, 'fill': False}
+                    {'label': '1. Sản lượng kế hoạch', 'data':  self.flat_res_by_key(plan_lines_groups, 'plan_accumulated_amount', chart_amount_unit), 'borderColor': '#2196f3', 'backgroundColor': '#2196f3', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#2196f3', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
+                    {'label': '2. Sản lượng thực tế', 'data': self.flat_res_by_key(plan_lines_groups, 'actual_accumulated_amount', chart_amount_unit), 'borderColor': '#4caf50', 'backgroundColor': '#4caf50', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#4caf50', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
+                    {'label': '3. Giá trị nghiệm thu kế hoạch', 'data': self.flat_res_by_key(plan_lines_groups, 'plan_accumulated_ipc_amount', chart_amount_unit), 'borderColor': '#ff9800', 'backgroundColor': '#ff9800', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#ff9800', 'pointRadius': 4, 'borderDash': [5, 5], 'tension': 0.1, 'fill': False},
+                    {'label': '4. Giá trị nghiệm thu thực tế', 'data': self.flat_res_by_key(plan_lines_groups, 'actual_accumulated_ipc_amount', chart_amount_unit), 'borderColor': '#9c27b0', 'backgroundColor': '#9c27b0', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#9c27b0', 'pointRadius': 4, 'tension': 0.1, 'fill': False},
+                    {'label': '5. Thanh toán thực tế', 'data': self.flat_res_by_key(plan_lines_groups, 'actual_accumulated_paid_amount', chart_amount_unit), 'borderColor': '#f44336', 'backgroundColor': '#f44336', 'pointBackgroundColor': '#ffffff', 'pointBorderColor': '#f44336', 'pointRadius': 4, 'tension': 0.1, 'fill': False}
                 ]
             }
         }
