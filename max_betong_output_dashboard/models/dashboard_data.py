@@ -153,8 +153,8 @@ class OutputDashboard(models.AbstractModel):
                 'value': self.convert_val_to_string(sum(plans.mapped('total_project_amount')), chart_amount_unit), #contract.amount_total,#plan.total_project_amount,
                 'name': ', '.join(str(i) for i in contracts.mapped('contract_ref_no')),
                 'time': f'{start} - {end}',
-                'plan_percent': self.get_value_el_by_key(today_el, 'plan_percentage_accumulated', None),#today_el['plan_percentage_accumulated'],
-                'actual_percent': self.get_value_el_by_key(today_el, 'actual_percentage', None),
+                'plan_percent': self.get_value_el_by_key(today_el, 'plan_percentage_accumulated', None), # Hoàn thành kế hoạch
+                'actual_percent': self.get_value_el_by_key(today_el, 'actual_percentage', None), # Hoàn thành thực tế
                 'delayed_value': self.convert_val_to_string(delayed_value, chart_amount_unit),
                 'diff_ipc': self.convert_val_to_string(diff_ipc, chart_amount_unit) # chênh lệch nghiệm thu
             },

@@ -116,7 +116,7 @@
                                     <span class="text-primary font-weight-bold"><t t-esc="state.data.contract_info.plan_percent"/></span>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <span class="text-muted small">% hoàn thành thực tế</span>
+                                    <span class="text-muted small">% Hoàn thành thực tế</span>
                                     <span class="text-success font-weight-bold"><t t-esc="state.data.contract_info.actual_percent"/></span>
                                 </div>
                             </div>

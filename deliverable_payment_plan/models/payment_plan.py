@@ -13,65 +13,10 @@ class OrderLineStockMixin(models.AbstractModel):
     _name = 'order.line.stock.mixin'
     _description = 'Mixin to calculate delivered qty in period via stock moves'
 
-    # def get_delivered_in_period(self, from_date, to_date):
-    #     """
-    #     Hàm dùng chung để tính số lượng thực tế dịch chuyển trong kỳ,
-    #     có trừ đi hàng trả (Returns).
-    #     """
-    #     self.ensure_one()
-        
-    #     # 1. Xác định field liên kết và hướng kho tùy theo model
-    #     if self._name == 'sale.order.line':
-    #         line_field = 'sale_line_id'
-    #         # Bán hàng: Xuất (Internal -> Customer) là [+], Nhập trả (Customer -> Internal) là [-]
-    #         # out_usage, in_usage = 'internal', 'customer'
-    #         expend_domain = [('location_dest_id.usage', '=', 'customer')]
-    #     else:
-    #         line_field = 'purchase_line_id'
-    #         # Mua hàng: Nhập (Supplier -> Internal) là [+], Trả NCC (Internal -> Supplier) là [-]
-    #         # out_usage, in_usage = 'supplier', 'internal'
-    #         expend_domain = [('location_id.usage','=', 'supplier')]
-
-    #     # 2. Tìm các Stock Moves đã hoàn thành trong khoảng thời gian
-    #     domain = [
-    #         (line_field, '=', self.id),
-    #         ('state', '=', 'done'),
-    #         ('date', '>=', from_date),
-    #         ('date', '<=', to_date),
-    #         # ('origin_returned_move_id', '=', False)
-    #     ] + expend_domain
-    #     moves = self.env['stock.move'].search(domain)
-    #     total_qty = 0.0
-    #     for move in moves:
-    #         # 1. Quy đổi số lượng THỰC XUẤT của move về đơn vị của Order Line
-    #         # move.quantity dùng chính move.product_uom nên compute này là chuẩn xác
-    #         qty = move.product_uom._compute_quantity(
-    #             move.quantity, 
-    #             self.product_uom, 
-    #             rounding_method='HALF-UP'
-    #         )
-            
-    #         # 2. Quy đổi số lượng THỰC TRẢ của các move trả hàng về đơn vị của Order Line
-    #         return_qty = 0.0
-    #         for re_move in move.returned_move_ids.filtered(lambda m: m.state == 'done'):
-    #             return_qty += re_move.product_uom._compute_quantity(
-    #                 re_move.quantity, 
-    #                 self.product_uom, 
-    #                 rounding_method='HALF-UP'
-    #             )
-            
-    #         # 3. Cộng dồn vào tổng
-    #         total_qty += (qty - return_qty)
-    #     return total_qty
 
     def get_delivered_in_period(self, from_date, to_date):
         self.ensure_one()
-        
-        # 1. Xác định field liên kết
         line_field = 'sale_line_id' if self._name == 'sale.order.line' else 'purchase_line_id'
-        
-        # 2. Tìm TẤT CẢ các moves liên quan đến line này đã hoàn thành trong kỳ
-        # Không phân biệt là move gốc hay move trả hàng
         domain = [
             (line_field, '=', self.id),
             ('state', '=', 'done'),
@@ -79,20 +24,13 @@ class OrderLineStockMixin(models.AbstractModel):
             ('date', '<=', to_date),
         ]
         moves = self.env['stock.move'].search(domain)
-        
         total_qty = 0.0
-        
-        # 3. Định nghĩa hướng kho để cộng/trừ
-        # Sale: Internal -> Customer (+), Customer -> Internal (-)
-        # Purchase: Vendor -> Internal (+), Internal -> Vendor (-)
         for move in moves:
-            # Quy đổi số lượng về UoM của Order Line
             qty = move.product_uom._compute_quantity(
                 move.quantity, 
                 self.product_uom, 
                 rounding_method='HALF-UP'
             )
-            
             if self._name == 'sale.order.line':
                 if move.location_dest_id.usage == 'customer':
                     total_qty += qty  # Xuất đi
@@ -103,7 +41,6 @@ class OrderLineStockMixin(models.AbstractModel):
                     total_qty += qty  # Nhập vào
                 elif move.location_dest_id.usage == 'supplier':
                     total_qty -= qty  # Trả NCC
-                    
         return total_qty
 
 
@@ -209,22 +146,13 @@ class DeliverablePaymentPlan(models.Model):
             if contract:
                 rec.partner_id = contract.partner_id
 
-    @api.depends("type", "customer_contract_id.amount_total", "subcontractor_contract_id.amount_total")
+    @api.depends("type", "customer_contract_id.amount_total", "subcontractor_contract_id.amount_total", "customer_contract_id.currency_id", "subcontractor_contract_id.currency_id")
     def _compute_total_project_amount(self):
         for rec in self:
             contract = rec.get_contracts()
             if contract:
                 rec.total_project_amount = contract.amount_total
                 rec.currency_id = contract.currency_id
-
-            # if rec.type == 'customer' and rec.customer_contract_id:
-            #     rec.total_project_amount = rec.customer_contract_id.amount_total
-            #     rec.currency_id = rec.customer_contract_id.currency_id
-            # elif rec.type == 'subcontract' and rec.subcontractor_contract_id:
-            #     rec.total_project_amount = rec.subcontractor_contract_id.amount_total
-            #     rec.currency_id = rec.subcontractor_contract_id.currency_id
-            # else:
-            #     rec.total_project_amount = 0.0
 
     def action_generate_lines(self):
         for rec in self:
@@ -318,8 +246,6 @@ class DeliverablePaymentPlan(models.Model):
     def action_unlink_lines(self):
         for rec in self:
             rec.line_ids.unlink()
-
-# tong_so_lan_goi = 0 
 
 class DeliverablePaymentPlanLine(models.Model):
     _name = "deliverable.payment.plan.line"
@@ -511,105 +437,4 @@ class DeliverablePaymentPlanLine(models.Model):
             prev_lines = rec.plan_id.line_ids.filtered(lambda l: l.from_date < rec.from_date)
             rec.actual_accumulated_paid_amount = sum(prev_lines.mapped('actual_paid_amount')) + paid_amount
 
-    # @api.depends('plan_id.type',
-    #              "plan_id.customer_contract_id.order_line.complete_qty",
-    #              "plan_id.subcontractor_contract_id.order_line.complete_qty",
-
-    #              'plan_id.customer_contract_id.order_line.qty_delivered', # Dùng trường chuẩn của Odoo hoặc Mixin
-    #              'plan_id.subcontractor_contract_id.order_line.qty_received',
-
-    #              "plan_id.customer_contract_id.ipc_ids.total_amount",
-    #              "plan_id.customer_contract_id.ipc_ids.custom_status",
-    #              "plan_id.customer_contract_id.ipc_ids.date",
-    #              "plan_id.subcontractor_contract_id.ipc_ids.total_amount",
-    #              "plan_id.subcontractor_contract_id.ipc_ids.custom_status",
-    #              "plan_id.subcontractor_contract_id.ipc_ids.date",
-
-    #              "plan_id.customer_contract_id.invoice_ids.amount_residual",
-    #              "plan_id.customer_contract_id.invoice_ids.state",
-    #              "plan_id.subcontractor_contract_id.invoice_ids.amount_residual",
-    #              "plan_id.subcontractor_contract_id.invoice_ids.state",
- 
-    #              )
-    # def _compute_actual(self):
-    #     for rec in self:
-    #         global tong_so_lan_goi
-    #         tong_so_lan_goi += 1
-    #         print ('**tong_so_lan_goi**', tong_so_lan_goi)
-    #         from_date = rec.from_date
-    #         to_date = rec.to_date
-    #         total_amt = rec.plan_id.total_project_amount or 0.0
-            
-    #         # --- 1. KHỞI TẠO GIÁ TRỊ ---
-    #         actual_amount = 0.0
-    #         actual_ipc_amount = 0.0
-
-    #         # --- 2. TÍNH SẢN LƯỢNG THỰC TẾ (ACTUAL AMOUNT) ---
-    #         # Dựa trên Task Deliverables của SO hoặc PO
-    #         contract = False
-    #         plan_type = rec.plan_id.type
-    #         if plan_type == 'customer':
-    #             contract = rec.plan_id.customer_contract_id
-    #         elif plan_type == 'subcontract':
-    #             contract = rec.plan_id.subcontractor_contract_id
-
-    #         if contract:
-    #             for line in contract.order_line:
-    #                 # Lọc các hạng mục công việc đã approved trong kỳ
-    #                 deliverables = line.task_deliverable_ids.filtered(
-    #                     lambda x: x.status == 'approved' and 
-    #                               x.progress_report_id.week_start_date and
-    #                               from_date <= x.progress_report_id.week_start_date <= to_date
-    #                 )
-    #                 qty_in_period = sum(deliverables.mapped('completed_qty'))
-    #                 if not qty_in_period:
-    #                     raw_qty_in_period = line.get_delivered_in_period(from_date, to_date)
-    #                     qty_in_period = line.product_id.uom_id._compute_quantity(raw_qty_in_period, line.product_uom)
-    #                 # Tránh lỗi chia cho 0
-    #                 total_qty = line.product_uom_qty if plan_type == 'customer' else line.product_qty
-    #                 if total_qty > 0:
-    #                     actual_amount += (qty_in_period / total_qty) * line.price_total
-
-    #         # --- 3. TÍNH NGHIỆM THU IPC THỰC TẾ (ACTUAL IPC AMOUNT) ---
-    #         # Dựa trên bảng construction_ipc JOIN ipc_stage (is_approved = True)
-    #         ipc_domain = [
-    #             ('date', '>=', from_date),
-    #             ('date', '<=', to_date),
-    #             ('custom_status.is_approved', '=', True)
-    #         ]
-            
-    #         if plan_type == 'customer' and rec.plan_id.customer_contract_id:
-    #             ipc_domain.append(('sale_order_id', '=', rec.plan_id.customer_contract_id.id))
-    #         elif plan_type == 'subcontract' and rec.plan_id.subcontractor_contract_id:
-    #             ipc_domain.append(('purchase_order_id', '=', rec.plan_id.subcontractor_contract_id.id))
-            
-    #         # Tìm các bản ghi IPC thỏa điều kiện
-    #         ipcs = self.env['construction.ipc'].search(ipc_domain)
-            
-    #         # Tính tổng từ các dòng construction_ipc_line (trường total_amount)
-    #         # Dùng line_ids.total_amount để đảm bảo lấy đúng giá trị chi tiết từng dòng
-    #         # actual_ipc_amount = sum(ipcs.mapped('total_amount'))
-    #         actual_ipc_amount = 0.0
-    #         for ipc_line in ipcs.boq_line_ids:
-    #             line = ipc_line.sale_order_line_id if plan_type == 'customer' else ipc_line.purchase_order_line_id
-    #             actual_ipc_amount +=  ipc_line.quantity/line.product_uom_qty*line.price_total
-            
-    #         # Gán giá trị thực tế trong kỳ
-    #         rec.actual_amount = actual_amount
-    #         rec.actual_ipc_amount = actual_ipc_amount
-    #         rec.actual_paid_amount = sum(contract.invoice_ids.filtered(lambda x : x.state =='posted' and from_date <= x.date <= to_date ).mapped(lambda invoice: invoice.amount_total - invoice.amount_residual))
-    #         # Tính % thực tế trong kỳ
-    #         rec.actual_percentage = (actual_amount / total_amt * 100) if total_amt > 0 else 0.0
-
-    #         # --- 4. TÍNH LŨY KẾ (ACCUMULATED) ---
-    #         # Lọc các dòng trước đó trong cùng một kế hoạch (plan_id)
-    #         prev_lines = rec.plan_id.line_ids.filtered(lambda l: l.from_date < rec.from_date)
-            
-    #         # Lũy kế = (Tổng các dòng trước) + (Dòng hiện tại)
-            
-    #         rec.actual_accumulated_amount = sum(prev_lines.mapped('actual_amount')) + actual_amount
-    #         rec.actual_accumulated_ipc_amount = sum(prev_lines.mapped('actual_ipc_amount')) + actual_ipc_amount
-    #         rec.actual_accumulated_paid_amount = sum(prev_lines.mapped('actual_paid_amount')) + rec.actual_paid_amount
-
-    #         # % Lũy kế thực tế (Dùng để vẽ đường cong S-Curve)
-    #         rec.actual_percentage_accumulated = (rec.actual_accumulated_amount / total_amt * 100) if total_amt > 0 else 0.0          
+    
