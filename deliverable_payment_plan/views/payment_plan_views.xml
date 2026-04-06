@@ -141,7 +141,6 @@
     <menuitem id="menu_contruction_partner" 
         name="Partner"
         parent="odoo_job_costing_management.menu_job_managmt"
-        action="max_betong_output_dashboard.action_output_dashboard"
          />
     
     <!-- <menuitem id="menu_payment_plan_dasboard"
