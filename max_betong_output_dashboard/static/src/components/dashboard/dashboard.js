@@ -21,6 +21,7 @@ export class OutputDashboard extends Component {
         this.context = this.props?.action?.context || {};
 
         this.state = useState({
+            context: this.context, // Lấy context từ service user
             filters: {
                 customer_partner_id: "", // Đổi từ [] thành ""
                 project_id: "",          // Đổi từ [] thành ""

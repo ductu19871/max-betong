@@ -17,7 +17,7 @@
                 <!-- Filters -->
                 <div class="dashboard-filters card mb-4 p-3 shadow-sm border-0 rounded-lg">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-3"  t-if="context.type_ == 'customer'">
                             <label class="form-label text-muted small">Chủ đầu tư</label>
                             <Many2XAutocomplete
                                 resModel="'res.partner'"
@@ -41,7 +41,7 @@
                                 noSearchMore="true"
                             />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" t-if="context.type_ == 'subcontract'">
                             <label class="form-label text-muted small">Nhà thầu</label>
                             <Many2XAutocomplete
                                 resModel="'res.partner'"
@@ -53,7 +53,7 @@
                                 noSearchMore="true"
                             />
                         </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" t-if="context.type_ == 'customer'">
                                 <label class="form-label text-muted small">Hợp đồng</label>
                                 <Many2XAutocomplete
                                     resModel="'sale.order'"
@@ -65,7 +65,7 @@
                                     noSearchMore="true"
                                 />
                             </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" t-if="context.type_ == 'subcontract'">
                             <label class="form-label text-muted small">Hợp đồng BB'</label>
                             <Many2XAutocomplete
                                 resModel="'purchase.order'"
