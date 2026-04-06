@@ -142,22 +142,6 @@
         name="Partner"
         parent="odoo_job_costing_management.menu_job_managmt"
          />
-    
-    <!-- <menuitem id="menu_payment_plan_dasboard"
-        name="Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế Của Chủ Đầu Tư"
-        parent="deliverable_payment_plan.menu_contruction_partner"
-        action="max_betong_output_dashboard.action_output_dashboard"
-        sequence="20"
-          />
-
-    <menuitem 
-        id="menu_output_dashboard_subcontract"
-        name="Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế Của Nhà Thầu"
-        action="max_betong_output_dashboard.action_output_dashboard_subcontract"
-        parent="deliverable_payment_plan.menu_contruction_partner"
-        sequence="20"
-    /> -->
-    
     <menuitem id="menu_payment_plan"
           name="Payment Plan"
           parent="menu_contruction_partner"
