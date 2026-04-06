@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="action_output_dashboard" model="ir.actions.client">
-        <field name="name">Báo cáo sản lượng kế hoạch &amp; thực tế</field>
+        <field name="name">Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế Của Chủ Đầu Tư</field>
         <field name="tag">max_betong_output_dashboard_action</field>
         <field name="context">{'type_': 'customer'}</field> 
     </record>
 
     <record id="action_output_dashboard_subcontract" model="ir.actions.client">
-        <field name="name">Báo cáo nhà thầu phụ</field>
+        <field name="name">Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế Của Nhà Thầu</field>
         <field name="tag">max_betong_output_dashboard_action</field>
         <field name="context">{'type_': 'subcontract'}</field> 
     </record>
 
 
-    <!-- Thêm menu vào một menu chính nào đó, ví dụ sales -->
-    <menuitem id="menu_output_dashboard"
-              name="Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế"
-              action="action_output_dashboard"
-              sequence="10"/>
 
-    <!-- <menuitem 
+   <menuitem id="menu_payment_plan_dasboard"
+        name="Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế Của Chủ Đầu Tư"
+        parent="deliverable_payment_plan.menu_contruction_partner"
+        action="max_betong_output_dashboard.action_output_dashboard"
+        sequence="20"
+          />
+
+    <menuitem 
         id="menu_output_dashboard_subcontract"
-        name="Dashboard Nhà thầu phụ"
-        action="action_output_dashboard_subcontract"
-    /> -->
+        name="Báo cáo Sản Lượng Kế Hoạch &amp; Thực Tế Của Nhà Thầu"
+        action="max_betong_output_dashboard.action_output_dashboard_subcontract"
+        parent="deliverable_payment_plan.menu_contruction_partner"
+        sequence="20"
+    />
 </odoo>

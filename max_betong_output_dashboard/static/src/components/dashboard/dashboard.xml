@@ -10,7 +10,7 @@
             </t>
             <t t-else="">
                 <div class="dashboard-header text-center mb-4">
-                    <h2 class="text-uppercase font-weight-bold">BÁO CÁO SẢN LƯỢNG KẾ HOẠCH &amp; THỰC TẾ
+                    <h2 class="text-uppercase font-weight-bold">BÁO CÁO SẢN LƯỢNG KẾ HOẠCH &amp; THỰC TẾ CỦA
                     <t t-if="context.type_ === 'customer'"> CHỦ ĐẦU TƯ</t>
                     <t t-else=""> NHÀ THẦU</t></h2> 
                     <p class="text-muted">Dashboard theo dõi tiến độ và thanh toán hợp đồng xây dựng</p>
