@@ -147,7 +147,7 @@ class OutputDashboard(models.AbstractModel):
         end = end.strftime('%d/%m/%Y') if end else ''
         today_el = self.get_el_by_today(plan_lines_groups, key_group)
         delayed_value = today_el['plan_accumulated_amount'] - today_el['actual_accumulated_amount'] # chậm tiến độ
-        delayed_payment = today_el['plan_accumulated_ipc_amount'] - today_el['actual_accumulated_ipc_amount'] # chênh lệch nghiệm thu
+        diff_ipc = today_el['actual_accumulated_amount'] - today_el['actual_accumulated_ipc_amount'] # chênh lệch nghiệm thu
         return {
             'contract_info': {
                 'value': self.convert_val_to_string(sum(plans.mapped('total_project_amount')), chart_amount_unit), #contract.amount_total,#plan.total_project_amount,
@@ -156,12 +156,12 @@ class OutputDashboard(models.AbstractModel):
                 'plan_percent': self.get_value_el_by_key(today_el, 'plan_percentage_accumulated', None),#today_el['plan_percentage_accumulated'],
                 'actual_percent': self.get_value_el_by_key(today_el, 'actual_percentage', None),
                 'delayed_value': self.convert_val_to_string(delayed_value, chart_amount_unit),
-                'delayed_payment': self.convert_val_to_string(delayed_payment, chart_amount_unit) # chênh lệch nghiệm thu
+                'diff_ipc': self.convert_val_to_string(diff_ipc, chart_amount_unit) # chênh lệch nghiệm thu
             },
             'summary': {
                 'plan_vol': self.get_value_el_by_key(today_el, 'plan_accumulated_amount', chart_amount_unit),
                 'actual_vol': self.get_value_el_by_key(today_el, 'actual_accumulated_amount', chart_amount_unit),
-                'plan_pay': self.get_value_el_by_key(today_el, 'actual_accumulated_ipc_amount', chart_amount_unit), #  thay bằng nghiệm thu thực tế lũy kế
+                'acctual_ipc': self.get_value_el_by_key(today_el, 'actual_accumulated_ipc_amount', chart_amount_unit), #  thay bằng nghiệm thu thực tế lũy kế
                 'actual_pay': self.get_value_el_by_key(today_el, 'actual_accumulated_paid_amount', chart_amount_unit),
             },
             'table_columns': [

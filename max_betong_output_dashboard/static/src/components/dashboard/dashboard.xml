@@ -10,7 +10,9 @@
             </t>
             <t t-else="">
                 <div class="dashboard-header text-center mb-4">
-                    <h2 class="text-uppercase font-weight-bold">BÁO CÁO SẢN LƯỢNG KẾ HOẠCH &amp; THỰC TẾ</h2>
+                    <h2 class="text-uppercase font-weight-bold">BÁO CÁO SẢN LƯỢNG KẾ HOẠCH &amp; THỰC TẾ
+                    <t t-if="context.type_ === 'customer'"> CHỦ ĐẦU TƯ</t>
+                    <t t-else=""> NHÀ THẦU</t></h2> 
                     <p class="text-muted">Dashboard theo dõi tiến độ và thanh toán hợp đồng xây dựng</p>
                 </div>
 
@@ -97,7 +99,7 @@
                                 <span class="text-muted small"><i class="fa fa-folder-o"/> Tên hợp đồng</span>
                                 <h5 class="mt-2"><t t-esc="state.data.contract_info.name"/></h5>
                                 <span class="badge text-warning mt-2 rounded-pill bg-light border border-warning">
-                                    <i class="fa fa-exclamation-triangle"/> Chậm tiến độ thanh toán <t t-esc="state.data.contract_info.delayed_payment"/>
+                                    <i class="fa fa-exclamation-triangle"/> Chênh lệch nghiệm thu <t t-esc="state.data.contract_info.diff_ipc"/>
                                 </span>
                             </div>
                         </div>
@@ -137,8 +139,8 @@
                         </div>
                         <div class="col-md-3">
                             <div class="card text-center p-3 shadow-sm border-0 border-top border-warning rounded-lg border-3">
-                                <span class="text-muted small"><i class="fa fa-circle text-warning"/> Thanh toán kế hoạch lũy kế</span>
-                                <h4 class="font-weight-bold mt-2"><t t-esc="state.data.summary.plan_pay"/></h4>
+                                <span class="text-muted small"><i class="fa fa-circle text-warning"/> Nghiệm thu thực tế lũy kế</span>
+                                <h4 class="font-weight-bold mt-2"><t t-esc="state.data.summary.acctual_ipc"/></h4>
                             </div>
                         </div>
                         <div class="col-md-3">
