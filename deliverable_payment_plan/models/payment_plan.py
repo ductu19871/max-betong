@@ -3,11 +3,6 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
-# class SaleOrder(models.Model):
-#     _inherit = 'sale.order'
-
-#     task_deliverable_ids = fields.One2many('project.progress.report', 'sale_order_id')
-
 
 class OrderLineStockMixin(models.AbstractModel):
     _name = 'order.line.stock.mixin'
@@ -43,7 +38,6 @@ class OrderLineStockMixin(models.AbstractModel):
                     total_qty -= qty  # Trả NCC
         return total_qty
 
-
     def get_ordered_qty(self):
         """Hàm bổ trợ lấy số lượng đặt hàng đúng theo model"""
         self.ensure_one()
@@ -56,6 +50,7 @@ class SaleOrderLine(models.Model):
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
     _inherit = ['purchase.order.line', 'order.line.stock.mixin']
+
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
